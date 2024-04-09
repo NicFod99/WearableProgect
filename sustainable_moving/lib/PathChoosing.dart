@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sustainable_moving/homepage.dart';
 import 'package:sustainable_moving/profilePage.dart';
 
 class PathChoosingFeature extends StatefulWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sustainable_moving/home.dart';
-import 'package:sustainable_moving/homepage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -33,7 +32,8 @@ class _LoginPageState extends State<LoginPage> {
               controller: _usernameController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'Username',
+                labelText: 'Username',
+                hintText: 'Enter username',
               ),
             ),
             const SizedBox(height: 16.0),
@@ -42,7 +42,8 @@ class _LoginPageState extends State<LoginPage> {
               controller: _passwordController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'Password',
+                labelText: 'Password',
+                hintText: 'Enter password',
               ),
             ),
             const SizedBox(height: 16.0),

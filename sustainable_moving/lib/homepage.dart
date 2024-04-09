@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sustainable_moving/PathChoosing.dart';
-import 'package:sustainable_moving/home.dart';
 import 'package:sustainable_moving/loginPage.dart';
 
 class HomePage extends StatelessWidget {
@@ -25,11 +23,17 @@ class HomePage extends StatelessWidget {
           children: [
             // Background image covering the entire screen
             Image.network(
-              'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3',
+              'https://fai-platform.imgix.net/media/sardegna/or/14199_spiaggia-is-arutas.jpg?crop=fit&w=1440&h=800&auto=format,compress',
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,
             ),
+            Positioned(
+              child: Center(
+                child: Image.asset('assets/Logo.png'),
+              ),
+            ),
+
             // Positioned at the bottom
             Positioned(
               bottom: 20.0,
@@ -49,7 +53,8 @@ class HomePage extends StatelessWidget {
                             'Click anywhere to continue',
                             style: TextStyle(
                               fontSize: fontSize,
-                              color: Colors.white, // Text color is white
+                              color: Color.fromARGB(
+                                  255, 42, 131, 9), // Text color is white
                               shadows: [
                                 Shadow(
                                   blurRadius: 2.0,

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sustainable_moving/home.dart';
-import 'package:sustainable_moving/loginPage.dart';
 import 'package:sustainable_moving/editProfile.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -23,11 +21,10 @@ class ProfilePage extends StatelessWidget {
               },
             ),
             ElevatedButton(
-              child: const Text('To the homepage'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
+                child: const Text('To the homepage'),
+                onPressed: () {
+                  Navigator.pop(context); // Implement popUntil.
+                }),
           ],
         )));
   } //build
