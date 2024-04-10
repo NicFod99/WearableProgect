@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sustainable_moving/profilePage.dart';
+import 'package:sustainable_moving/Models/distance.dart';
+import 'package:sustainable_moving/Screens/profilePage.dart';
+import 'dart:math';
+import 'package:sustainable_moving/Screens/getDistance.dart';
 
 class PathChoosingFeature extends StatefulWidget {
   static const routename = 'PathChoosingFeature';
@@ -28,6 +31,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
   int _durationHours = 0;
   int _durationMinutes = 0;
   List<String> choices = [];
+  int totalDistance = 0;
 
   @override
   void initState() {
@@ -70,17 +74,28 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
   }
 
   void _addChoiceToList() {
+    // Generate a random distance value between 1 and 100 kilometers
+    int randomDistance = Random().nextInt(20) + 1;
+
     String choice =
-        'Place: ${_placeController.text} \nCheck-in: ${_checkInDate.toString().split(' ')[0]} \nCheck-out: ${_checkOutDate.toString().split(' ')[0]} \nDuration: $_durationHours hours $_durationMinutes minutes \nPeople: $_numberOfPeople \nRooms: $_numberOfRooms \n_____________________________';
+        'Place: ${_placeController.text} \nCheck-in: ${_checkInDate.toString().split(' ')[0]} \nCheck-out: ${_checkOutDate.toString().split(' ')[0]} \nDuration: $_durationHours hours $_durationMinutes minutes \nPeople: $_numberOfPeople \nRooms: $_numberOfRooms \nDistance: $randomDistance km\n_____________________________';
     setState(() {
       choices.add(choice);
+      totalDistance += randomDistance;
     });
   }
 
   void _removeChoice(int index) {
-    setState(() {
-      choices.removeAt(index);
-    });
+    final removedChoice = choices[index];
+    final regex = RegExp(r'Distance: (\d+) km');
+    final match = regex.firstMatch(removedChoice);
+    if (match != null) {
+      final distance = int.parse(match.group(1)!);
+      setState(() {
+        choices.removeAt(index);
+        totalDistance -= distance;
+      });
+    }
   }
 
   @override
@@ -264,9 +279,19 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
               ],
             ),
             SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _addChoiceToList,
-              child: Text('Add place to visit'),
+            Row(
+              children: [
+                ElevatedButton(
+                    onPressed: _addChoiceToList, child: Text("Add stop")),
+                SizedBox(width: 50),
+                Text(
+                  'Total Distance: $totalDistance km',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 16.0),
             Text(

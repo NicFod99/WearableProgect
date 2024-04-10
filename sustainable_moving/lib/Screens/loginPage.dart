@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sustainable_moving/home.dart';
+import 'package:sustainable_moving/Screens/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

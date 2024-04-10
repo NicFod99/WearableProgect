@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sustainable_moving/PathChoosing.dart';
-import 'package:sustainable_moving/editProfile.dart';
-import 'package:sustainable_moving/getDistance.dart';
-import 'package:sustainable_moving/home.dart';
-import 'package:sustainable_moving/homepage.dart';
-import 'package:sustainable_moving/loginPage.dart';
-import 'package:sustainable_moving/profilePage.dart';
+import 'package:sustainable_moving/Screens/PathChoosing.dart';
+import 'package:sustainable_moving/Screens/editProfile.dart';
+import 'package:sustainable_moving/Screens/getDistance.dart';
+import 'package:sustainable_moving/Screens/home.dart';
+import 'package:sustainable_moving/Screens/homepage.dart';
+import 'package:sustainable_moving/Screens/loginPage.dart';
+import 'package:sustainable_moving/Screens/profilePage.dart';
 
 void main() {
   runApp(
