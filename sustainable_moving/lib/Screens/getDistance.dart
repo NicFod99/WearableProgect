@@ -18,6 +18,8 @@ class GetDistanceFeature extends StatefulWidget {
 
 class _GetDistanceFeatureState extends State<GetDistanceFeature> {
   List<Distance> _distances = []; // List to hold distances
+  double _totalDistance = 0;
+  // Variable to hold the total distance
 
   @override
   Widget build(BuildContext context) {
@@ -32,44 +34,68 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () async {
-                final result = await _authorize();
-                final message =
-                    result == 200 ? 'Request successful' : 'Request failed';
-                ScaffoldMessenger.of(context)
-                  ..removeCurrentSnackBar()
-                  ..showSnackBar(SnackBar(content: Text(message)));
-              },
-              child: Text('Authorize the app'),
-            ),
+                onPressed: () async {
+                  final result = await _authorize();
+                  final message =
+                      result == 200 ? 'Request successful' : 'Request failed';
+                  ScaffoldMessenger.of(context)
+                    ..removeCurrentSnackBar()
+                    ..showSnackBar(SnackBar(content: Text(message)));
+                },
+                child: Text('Authorize the app')),
             SizedBox(
               height: 10,
             ),
             ElevatedButton(
-              onPressed: () async {
-                final sp = await SharedPreferences.getInstance();
-                await sp.remove('access');
-                await sp.remove('refresh');
-                ScaffoldMessenger.of(context)
-                  ..removeCurrentSnackBar()
-                  ..showSnackBar(
-                      SnackBar(content: Text('Tokens have been deleted')));
-              },
-              child: Text('Unauthorize the app'),
-            ),
-            SizedBox(
-              height: 10,
-            ),
+                onPressed: () async {
+                  final sp = await SharedPreferences.getInstance();
+                  await sp.remove('access');
+                  await sp.remove('refresh');
+                  ScaffoldMessenger.of(context)
+                    ..removeCurrentSnackBar()
+                    ..showSnackBar(
+                        SnackBar(content: Text('Tokens have been deleted')));
+                },
+                child: Text('Unauthorize the app')),
             ElevatedButton(
               onPressed: () async {
                 final result = await _requestData();
                 setState(() {
                   _distances = result ?? []; // Update the distances list
+                  _totalDistance =
+                      _calculateTotalDistance(); // Calculate the total distance
                 });
               },
               child: Text('Distance'),
             ),
             SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Total Distance: ',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  _totalDistance.toStringAsFixed(2),
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  " km",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+
             SizedBox(height: 20.0),
             // Show distances in a ListView
             Expanded(
@@ -83,17 +109,28 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
                 },
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                // Go back to the previous page
-                Navigator.pop(context);
-              },
-              child: Text('Back to Home'),
+            Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () {
+                  // Go back to the previous page
+                  Navigator.popUntil(context, ModalRoute.withName('/home/'));
+                },
+                child: Text('Back to Home'),
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  // Calculate the total distance
+  double _calculateTotalDistance() {
+    double total = 0;
+    for (var distance in _distances) {
+      total += (distance.value / 1000);
+    }
+    return total;
   }
 
   //This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
@@ -120,47 +157,41 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
 
   //This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
   Future<List<Distance>?> _requestData() async {
-    //Initialize the result
-    List<Distance>? result;
-
-    //Get the stored access token (Note that this code does not work if the tokens are null)
+    // Get the stored access token
     final sp = await SharedPreferences.getInstance();
-    var access = sp.getString('access');
+    final access = sp.getString('access');
 
-    //If access token is expired, refresh it
-    if (JwtDecoder.isExpired(access!)) {
+    // If the access token is expired, refresh it
+    if (access != null && JwtDecoder.isExpired(access)) {
       await _refreshTokens();
-      access = sp.getString('access');
-    } //if
+    }
 
-    //Create the (representative) request
+    // Create the request
     final day = '2023-05-04';
-    final url = Impact.baseUrl +
-        Impact.distanceEndpoint +
-        Impact.patientUsername +
-        '/day/$day/';
+    final url =
+        '${Impact.baseUrl}${Impact.distanceEndpoint}${Impact.patientUsername}/day/$day/';
     final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};
 
-    //Get the response
+    // Get the response
     print('Calling: $url');
     final response = await http.get(Uri.parse(url), headers: headers);
 
-    //if OK parse the response, otherwise return null
+    // Parse the response if it's OK, otherwise return null
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
-      result = [];
+      final List<Distance> distances = [];
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
         final distance = Distance.fromJson(decodedResponse['data']['date'],
             decodedResponse['data']['data'][i]);
         // Check if the value is greater than 0 before adding it to the result list
         if (distance.value > 0) {
-          result.add(distance);
+          distances.add(distance);
         }
-      } //for
-    } //else
-
-    //Return the result
-    return result;
+      }
+      return distances;
+    } else {
+      return null;
+    }
   } //_requestData
 
   //This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences

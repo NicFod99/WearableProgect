@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Models/distance.dart';
 import 'package:sustainable_moving/Screens/profilePage.dart';
 import 'dart:math';
-import 'package:sustainable_moving/Screens/getDistance.dart';
 
 class PathChoosingFeature extends StatefulWidget {
+  const PathChoosingFeature({
+    this.distance, // Making distance optional
+    Key? key,
+  }) : super(key: key);
+
+  final Distance? distance; // Define distance as a member variable
+
   static const routename = 'PathChoosingFeature';
+
   @override
   _PathChoosingFeatureState createState() => _PathChoosingFeatureState();
 }
@@ -13,11 +20,15 @@ class PathChoosingFeature extends StatefulWidget {
 class _PathChoosingFeatureState extends State<PathChoosingFeature> {
   @override
   Widget build(BuildContext context) {
-    return HotelBookingScreen();
+    return HotelBookingScreen(
+        distance: widget.distance); // Pass distance to HotelBookingScreen
   }
 }
 
 class HotelBookingScreen extends StatefulWidget {
+  final Distance? distance; // Receive distance from PathChoosingFeature
+  const HotelBookingScreen({Key? key, this.distance}) : super(key: key);
+
   @override
   _HotelBookingScreenState createState() => _HotelBookingScreenState();
 }
@@ -79,9 +90,17 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
 
     String choice =
         'Place: ${_placeController.text} \nCheck-in: ${_checkInDate.toString().split(' ')[0]} \nCheck-out: ${_checkOutDate.toString().split(' ')[0]} \nDuration: $_durationHours hours $_durationMinutes minutes \nPeople: $_numberOfPeople \nRooms: $_numberOfRooms \nDistance: $randomDistance km\n_____________________________';
+
     setState(() {
       choices.add(choice);
       totalDistance += randomDistance;
+
+      // Print "Ok" or "Not possible" based on the comparison
+      if (widget.distance != null && widget.distance!.value > totalDistance) {
+        print("Ok");
+      } else {
+        print("Not possible");
+      }
     });
   }
 

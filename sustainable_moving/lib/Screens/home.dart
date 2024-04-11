@@ -4,6 +4,7 @@ import 'package:sustainable_moving/Screens/getDistance.dart';
 import 'package:sustainable_moving/Screens/homepage.dart';
 import 'package:sustainable_moving/Screens/loginPage.dart';
 import 'package:sustainable_moving/Screens/profilePage.dart';
+import 'package:sustainable_moving/Screens/trainingPage.dart';
 
 // Import your booking page
 
@@ -52,9 +53,9 @@ class ChoosePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()));
+                    MaterialPageRoute(builder: (context) => TrainingPage()));
               },
-              child: Text('login'),
+              child: Text('Go to TrainingPage'),
             ),
           ],
         ),
