@@ -1,0 +1,33 @@
+import 'package:flutter/material.dart';
+import 'package:sustainable_moving/Models/Screens/editProfile.dart';
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+  static const routename = 'Profilepage';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text(ProfilePage.routename),
+        ),
+        body: Center(
+            child: Column(
+          children: [
+            ElevatedButton(
+              child: const Text('To the Edit'),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EditProfile()));
+              },
+            ),
+            ElevatedButton(
+                child: const Text('To the homepage'),
+                onPressed: () {
+                  Navigator.pop(context); // Implement popUntil.
+                }),
+          ],
+        )));
+  } //build
+} //HomePage
