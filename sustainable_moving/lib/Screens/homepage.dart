@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sustainable_moving/Models/Screens/loginPage.dart';
+import 'package:sustainable_moving/Screens/loginPage.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sustainable_moving/Models/Screens/getDistance.dart';
-import 'package:sustainable_moving/Models/Screens/trainingPage.dart';
+import 'package:sustainable_moving/Screens/getDistance.dart';
+import 'package:sustainable_moving/Screens/trainingPage.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);

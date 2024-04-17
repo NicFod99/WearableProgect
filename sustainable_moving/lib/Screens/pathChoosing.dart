@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Models/distance.dart';
-import 'package:sustainable_moving/Models/Screens/profilePage.dart';
+import 'package:sustainable_moving/Screens/profilePage.dart';
 import 'dart:math';
 
 class PathChoosingFeature extends StatefulWidget {

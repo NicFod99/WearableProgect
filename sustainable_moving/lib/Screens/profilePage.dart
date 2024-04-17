@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sustainable_moving/Models/Screens/editProfile.dart';
+import 'package:sustainable_moving/Screens/editProfile.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

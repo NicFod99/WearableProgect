@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sustainable_moving/Models/Screens/PathChoosing.dart';
-import 'package:sustainable_moving/Models/Screens/home.dart';
-import 'package:sustainable_moving/Models/Screens/getDistance.dart';
-import 'package:sustainable_moving/Models/Screens/homepage.dart';
-import 'package:sustainable_moving/Models/Screens/profilePage.dart';
-import 'package:sustainable_moving/Models/Screens/trainingPage.dart';
+import 'package:sustainable_moving/Models/favorite.dart';
+import 'package:sustainable_moving/Screens/FavoritePage.dart';
+import 'package:sustainable_moving/Screens/pathChoosing.dart';
+import 'package:sustainable_moving/Screens/home.dart';
+import 'package:sustainable_moving/Screens/profilePage.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -27,7 +26,7 @@ class _NavBar extends State<NavBar> {
           ChoosePage(),
           PathChoosingFeature(),
           ProfilePage(),
-          ProfilePage(),
+          FavoritePage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
