@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sustainable_moving/Models/favorite.dart';
 import 'package:sustainable_moving/Screens/FavoritePage.dart';
 import 'package:sustainable_moving/Screens/pathChoosing.dart';
 import 'package:sustainable_moving/Screens/home.dart';
 import 'package:sustainable_moving/Screens/profilePage.dart';
+import 'package:sustainable_moving/Screens/trainingPage.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -27,6 +28,7 @@ class _NavBar extends State<NavBar> {
           PathChoosingFeature(),
           ProfilePage(),
           FavoritePage(),
+          TrainingPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -56,6 +58,10 @@ class _NavBar extends State<NavBar> {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Favorite',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(EvaIcons.activity),
+            label: 'Activity',
           ),
         ],
       ),

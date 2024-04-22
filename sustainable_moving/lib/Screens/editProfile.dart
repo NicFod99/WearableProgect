@@ -12,7 +12,6 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfile extends State<EditProfile> {
   int index = 0;
-  static const routename = 'EditProfile';
   @override
   Widget build(BuildContext context) {
     return Scaffold(

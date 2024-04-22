@@ -6,6 +6,8 @@ import 'package:sustainable_moving/Impact/impact.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:sustainable_moving/Models/distanceNotifier.dart';
 
 class GetDistanceFeature extends StatefulWidget {
   const GetDistanceFeature({Key? key}) : super(key: key);
@@ -187,6 +189,9 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
         // Check if the value is greater than 0 before adding it to the result list
         if (distance.value > 0) {
           distances.add(distance);
+          Provider.of<DistanceNotifier>(context, listen: false)
+              .addProduct(distance);
+          print(distance);
         }
       }
       return distances;

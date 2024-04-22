@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sustainable_moving/Models/favorite.dart';
-import 'package:sustainable_moving/Screens/home.dart';
+import 'package:sustainable_moving/Models/items.dart';
 
 class FavoritePage extends StatelessWidget {
   const FavoritePage({Key? key}) : super(key: key);
@@ -11,55 +11,66 @@ class FavoritePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('${FavoritePage.routename} built');
+    final item = Provider.of<Favorite>(context);
+
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () =>
-                Provider.of<Favorite>(context, listen: false).clearFavorite(),
+            onPressed: () => item.clearFavorite(),
             icon: Icon(Icons.delete),
           )
         ],
         centerTitle: true,
         title: Text("Favorite places"),
       ),
-      body: Consumer<Favorite>(
-        builder: (context, favorite, child) {
-          return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 4.0,
-              crossAxisSpacing: 4.0,
-              childAspectRatio: 0.75,
-            ),
-            itemCount: favorite.favorites.length,
-            itemBuilder: (BuildContext context, int index) {
-              // Get the corresponding PathData object from the imageText list
-              PathData pathData = imageText[index].name;
-              return Column(
+      body: ListView.builder(
+        itemCount: item.products.length,
+        itemBuilder: (BuildContext context, int index) {
+          PathData pathData = item.products[index];
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Stack(
                 children: [
                   Image.asset(
-                    favorite.favorites[
-                        index], // Assuming favorites contain image paths
-                    fit: BoxFit.cover,
+                    pathData.imagePath,
+                    fit: BoxFit.fitWidth,
                   ),
-                  Text(
-                    pathData.name, // Display the name from the PathData object
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    pathData
-                        .description, // Display the description from the PathData object
-                    style: TextStyle(
-                      fontSize: 14,
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      color: Colors.black.withOpacity(0.5),
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            pathData.name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            "Length: ${pathData.length} km",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
-              );
-            },
+              ),
+              SizedBox(height: 16),
+            ],
           );
         },
       ),
