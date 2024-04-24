@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -28,6 +30,8 @@ class _TrainingPage extends State<TrainingPage> {
   bool _isCalendarVisible = false;
   String? _heartRate; // Define _heartRate variable
   HeartRateNotifier lista = HeartRateNotifier();
+  final Random random = Random();
+  String heartRateText = 'No data';
 
   @override
   Widget build(BuildContext context) {
@@ -41,26 +45,6 @@ class _TrainingPage extends State<TrainingPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                  onPressed: () async {
-                    final result = await _authorize();
-                    final message =
-                        result == 200 ? 'Request successful' : 'Request failed';
-                    ScaffoldMessenger.of(context)
-                      ..removeCurrentSnackBar()
-                      ..showSnackBar(SnackBar(content: Text(message)));
-                  },
-                  child: Text('Authorize the app')),
-              SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  _getHeartRate();
-                  // Call function to get heart rate
-                },
-                child: Text("Get HeartRate"),
-              ),
               SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
@@ -85,29 +69,39 @@ class _TrainingPage extends State<TrainingPage> {
                   ),
                 ),
               SizedBox(height: 100),
-              Stack(
-                children: [
-                  SizedBox(width: 150),
-                  Transform.scale(
-                    scale: 10.0, // Adjust the scale factor as needed
-                    child: Icon(Icons.favorite),
-                  ),
-                  Consumer<HeartRateNotifier>(
-                    builder: (context, mealDB, child) {
-                      //If the list of meals is empty, show a simple Text, otherwise show the list of meals using a ListView.
-                      return mealDB.pulses.isEmpty
-                          ? Text('Empty')
-                          : ListView.builder(
-                              itemCount: mealDB.pulses.length,
-                              itemBuilder: (context, mealIndex) {
-                                Text(
-                                  "C'è roba",
-                                  style: TextStyle(color: Colors.black),
-                                );
-                              });
-                    },
-                  ),
-                ],
+              Center(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Transform.scale(
+                      scale: 10.0, // Adjust the scale factor as needed
+                      child: Icon(Icons.favorite, color: Colors.red),
+                    ),
+                    Consumer<HeartRateNotifier>(
+                      builder: (context, heartRateNotifier, child) {
+                        // Check if there is any heart rate data available
+                        if (heartRateNotifier.pulses.isNotEmpty) {
+                          // Generate a random index to select a heart rate value
+                          final randomIndex =
+                              Random().nextInt(heartRateNotifier.pulses.length);
+                          final randomHeartRate =
+                              heartRateNotifier.pulses[randomIndex].value;
+
+                          return Text(
+                            randomHeartRate.toString(),
+                            style: TextStyle(color: Colors.black, fontSize: 50),
+                          );
+                        } else {
+                          // If no heart rate data available, display a placeholder or empty text
+                          return Text(
+                            'No data',
+                            style: TextStyle(color: Colors.white),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 150),
               Column(
@@ -439,8 +433,6 @@ class _TrainingPage extends State<TrainingPage> {
     if (JwtDecoder.isExpired(access!)) {
       await _refreshTokens();
       access = sp.getString('access');
-    } else {
-      print("Unable to fetch Heart Rate datas...");
     } //if
 
     //Create the (representative) request
@@ -460,10 +452,8 @@ class _TrainingPage extends State<TrainingPage> {
       final decodedResponse = jsonDecode(response.body);
       result = [];
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        print("ok");
-        /*result.add(HeartRate.fromJson(decodedResponse['data']['date'],
+        result.add(HeartRate.fromJson(decodedResponse['data']['date'],
             decodedResponse['data']['data'][i]));
-      */
       } //for
     } //if
     else {
@@ -511,12 +501,44 @@ class _TrainingPage extends State<TrainingPage> {
       heartRates.forEach((heartRate) {
         Provider.of<HeartRateNotifier>(context, listen: false)
             .addProduct(heartRate);
-        print(
+        /*print(
             "Time: ${heartRate.time}, Value: ${heartRate.value}, Confidence: ${heartRate.confidence}");
+      */
       });
     } else {
       print("Unable to fetch Heart Rate datas...");
     }
     return heartRates;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _authorize();
+    _getHeartRate(); // Automatically authorize when the page is entered
+    // Start a timer that updates the heart rate text every second
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      updateHeartRateText();
+    });
+  }
+
+  void updateHeartRateText() {
+    setState(() {
+      if (Provider.of<HeartRateNotifier>(context, listen: false)
+          .pulses
+          .isNotEmpty) {
+        final randomIndex = random.nextInt(
+            Provider.of<HeartRateNotifier>(context, listen: false)
+                .pulses
+                .length);
+        final randomHeartRate =
+            Provider.of<HeartRateNotifier>(context, listen: false)
+                .pulses[randomIndex]
+                .value;
+        heartRateText = randomHeartRate.toString();
+      } else {
+        heartRateText = 'No data';
+      }
+    });
   }
 }
