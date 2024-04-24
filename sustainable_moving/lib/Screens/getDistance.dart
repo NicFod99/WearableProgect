@@ -27,101 +27,108 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
   Widget build(BuildContext context) {
     print('${GetDistanceFeature.routename} built');
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Distance Page"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
+    return Provider<DistanceNotifier>(
+      create: (context) => DistanceNotifier(),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text("Distance Page"),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                  onPressed: () async {
+                    final result = await _authorize();
+                    final message =
+                        result == 200 ? 'Request successful' : 'Request failed';
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(SnackBar(content: Text(message)));
+                  },
+                  child: Text('Authorize the app')),
+              SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    final sp = await SharedPreferences.getInstance();
+                    await sp.remove('access');
+                    await sp.remove('refresh');
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(
+                          SnackBar(content: Text('Tokens have been deleted')));
+                  },
+                  child: Text('Unauthorize the app')),
+              ElevatedButton(
                 onPressed: () async {
-                  final result = await _authorize();
-                  final message =
-                      result == 200 ? 'Request successful' : 'Request failed';
-                  ScaffoldMessenger.of(context)
-                    ..removeCurrentSnackBar()
-                    ..showSnackBar(SnackBar(content: Text(message)));
+                  final result = await _requestData();
+                  setState(() {
+                    _distances = result ?? []; // Update the distances list
+                    _totalDistance =
+                        _calculateTotalDistance(); // Calculate the total distance
+                  });
+                  for (var distance in _distances) {
+                    Provider.of<DistanceNotifier>(context, listen: false)
+                        .addProduct(distance);
+                  }
                 },
-                child: Text('Authorize the app')),
-            SizedBox(
-              height: 10,
-            ),
-            ElevatedButton(
-                onPressed: () async {
-                  final sp = await SharedPreferences.getInstance();
-                  await sp.remove('access');
-                  await sp.remove('refresh');
-                  ScaffoldMessenger.of(context)
-                    ..removeCurrentSnackBar()
-                    ..showSnackBar(
-                        SnackBar(content: Text('Tokens have been deleted')));
-                },
-                child: Text('Unauthorize the app')),
-            ElevatedButton(
-              onPressed: () async {
-                final result = await _requestData();
-                setState(() {
-                  _distances = result ?? []; // Update the distances list
-                  _totalDistance =
-                      _calculateTotalDistance(); // Calculate the total distance
-                });
-              },
-              child: Text('Distance'),
-            ),
-            SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Total Distance: ',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                child: Text('Distance'),
+              ),
+              SizedBox(height: 20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Total Distance: ',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  _totalDistance.toStringAsFixed(2),
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                  Text(
+                    _totalDistance.toStringAsFixed(2),
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  " km",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                  Text(
+                    " km",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
-            SizedBox(height: 20.0),
-            // Show distances in a ListView
-            Expanded(
-              child: ListView.builder(
-                itemCount: _distances.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(
-                        'Time: ${_distances[index].time}, Value: ${_distances[index].value}'),
-                  );
-                },
+              SizedBox(height: 20.0),
+              // Show distances in a ListView
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _distances.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text(
+                          'Time: ${_distances[index].time}, Value: ${_distances[index].value}'),
+                    );
+                  },
+                ),
               ),
-            ),
-            Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () {
-                  // Go back to the previous page
-                  Navigator.popUntil(context, ModalRoute.withName('/home/'));
-                },
-                child: Text('Back to Home'),
+              Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () {
+                    // Go back to the previous page
+                    Navigator.popUntil(context, ModalRoute.withName('/home/'));
+                  },
+                  child: Text('Back to Home'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -189,8 +196,6 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
         // Check if the value is greater than 0 before adding it to the result list
         if (distance.value > 0) {
           distances.add(distance);
-          Provider.of<DistanceNotifier>(context, listen: false)
-              .addProduct(distance);
           print(distance);
         }
       }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Screens/FavoritePage.dart';
+import 'package:sustainable_moving/Screens/getDistance.dart';
 import 'package:sustainable_moving/Screens/pathChoosing.dart';
 import 'package:sustainable_moving/Screens/home.dart';
 import 'package:sustainable_moving/Screens/profilePage.dart';
@@ -29,6 +30,7 @@ class _NavBar extends State<NavBar> {
           ProfilePage(),
           FavoritePage(),
           TrainingPage(),
+          GetDistanceFeature(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -62,6 +64,10 @@ class _NavBar extends State<NavBar> {
           BottomNavigationBarItem(
             icon: Icon(EvaIcons.activity),
             label: 'Activity',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(EvaIcons.arrowCircleDownOutline),
+            label: 'Distance',
           ),
         ],
       ),

@@ -3,14 +3,12 @@ class PathData {
   final double length;
   final String description;
   final String imagePath;
-  bool selected;
 
   PathData({
     required this.name,
     required this.length,
     required this.description,
     required this.imagePath,
-    this.selected = false,
   });
 }
 

@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:sustainable_moving/Models/distanceNotifier.dart';
+import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:sustainable_moving/Screens/PathChoosing.dart';
 import 'package:sustainable_moving/Screens/editProfile.dart';
 import 'package:sustainable_moving/Screens/getDistance.dart';
@@ -16,12 +20,20 @@ void main() {
 
 class SustainableMovingApp extends StatelessWidget {
   const SustainableMovingApp({Key? key}) : super(key: key);
+
+  // WRAP IN A FUTUREBUILDER PER IL LOGIN
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Favorite>(
-      create: (context) => Favorite(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<Favorite>(create: (_) => Favorite()),
+        ChangeNotifierProvider<DistanceNotifier>(
+            create: (_) => DistanceNotifier()),
+        ChangeNotifierProvider<HeartRateNotifier>(
+            create: (_) => HeartRateNotifier()),
+      ],
       child: MaterialApp(
-        initialRoute: GetDistanceFeature.routename,
+        initialRoute: HomePage.routename,
         routes: {
           HomePage.routename: (context) => HomePage(),
           GetDistanceFeature.routename: (context) => GetDistanceFeature(),

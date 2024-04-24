@@ -2,7 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:sustainable_moving/Impact/impact.dart';
+import 'package:sustainable_moving/Models/heartRate.dart';
+import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({Key? key}) : super(key: key);
@@ -17,27 +26,42 @@ class _TrainingPage extends State<TrainingPage> {
   int _timer = 0;
   int _total = 0;
   bool _isCalendarVisible = false;
+  String? _heartRate; // Define _heartRate variable
+  HeartRateNotifier lista = HeartRateNotifier();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Column(
-          children: [
-            Text("Training Page"), // Adjust the spacing as needed
-          ],
-        ),
+        title: Text("Training Page"),
       ),
       body: SingleChildScrollView(
-        // Wrap with SingleChildScrollView to handle overflow
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              ElevatedButton(
+                  onPressed: () async {
+                    final result = await _authorize();
+                    final message =
+                        result == 200 ? 'Request successful' : 'Request failed';
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(SnackBar(content: Text(message)));
+                  },
+                  child: Text('Authorize the app')),
               SizedBox(
-                height: 25,
+                height: 10,
               ),
+              ElevatedButton(
+                onPressed: () {
+                  _getHeartRate();
+                  // Call function to get heart rate
+                },
+                child: Text("Get HeartRate"),
+              ),
+              SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -46,7 +70,7 @@ class _TrainingPage extends State<TrainingPage> {
                 },
                 child: Text(
                   "${DateTime.now().toString().substring(0, 10)}",
-                  style: TextStyle(fontSize: 25),
+                  style: TextStyle(fontSize: 25, color: Colors.blue),
                 ),
               ),
               if (_isCalendarVisible)
@@ -61,16 +85,28 @@ class _TrainingPage extends State<TrainingPage> {
                   ),
                 ),
               SizedBox(height: 100),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Stack(
                 children: [
                   SizedBox(width: 150),
                   Transform.scale(
                     scale: 10.0, // Adjust the scale factor as needed
                     child: Icon(Icons.favorite),
                   ),
-                  SizedBox(width: 120),
-                  Icon(Icons.person),
+                  Consumer<HeartRateNotifier>(
+                    builder: (context, mealDB, child) {
+                      //If the list of meals is empty, show a simple Text, otherwise show the list of meals using a ListView.
+                      return mealDB.pulses.isEmpty
+                          ? Text('Empty')
+                          : ListView.builder(
+                              itemCount: mealDB.pulses.length,
+                              itemBuilder: (context, mealIndex) {
+                                Text(
+                                  "C'è roba",
+                                  style: TextStyle(color: Colors.black),
+                                );
+                              });
+                    },
+                  ),
                 ],
               ),
               SizedBox(height: 150),
@@ -127,11 +163,28 @@ class _TrainingPage extends State<TrainingPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            _total.toString(),
-                            style: TextStyle(
-                              fontSize: 24, // Adjust the font size as needed
-                            ),
+                          FutureBuilder(
+                            future: SharedPreferences.getInstance(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                final sp = snapshot.data!;
+                                final tempCount = sp.getInt('counter');
+                                if (tempCount == null) {
+                                  _total = 0;
+                                } else {
+                                  _total = tempCount;
+                                }
+                                return Text(
+                                  _total.toString(),
+                                  style: TextStyle(
+                                    fontSize:
+                                        24, // Adjust the font size as needed
+                                  ),
+                                );
+                              } else {
+                                return CircularProgressIndicator();
+                              }
+                            },
                           ),
                           Text(
                             "ml remaining",
@@ -245,12 +298,16 @@ class _TrainingPage extends State<TrainingPage> {
           ),
           actions: <Widget>[
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
                 // Add the new number to the existing total
-                setState(() {
-                  _total -= number;
-                });
+                if ((_total - number) >= 0) {
+                  setState(() {
+                    _total -= number;
+                  });
+                  final sp = await SharedPreferences.getInstance();
+                  await sp.setInt('counter', _total);
+                }
               },
               child: Text('OK'),
             ),
@@ -279,14 +336,16 @@ class _TrainingPage extends State<TrainingPage> {
           ),
           actions: <Widget>[
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
                 // Add the new number to the existing total
                 setState(() {
                   _total += number;
                 });
+                final sp = await SharedPreferences.getInstance();
+                await sp.setInt('counter', _total);
               },
-              child: Text('OK'),
+              child: Text('Ok'),
             ),
           ],
         );
@@ -346,5 +405,118 @@ class _TrainingPage extends State<TrainingPage> {
     return '$seconds:$centiseconds'; // Return formatted time
   }
 
-  // Variable to hold the total distance
+  Future<int?> _authorize() async {
+    //Create the request
+    final url = ImpactHR.baseUrl + ImpactHR.tokenEndpoint;
+    final body = {'username': ImpactHR.username, 'password': ImpactHR.password};
+
+    //Get the response
+    print('Calling: $url');
+    final response = await http.post(Uri.parse(url), body: body);
+
+    //If 200, set the token
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      final sp = await SharedPreferences.getInstance();
+      sp.setString('access', decodedResponse['access']);
+      sp.setString('refresh', decodedResponse['refresh']);
+    } //if
+
+    //Just return the status code
+    return response.statusCode;
+  } //_authorize
+
+  //This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
+  Future<List<HeartRate>?> _requestData() async {
+    //Initialize the result
+    List<HeartRate>? result;
+
+    //Get the stored access token (Note that this code does not work if the tokens are null)
+    final sp = await SharedPreferences.getInstance();
+    var access = sp.getString('access');
+
+    //If access token is expired, refresh it
+    if (JwtDecoder.isExpired(access!)) {
+      await _refreshTokens();
+      access = sp.getString('access');
+    } else {
+      print("Unable to fetch Heart Rate datas...");
+    } //if
+
+    //Create the (representative) request
+    final day = '2023-05-04';
+    final url = ImpactHR.baseUrl +
+        ImpactHR.hrEndpoint +
+        ImpactHR.patientUsername +
+        '/day/$day/';
+    final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};
+
+    //Get the response
+    print('Calling: $url');
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    //if OK parse the response, otherwise return null
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      result = [];
+      for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
+        print("ok");
+        /*result.add(HeartRate.fromJson(decodedResponse['data']['date'],
+            decodedResponse['data']['data'][i]));
+      */
+      } //for
+    } //if
+    else {
+      result = null;
+    } //else
+
+    //Return the result
+    return result;
+  } //_requestData
+
+  //This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
+  Future<int> _refreshTokens() async {
+    //Create the request
+    final url = ImpactHR.baseUrl + ImpactHR.refreshEndpoint;
+    final sp = await SharedPreferences.getInstance();
+    final refresh = sp.getString('refresh');
+    final body = {'refresh': refresh};
+
+    //Get the respone
+    print('Calling: $url');
+    final response = await http.post(Uri.parse(url), body: body);
+
+    //If 200 set the tokens
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      final sp = await SharedPreferences.getInstance();
+      sp.setString('access', decodedResponse['access']);
+      sp.setString('refresh', decodedResponse['refresh']);
+    } //if
+
+    //Return just the status code
+    return response.statusCode;
+  }
+
+  Future<List<HeartRate>?> _getHeartRate() async {
+    List<HeartRate>? heartRates = await _requestData();
+    if (heartRates != null && heartRates.isNotEmpty) {
+      setState(() {
+        _heartRate =
+            heartRates.first.value.toString(); // Update heart rate value
+      });
+
+      // Print each heart rate value in the console
+      print("Heart Rates:");
+      heartRates.forEach((heartRate) {
+        Provider.of<HeartRateNotifier>(context, listen: false)
+            .addProduct(heartRate);
+        print(
+            "Time: ${heartRate.time}, Value: ${heartRate.value}, Confidence: ${heartRate.confidence}");
+      });
+    } else {
+      print("Unable to fetch Heart Rate datas...");
+    }
+    return heartRates;
+  }
 }

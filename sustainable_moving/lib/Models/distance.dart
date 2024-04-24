@@ -14,4 +14,4 @@ class Distance {
   String toString() {
     return 'Distance(time: $time, value: $value)';
   } //toString
-}//Steps
+}
