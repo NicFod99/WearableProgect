@@ -33,7 +33,7 @@ class SustainableMovingApp extends StatelessWidget {
             create: (_) => HeartRateNotifier()),
       ],
       child: MaterialApp(
-        initialRoute: NavBar.routename,
+        initialRoute: HomePage.routename,
         routes: {
           HomePage.routename: (context) => HomePage(),
           GetDistanceFeature.routename: (context) => GetDistanceFeature(),

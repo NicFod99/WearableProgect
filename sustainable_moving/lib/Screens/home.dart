@@ -14,27 +14,66 @@ class ChoosePage extends StatefulWidget {
   _ChoosePageState createState() => _ChoosePageState();
 }
 
-class _ChoosePageState extends State<ChoosePage> {
-  int index = 0;
-  late Timer _timer;
-  final Catalog catalog = Catalog();
-  //List<bool> selected = List.filled(items.length, false);
+class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  late int selectedIndex; // Track the index of the tapped item
+  final Catalog catalog = Catalog(); // Define the catalog here
 
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    );
+    _animation = Tween<double>(begin: 1.0, end: 1.5).animate(_controller)
+      ..addListener(() {
+        setState(() {});
+      });
+    selectedIndex = -1; // Initialize selectedIndex to -1
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    _controller.dispose();
     super.dispose();
+  }
+
+  void _handleTap(int index) {
+    setState(() {
+      selectedIndex = index; // Update selected index
+    });
+    _controller.forward(); // Start animation
+  }
+
+  void _addToFavorites(int index) {
+    Provider.of<Favorite>(context, listen: false)
+        .addProduct(catalog.items[index]);
+  }
+
+  void _showDescription(BuildContext context, String description) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Description'),
+          content: Text(description),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    print('${ChoosePage.routename} built');
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -55,34 +94,36 @@ class _ChoosePageState extends State<ChoosePage> {
           Expanded(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: MediaQuery.of(context).size.width ~/
-                    200, // Adjust 200 according to your preference
+                crossAxisCount: MediaQuery.of(context).size.width ~/ 200,
                 mainAxisSpacing: 4.0,
                 crossAxisSpacing: 4.0,
-                childAspectRatio:
-                    4 / 3, // Adjust aspect ratio to maintain consistency
+                childAspectRatio: 4 / 3,
               ),
               itemCount: catalog.items.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                  onTap: () => Provider.of<Favorite>(context, listen: false)
-                      .addProduct(catalog.items[index]),
+                  onTap: () => _handleTap(index), // Pass index to _handleTap
                   child: Stack(
                     children: [
-                      Stack(
-                        children: [
-                          Image.asset(
-                            catalog.items[index].imagePath,
-                            fit: BoxFit.fitWidth,
-                          ),
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            child: Container(
-                              color: Colors.black.withOpacity(0.5),
-                              padding: EdgeInsets.all(8),
-                              child: Column(
+                      Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        child: Image.asset(
+                          catalog.items[index].imagePath,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          color: Colors.black.withOpacity(0.5),
+                          padding: EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
@@ -102,11 +143,35 @@ class _ChoosePageState extends State<ChoosePage> {
                                   ),
                                 ],
                               ),
-                            ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      _addToFavorites(index);
+                                      _controller.forward(
+                                          from:
+                                              0); // Start animation from the beginning
+                                    },
+                                    icon: Icon(Icons.favorite),
+                                    color: Colors.white,
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      _showDescription(context,
+                                          catalog.items[index].description);
+                                      _controller.forward(
+                                          from:
+                                              0); // Start animation from the beginning
+                                    },
+                                    icon: Icon(Icons.info),
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                      SizedBox(height: 16),
                     ],
                   ),
                 );
