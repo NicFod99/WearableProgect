@@ -1,19 +1,18 @@
+import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
+import 'package:provider/provider.dart';
 import 'package:sustainable_moving/Impact/impact.dart';
 import 'package:sustainable_moving/Models/heartRate.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:provider/provider.dart';
+import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({Key? key}) : super(key: key);
@@ -25,13 +24,15 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPage extends State<TrainingPage> {
-  int _timer = 0;
-  int _total = 0;
   bool _isCalendarVisible = false;
-  String? _heartRate; // Define _heartRate variable
+  String? _heartRate;
   HeartRateNotifier lista = HeartRateNotifier();
   final Random random = Random();
   String heartRateText = 'No data';
+  final CountDownController _controller = CountDownController();
+  int _duration = 0;
+  int _selectedMinutes = 0;
+  int _selectedSeconds = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -45,115 +46,191 @@ class _TrainingPage extends State<TrainingPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _isCalendarVisible = !_isCalendarVisible;
-                  });
-                },
-                child: Text(
-                  "${DateTime.now().toString().substring(0, 10)}",
-                  style: TextStyle(fontSize: 25, color: Colors.blue),
+              FittedBox(
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 50,
+                    ),
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Transform.scale(
+                          scale: 9.0,
+                          child: Icon(Icons.favorite, color: Colors.red),
+                        ),
+                        Column(
+                          children: [
+                            Consumer<HeartRateNotifier>(
+                              builder: (context, heartRateNotifier, child) {
+                                if (heartRateNotifier.pulses.isNotEmpty) {
+                                  final randomIndex = Random()
+                                      .nextInt(heartRateNotifier.pulses.length);
+                                  final randomHeartRate = heartRateNotifier
+                                      .pulses[randomIndex].value;
+
+                                  return Text(
+                                    randomHeartRate.toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                } else {
+                                  return Text(
+                                    'No data',
+                                    style: TextStyle(color: Colors.black),
+                                  );
+                                }
+                              },
+                            ),
+                            Text(
+                              "BPM",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(width: 90),
+                    CircularCountDownTimer(
+                      duration: _duration,
+                      initialDuration: 0,
+                      controller: _controller,
+                      width: MediaQuery.of(context).size.width / 2.7,
+                      height: MediaQuery.of(context).size.height / 2.7,
+                      ringColor: Color.fromARGB(255, 247, 236, 137)!,
+                      fillColor: Colors.orange!,
+                      backgroundColor: Colors.red,
+                      backgroundGradient: null,
+                      strokeWidth: 30.0,
+                      strokeCap: StrokeCap.round,
+                      textStyle: TextStyle(
+                        fontSize: 30.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textFormat: CountdownTextFormat.MM_SS,
+                      isReverse: false,
+                      isReverseAnimation: false,
+                      isTimerTextShown: true,
+                      autoStart: false,
+                    ),
+                    //FFAFSA
+                  ],
                 ),
               ),
-              if (_isCalendarVisible)
-                SfDateRangePicker(
-                  view: DateRangePickerView.month,
-                  monthViewSettings: const DateRangePickerMonthViewSettings(
-                    showWeekNumber: true,
-                    weekNumberStyle: DateRangePickerWeekNumberStyle(
-                      textStyle: TextStyle(fontStyle: FontStyle.italic),
-                      backgroundColor: Colors.red,
-                    ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildPickerLabel('Minutes'),
+                      SizedBox(width: 10),
+                      _buildDurationInput('Minutes', _selectedMinutes, (value) {
+                        setState(() {
+                          _selectedMinutes = int.tryParse(value) ?? 0;
+                          _updateDuration();
+                        });
+                      }),
+                    ],
                   ),
-                ),
-              SizedBox(height: 100),
+                  SizedBox(
+                    width: 100,
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(width: 50),
+                      _buildPickerLabel('Seconds'),
+                      SizedBox(width: 10),
+                      _buildDurationInput('Seconds', _selectedSeconds, (value) {
+                        setState(() {
+                          _selectedSeconds = int.tryParse(value) ?? 0;
+                          _updateDuration();
+                        });
+                      }),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
               Center(
-                child: Stack(
-                  alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Transform.scale(
-                      scale: 10.0, // Adjust the scale factor as needed
-                      child: Icon(Icons.favorite, color: Colors.red),
+                    _button(
+                      title: "Start",
+                      onPressed: () => _controller.restart(duration: _duration),
                     ),
-                    Consumer<HeartRateNotifier>(
-                      builder: (context, heartRateNotifier, child) {
-                        // Check if there is any heart rate data available
-                        if (heartRateNotifier.pulses.isNotEmpty) {
-                          // Generate a random index to select a heart rate value
-                          final randomIndex =
-                              Random().nextInt(heartRateNotifier.pulses.length);
-                          final randomHeartRate =
-                              heartRateNotifier.pulses[randomIndex].value;
-
-                          return Text(
-                            randomHeartRate.toString(),
-                            style: TextStyle(color: Colors.black, fontSize: 50),
-                          );
-                        } else {
-                          // If no heart rate data available, display a placeholder or empty text
-                          return Text(
-                            'No data',
-                            style: TextStyle(color: Colors.white),
-                          );
-                        }
-                      },
+                    const SizedBox(
+                      width: 2,
+                    ),
+                    _button(
+                      title: "Pause",
+                      onPressed: () => _controller.pause(),
+                    ),
+                    const SizedBox(
+                      width: 2,
+                    ),
+                    _button(
+                      title: "Resume",
+                      onPressed: () => _controller.resume(),
+                    ),
+                    const SizedBox(
+                      width: 2,
+                    ),
+                    _button(
+                      title: "Restart",
+                      onPressed: () => _controller.restart(duration: _duration),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 150),
+              SizedBox(
+                height: 20,
+              ),
               Column(
                 children: [
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton.icon(
                             onPressed: () {
                               _showTotal(context);
                             },
-                            icon: Icon(Icons.local_drink), // Icon on the left
+                            icon: Icon(Icons.local_drink),
                             label: Text(
                               "Add Water",
-                              style: TextStyle(
-                                fontSize: 19, // Adjust the font size as needed
-                              ),
-                            ), // Button label
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 16,
-                                  horizontal: 24), // Adjust padding as needed
+                              style: TextStyle(fontSize: 19),
                             ),
                           ),
                           SizedBox(
                             height: 20,
-                          ), // Add some spacing between the button and text field
+                          ),
                           ElevatedButton.icon(
                             onPressed: () {
                               _consumeWater(context);
                             },
-                            icon: Icon(
-                                Icons.local_drink_outlined), // Icon on the left
+                            icon: Icon(Icons.local_drink_outlined),
                             label: Text(
                               "Consume Water",
-                              style: TextStyle(
-                                fontSize: 19, // Adjust the font size as needed
-                              ),
-                            ), // Button label
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 16,
-                                  horizontal: 24), // Adjust padding as needed
+                              style: TextStyle(fontSize: 19),
                             ),
                           ),
                         ],
                       ),
                       SizedBox(
                         height: 20,
-                      ), // Add some spacing between the button and text field
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -163,17 +240,10 @@ class _TrainingPage extends State<TrainingPage> {
                               if (snapshot.hasData) {
                                 final sp = snapshot.data!;
                                 final tempCount = sp.getInt('counter');
-                                if (tempCount == null) {
-                                  _total = 0;
-                                } else {
-                                  _total = tempCount;
-                                }
+                                final _total = tempCount ?? 0;
                                 return Text(
                                   _total.toString(),
-                                  style: TextStyle(
-                                    fontSize:
-                                        24, // Adjust the font size as needed
-                                  ),
+                                  style: TextStyle(fontSize: 24),
                                 );
                               } else {
                                 return CircularProgressIndicator();
@@ -182,77 +252,7 @@ class _TrainingPage extends State<TrainingPage> {
                           ),
                           Text(
                             "ml remaining",
-                            style: TextStyle(
-                              fontSize: 24, // Adjust the font size as needed
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Text field to display the total
-                    ],
-                  ),
-                  SizedBox(height: 30),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton.icon(
-                                onPressed: () {
-                                  _startTimer(context);
-                                },
-                                icon: Icon(Icons.timer), // Icon on the left
-                                label: Text(
-                                  "Set Timer",
-                                  style: TextStyle(
-                                    fontSize:
-                                        20, // Adjust the font size as needed
-                                  ),
-                                ), // Button label
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 16,
-                                      horizontal:
-                                          24), // Adjust padding as needed
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              // Add some spacing between the button and text field
-                              ElevatedButton.icon(
-                                onPressed: () {
-                                  _resetTimer();
-                                },
-                                icon: Icon(Icons.restore), // Icon on the left
-                                label: Text(
-                                  "Reset Timer",
-                                  style: TextStyle(
-                                    fontSize:
-                                        20, // Adjust the font size as needed
-                                  ),
-                                ), // Button label
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 16,
-                                      horizontal:
-                                          24), // Adjust padding as needed
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ), // Add some spacing between the button and text field
-                          Text(
-                            _formatTime(_timer),
-                            style: TextStyle(
-                              fontSize: 24, // Adjust the font size as needed
-                            ),
+                            style: TextStyle(fontSize: 24),
                           ),
                         ],
                       ),
@@ -267,15 +267,48 @@ class _TrainingPage extends State<TrainingPage> {
     );
   }
 
-  void _resetTimer() {
+  Widget _button({required String title, VoidCallback? onPressed}) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Colors.red),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          title,
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPickerLabel(String label) {
+    return Text(label);
+  }
+
+  Widget _buildDurationInput(
+      String label, int value, Function(String) onChanged) {
+    return SizedBox(
+      width: 60,
+      child: TextField(
+        keyboardType: TextInputType.number,
+        textAlign: TextAlign.center,
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+        ),
+      ),
+    );
+  }
+
+  void _updateDuration() {
     setState(() {
-      _timer = 0; // Reset the timer to zero
+      _duration = _selectedMinutes * 60 + _selectedSeconds;
     });
   }
 
   void _consumeWater(BuildContext context) {
-    // Implement the functionality to add a number and show the total
-    int number = 0; // Initialize the number variable
+    int number = 0;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -284,7 +317,6 @@ class _TrainingPage extends State<TrainingPage> {
           content: TextField(
             keyboardType: TextInputType.number,
             onChanged: (value) {
-              // Update the number variable as the user types
               setState(() {
                 number = int.tryParse(value) ?? 0;
               });
@@ -294,13 +326,12 @@ class _TrainingPage extends State<TrainingPage> {
             ElevatedButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                // Add the new number to the existing total
+                final sp = await SharedPreferences.getInstance();
+                final _total = sp.getInt('counter') ?? 0;
                 if ((_total - number) >= 0) {
                   setState(() {
-                    _total -= number;
+                    sp.setInt('counter', _total - number);
                   });
-                  final sp = await SharedPreferences.getInstance();
-                  await sp.setInt('counter', _total);
                 }
               },
               child: Text('OK'),
@@ -312,8 +343,7 @@ class _TrainingPage extends State<TrainingPage> {
   }
 
   void _showTotal(BuildContext context) {
-    // Implement the functionality to add a number and show the total
-    int number = 0; // Initialize the number variable
+    int number = 0;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -322,7 +352,6 @@ class _TrainingPage extends State<TrainingPage> {
           content: TextField(
             keyboardType: TextInputType.number,
             onChanged: (value) {
-              // Update the number variable as the user types
               setState(() {
                 number = int.tryParse(value) ?? 0;
               });
@@ -332,12 +361,11 @@ class _TrainingPage extends State<TrainingPage> {
             ElevatedButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                // Add the new number to the existing total
-                setState(() {
-                  _total += number;
-                });
                 final sp = await SharedPreferences.getInstance();
-                await sp.setInt('counter', _total);
+                final _total = sp.getInt('counter') ?? 0;
+                setState(() {
+                  sp.setInt('counter', _total + number);
+                });
               },
               child: Text('Ok'),
             ),
@@ -347,95 +375,34 @@ class _TrainingPage extends State<TrainingPage> {
     );
   }
 
-  void _startTimer(BuildContext context) {
-    // Implement the functionality to set a timer
-    int duration = 60; // Initial duration in seconds
-    int remainingTime =
-        duration * 100; // Initialize remaining time in centiseconds
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Set Timer'),
-          content: TextField(
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              // Update the duration variable as the user types
-              setState(() {
-                //duration = int.tryParse(value) ?? 0;
-                //remainingTime = duration * 100;
-              });
-            },
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Start the timer
-                Timer.periodic(Duration(milliseconds: 10), (Timer timer) {
-                  setState(() {
-                    if (remainingTime == 0) {
-                      timer.cancel(); // Stop the timer when it reaches zero
-                    } else {
-                      remainingTime -=
-                          1; // Decrement remaining time by 1 centisecond
-                      _timer = remainingTime; // Update timer variable
-                    }
-                  });
-                });
-              },
-              child: Text('Start Timer'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  String _formatTime(int time) {
-    int seconds = time ~/ 100; // Calculate seconds
-    int centiseconds = time % 100; // Calculate centiseconds
-    return '$seconds:$centiseconds'; // Return formatted time
-  }
-
   Future<int?> _authorize() async {
-    //Create the request
     final url = ImpactHR.baseUrl + ImpactHR.tokenEndpoint;
     final body = {'username': ImpactHR.username, 'password': ImpactHR.password};
 
-    //Get the response
-    print('Calling: $url');
+    //print('Calling: $url');
     final response = await http.post(Uri.parse(url), body: body);
 
-    //If 200, set the token
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
       final sp = await SharedPreferences.getInstance();
       sp.setString('access', decodedResponse['access']);
       sp.setString('refresh', decodedResponse['refresh']);
-    } //if
+    }
 
-    //Just return the status code
     return response.statusCode;
-  } //_authorize
+  }
 
-  //This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
   Future<List<HeartRate>?> _requestData() async {
-    //Initialize the result
     List<HeartRate>? result;
 
-    //Get the stored access token (Note that this code does not work if the tokens are null)
     final sp = await SharedPreferences.getInstance();
     var access = sp.getString('access');
 
-    //If access token is expired, refresh it
     if (JwtDecoder.isExpired(access!)) {
       await _refreshTokens();
       access = sp.getString('access');
-    } //if
+    }
 
-    //Create the (representative) request
     final day = '2023-05-04';
     final url = ImpactHR.baseUrl +
         ImpactHR.hrEndpoint +
@@ -443,48 +410,39 @@ class _TrainingPage extends State<TrainingPage> {
         '/day/$day/';
     final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};
 
-    //Get the response
-    print('Calling: $url');
+    //print('Calling: $url');
     final response = await http.get(Uri.parse(url), headers: headers);
 
-    //if OK parse the response, otherwise return null
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
       result = [];
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
         result.add(HeartRate.fromJson(decodedResponse['data']['date'],
             decodedResponse['data']['data'][i]));
-      } //for
-    } //if
-    else {
+      }
+    } else {
       result = null;
-    } //else
+    }
 
-    //Return the result
     return result;
-  } //_requestData
+  }
 
-  //This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
   Future<int> _refreshTokens() async {
-    //Create the request
     final url = ImpactHR.baseUrl + ImpactHR.refreshEndpoint;
     final sp = await SharedPreferences.getInstance();
     final refresh = sp.getString('refresh');
     final body = {'refresh': refresh};
 
-    //Get the respone
-    print('Calling: $url');
+    //print('Calling: $url');
     final response = await http.post(Uri.parse(url), body: body);
 
-    //If 200 set the tokens
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
       final sp = await SharedPreferences.getInstance();
       sp.setString('access', decodedResponse['access']);
       sp.setString('refresh', decodedResponse['refresh']);
-    } //if
+    }
 
-    //Return just the status code
     return response.statusCode;
   }
 
@@ -492,18 +450,11 @@ class _TrainingPage extends State<TrainingPage> {
     List<HeartRate>? heartRates = await _requestData();
     if (heartRates != null && heartRates.isNotEmpty) {
       setState(() {
-        _heartRate =
-            heartRates.first.value.toString(); // Update heart rate value
+        _heartRate = heartRates.first.value.toString();
       });
-
-      // Print each heart rate value in the console
-      print("Heart Rates:");
       heartRates.forEach((heartRate) {
         Provider.of<HeartRateNotifier>(context, listen: false)
             .addProduct(heartRate);
-        /*print(
-            "Time: ${heartRate.time}, Value: ${heartRate.value}, Confidence: ${heartRate.confidence}");
-      */
       });
     } else {
       print("Unable to fetch Heart Rate datas...");
@@ -515,9 +466,8 @@ class _TrainingPage extends State<TrainingPage> {
   void initState() {
     super.initState();
     _authorize();
-    _getHeartRate(); // Automatically authorize when the page is entered
-    // Start a timer that updates the heart rate text every second
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      _getHeartRate();
       updateHeartRateText();
     });
   }

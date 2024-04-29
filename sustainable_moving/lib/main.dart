@@ -20,7 +20,6 @@ void main() {
 
 class SustainableMovingApp extends StatelessWidget {
   const SustainableMovingApp({Key? key}) : super(key: key);
-
   // WRAP IN A FUTUREBUILDER PER IL LOGIN
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class SustainableMovingApp extends StatelessWidget {
             create: (_) => HeartRateNotifier()),
       ],
       child: MaterialApp(
-        initialRoute: HomePage.routename,
+        initialRoute: NavBar.routename,
         routes: {
           HomePage.routename: (context) => HomePage(),
           GetDistanceFeature.routename: (context) => GetDistanceFeature(),
