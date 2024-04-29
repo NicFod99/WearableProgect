@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -13,6 +14,7 @@ import 'package:sustainable_moving/Impact/impact.dart';
 import 'package:sustainable_moving/Models/heartRate.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
+import 'package:scroll_datetime_picker/scroll_datetime_picker.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({Key? key}) : super(key: key);
@@ -33,6 +35,8 @@ class _TrainingPage extends State<TrainingPage> {
   int _duration = 0;
   int _selectedMinutes = 0;
   int _selectedSeconds = 0;
+
+  DateTime time = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -116,77 +120,50 @@ class _TrainingPage extends State<TrainingPage> {
                         fontWeight: FontWeight.bold,
                       ),
                       textFormat: CountdownTextFormat.MM_SS,
-                      isReverse: false,
+                      isReverse: true,
                       isReverseAnimation: false,
                       isTimerTextShown: true,
                       autoStart: false,
                     ),
-                    //FFAFSA
                   ],
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildPickerLabel('Minutes'),
-                      SizedBox(width: 10),
-                      _buildDurationInput('Minutes', _selectedMinutes, (value) {
-                        setState(() {
-                          _selectedMinutes = int.tryParse(value) ?? 0;
-                          _updateDuration();
-                        });
-                      }),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 100,
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(width: 50),
-                      _buildPickerLabel('Seconds'),
-                      SizedBox(width: 10),
-                      _buildDurationInput('Seconds', _selectedSeconds, (value) {
-                        setState(() {
-                          _selectedSeconds = int.tryParse(value) ?? 0;
-                          _updateDuration();
-                        });
-                      }),
-                    ],
-                  ),
-                ],
-              ),
+              _buildDurationInput('Timer', _selectedMinutes,
+                  (minutes, seconds) {
+                setState(() {
+                  _selectedMinutes = minutes;
+                  _selectedSeconds = seconds;
+                  _updateDuration();
+                });
+              }),
               SizedBox(height: 20),
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _button(
-                      title: "Start",
+                      icon: Icons.play_arrow,
                       onPressed: () => _controller.restart(duration: _duration),
                     ),
                     const SizedBox(
                       width: 2,
                     ),
                     _button(
-                      title: "Pause",
+                      icon: Icons.pause,
                       onPressed: () => _controller.pause(),
                     ),
                     const SizedBox(
                       width: 2,
                     ),
                     _button(
-                      title: "Resume",
+                      icon: Icons.double_arrow,
                       onPressed: () => _controller.resume(),
                     ),
                     const SizedBox(
                       width: 2,
                     ),
                     _button(
-                      title: "Restart",
+                      icon: Icons.restart_alt,
                       onPressed: () => _controller.restart(duration: _duration),
                     ),
                   ],
@@ -267,16 +244,16 @@ class _TrainingPage extends State<TrainingPage> {
     );
   }
 
-  Widget _button({required String title, VoidCallback? onPressed}) {
+  Widget _button({required IconData icon, VoidCallback? onPressed}) {
     return Expanded(
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(Colors.red),
         ),
         onPressed: onPressed,
-        child: Text(
-          title,
-          style: const TextStyle(color: Colors.white),
+        child: Icon(
+          icon,
+          color: Colors.white,
         ),
       ),
     );
@@ -287,24 +264,48 @@ class _TrainingPage extends State<TrainingPage> {
   }
 
   Widget _buildDurationInput(
-      String label, int value, Function(String) onChanged) {
+      String label, int value, Function(int, int) onChanged) {
     return SizedBox(
-      width: 60,
-      child: TextField(
-        keyboardType: TextInputType.number,
-        textAlign: TextAlign.center,
-        onChanged: onChanged,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-        ),
+      width: 300, // Increase width
+      child: Column(
+        children: [
+          Text(
+            label,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 5),
+          ScrollDateTimePicker(
+            itemExtent: 40, // Adjust item extent for wider scroll
+            infiniteScroll: true,
+            dateOption: DateTimePickerOption(
+              dateFormat: DateFormat(
+                'HHmmss',
+              ),
+              minDate: DateTime(2000, 6),
+              maxDate: DateTime(2024, 6),
+              initialDate: DateTime.now(),
+            ),
+            onChange: (datetime) {
+              setState(() {
+                _selectedMinutes = datetime.minute;
+                _selectedSeconds = datetime.second;
+              });
+              onChanged(datetime.minute, datetime.second);
+            },
+            centerWidget: DateTimePickerCenterWidget(
+              builder: (context, constraints, child) => const DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(width: 3),
+                    bottom: BorderSide(width: 3),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
-  }
-
-  void _updateDuration() {
-    setState(() {
-      _duration = _selectedMinutes * 60 + _selectedSeconds;
-    });
   }
 
   void _consumeWater(BuildContext context) {
@@ -462,6 +463,12 @@ class _TrainingPage extends State<TrainingPage> {
     return heartRates;
   }
 
+  void _updateDuration() {
+    setState(() {
+      _duration = _selectedMinutes * 60 + _selectedSeconds;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -470,6 +477,8 @@ class _TrainingPage extends State<TrainingPage> {
       _getHeartRate();
       updateHeartRateText();
     });
+
+    _updateDuration();
   }
 
   void updateHeartRateText() {
