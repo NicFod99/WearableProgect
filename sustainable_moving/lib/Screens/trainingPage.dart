@@ -15,6 +15,8 @@ import 'package:sustainable_moving/Models/heartRate.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:scroll_datetime_picker/scroll_datetime_picker.dart';
+import 'package:draw_graph/draw_graph.dart';
+import 'package:draw_graph/models/feature.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({Key? key}) : super(key: key);
@@ -35,8 +37,20 @@ class _TrainingPage extends State<TrainingPage> {
   int _duration = 0;
   int _selectedMinutes = 0;
   int _selectedSeconds = 0;
-
   DateTime time = DateTime.now();
+
+  final List<Feature> features = [
+    Feature(
+      title: "Heart Beat",
+      color: Colors.red,
+      data: [],
+    ),
+    Feature(
+      title: "Water Drank",
+      color: Colors.blue,
+      data: [1, 0.8, 0.6, 0.7, 0.3],
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -230,6 +244,41 @@ class _TrainingPage extends State<TrainingPage> {
                           Text(
                             "ml remaining",
                             style: TextStyle(fontSize: 24),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 64.0),
+                            child: Text(
+                              "Tasks Track",
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ),
+                          LineGraph(
+                            features: features,
+                            size: Size(320, 400),
+                            labelX: [
+                              'Day 1',
+                              'Day 2',
+                              'Day 3',
+                              'Day 4',
+                              'Day 5'
+                            ],
+                            labelY: ['20%', '40%', '60%', '80%', '100%'],
+                            showDescription: true,
+                            graphColor: Colors.black,
+                            graphOpacity: 0.2,
+                            verticalFeatureDirection: false,
+                            descriptionHeight: 130,
                           ),
                         ],
                       ),
@@ -457,9 +506,17 @@ class _TrainingPage extends State<TrainingPage> {
         Provider.of<HeartRateNotifier>(context, listen: false)
             .addProduct(heartRate);
       });
+      lista.pulses = heartRates!;
+      print('Number of elements in lista.pulses: ${lista.pulses.length}');
+      // Set data of the first feature
+      features[0].data = _dataPicker();
+      for (int i = 0; i < features[0].data.length; ++i) {
+        features[0].data[i] *= 0.01;
+      }
     } else {
       print("Unable to fetch Heart Rate datas...");
     }
+
     return heartRates;
   }
 
@@ -499,5 +556,18 @@ class _TrainingPage extends State<TrainingPage> {
         heartRateText = 'No data';
       }
     });
+  }
+
+  List<double> _dataPicker() {
+    List<double> heartRatetoList = [];
+    for (int i = 0; i < 5; ++i) {
+      HeartRate heartRate = lista.pulses[i];
+      if (heartRate != null && heartRate.value != null) {
+        heartRatetoList.add(heartRate.value.toDouble());
+      } else {
+        print('Invalid HeartRate object at index $i');
+      }
+    }
+    return heartRatetoList;
   }
 }
