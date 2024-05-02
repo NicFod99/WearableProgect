@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:sustainable_moving/Models/favorite.dart';
 import 'package:sustainable_moving/Models/items.dart';
 
+/* Pagine Favorite, prende dal listato item e aggiunge tramite item builder ciò
+ * che è presente nella lista item del provider Favorite */
+
 class FavoritePage extends StatelessWidget {
   const FavoritePage({Key? key}) : super(key: key);
 

@@ -18,9 +18,13 @@ void main() {
   runApp(SustainableMovingApp());
 }
 
+/* MAIN, ci sono 3 provider, Heart e Distance fanno una get e prelevano roba. 
+ * Se volete aggiungere provider per altri get, richiamateli come qui.
+ * Non c'è bisogno di aggiungere le pagine qui. */
+
 class SustainableMovingApp extends StatelessWidget {
   const SustainableMovingApp({Key? key}) : super(key: key);
-  // WRAP IN A FUTUREBUILDER PER IL LOGIN
+  // WRAPPARE IN A FUTUREBUILDER PER IL LOGIN,
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -32,7 +36,9 @@ class SustainableMovingApp extends StatelessWidget {
             create: (_) => HeartRateNotifier()),
       ],
       child: MaterialApp(
-        initialRoute: NavBar.routename,
+        initialRoute:
+            NavBar // <- CAMBIA QUA PER LAVORARE DIRETTAMENTE SU UNA PAGINA
+                .routename,
         routes: {
           HomePage.routename: (context) => HomePage(),
           GetDistanceFeature.routename: (context) => GetDistanceFeature(),

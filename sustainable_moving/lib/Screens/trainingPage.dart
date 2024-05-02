@@ -1,22 +1,24 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:draw_graph/draw_graph.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
 import 'package:provider/provider.dart';
-import 'package:sustainable_moving/Impact/impact.dart';
 import 'package:sustainable_moving/Models/heartRate.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:scroll_datetime_picker/scroll_datetime_picker.dart';
-import 'package:draw_graph/draw_graph.dart';
-import 'package:draw_graph/models/feature.dart';
+import 'package:sustainable_moving/Models/featuresGraph.dart';
+import 'package:water_bottle/water_bottle.dart';
+
+/* Training page pesante, ha diverse funzionalità.
+ * 
+ * TODO: Migliorare la grafica della pagina.
+ *       Evitare che crashi l'app.
+ *       Collegare il grafico con gli HeartRate e ridimensionarlo.
+ *       Collegare nel timer anche le Ore. */
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({Key? key}) : super(key: key);
@@ -28,8 +30,6 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPage extends State<TrainingPage> {
-  bool _isCalendarVisible = false;
-  String? _heartRate;
   HeartRateNotifier lista = HeartRateNotifier();
   final Random random = Random();
   String heartRateText = 'No data';
@@ -38,19 +38,13 @@ class _TrainingPage extends State<TrainingPage> {
   int _selectedMinutes = 0;
   int _selectedSeconds = 0;
   DateTime time = DateTime.now();
-
-  final List<Feature> features = [
-    Feature(
-      title: "Heart Beat",
-      color: Colors.red,
-      data: [],
-    ),
-    Feature(
-      title: "Water Drank",
-      color: Colors.blue,
-      data: [1, 0.8, 0.6, 0.7, 0.3],
-    ),
-  ];
+  /* Variabili per l'animazione, consiglio di cercare il main dell'example su git
+   * della relativa funzione (ho fatto quasi copia e incolla), se serve. */
+  final plainBottleRef = GlobalKey<WaterBottleState>();
+  final sphereBottleRef = GlobalKey<SphericalBottleState>();
+  final triangleBottleRef = GlobalKey<TriangularBottleState>();
+  var waterLevel = 0.5;
+  var selectedStyle = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +59,7 @@ class _TrainingPage extends State<TrainingPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FittedBox(
+                // ROW DEL CUORE E DEL TIMER
                 child: Row(
                   children: [
                     SizedBox(
@@ -77,6 +72,9 @@ class _TrainingPage extends State<TrainingPage> {
                           scale: 9.0,
                           child: Icon(Icons.favorite, color: Colors.red),
                         ),
+                        /* E' il cuore che prende un valore random dal listato
+                         * pulses del notifier di heartRate e lo mostra a schermo
+                         * ci sono stacked la scritta e l'icona del cuore. */
                         Column(
                           children: [
                             Consumer<HeartRateNotifier>(
@@ -115,6 +113,8 @@ class _TrainingPage extends State<TrainingPage> {
                         )
                       ],
                     ),
+                    /* Timer settato da _Duration a 0, collegato al widget che 
+                     * crea lo slider del tempo, con cui è incolonnato. */
                     SizedBox(width: 90),
                     CircularCountDownTimer(
                       duration: _duration,
@@ -150,11 +150,15 @@ class _TrainingPage extends State<TrainingPage> {
                   _updateDuration();
                 });
               }),
+              // BOTTONI IN ROW DEL TIMER.
               SizedBox(height: 20),
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const SizedBox(
+                      width: 40,
+                    ),
                     _button(
                       icon: Icons.play_arrow,
                       onPressed: () => _controller.restart(duration: _duration),
@@ -174,11 +178,7 @@ class _TrainingPage extends State<TrainingPage> {
                       onPressed: () => _controller.resume(),
                     ),
                     const SizedBox(
-                      width: 2,
-                    ),
-                    _button(
-                      icon: Icons.restart_alt,
-                      onPressed: () => _controller.restart(duration: _duration),
+                      width: 40,
                     ),
                   ],
                 ),
@@ -189,98 +189,48 @@ class _TrainingPage extends State<TrainingPage> {
               Column(
                 children: [
                   Column(
+                    /* Colonnato tra widget dell'acqua e il grafico i HeartRate 
+                     * e dell'acqua bevuta. Sono entrambi presi di PubDev.com */
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              _showTotal(context);
-                            },
-                            icon: Icon(Icons.local_drink),
-                            label: Text(
-                              "Add Water",
-                              style: TextStyle(fontSize: 19),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              _consumeWater(context);
-                            },
-                            icon: Icon(Icons.local_drink_outlined),
-                            label: Text(
-                              "Consume Water",
-                              style: TextStyle(fontSize: 19),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FutureBuilder(
-                            future: SharedPreferences.getInstance(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                final sp = snapshot.data!;
-                                final tempCount = sp.getInt('counter');
-                                final _total = tempCount ?? 0;
-                                return Text(
-                                  _total.toString(),
-                                  style: TextStyle(fontSize: 24),
-                                );
-                              } else {
-                                return CircularProgressIndicator();
-                              }
-                            },
-                          ),
-                          Text(
-                            "ml remaining",
-                            style: TextStyle(fontSize: 24),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Container(),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 64.0),
-                            child: Text(
-                              "Tasks Track",
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2,
+                      //_buildWaterSlide(), // <- DECOMMENTA QUA PER LO SLIDER ACQUA.
+                      FittedBox(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: Text(
+                                "Tasks Track",
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2,
+                                ),
                               ),
                             ),
-                          ),
-                          LineGraph(
-                            features: features,
-                            size: Size(320, 400),
-                            labelX: [
-                              'Day 1',
-                              'Day 2',
-                              'Day 3',
-                              'Day 4',
-                              'Day 5'
-                            ],
-                            labelY: ['20%', '40%', '60%', '80%', '100%'],
-                            showDescription: true,
-                            graphColor: Colors.black,
-                            graphOpacity: 0.2,
-                            verticalFeatureDirection: false,
-                            descriptionHeight: 130,
-                          ),
-                        ],
+                            LineGraph(
+                              features: features,
+                              size: Size(300, 300),
+                              labelX: [
+                                'Day 1',
+                                'Day 2',
+                                'Day 3',
+                                'Day 4',
+                                'Day 5',
+                              ],
+                              labelY: ['20%', '40%', '60%', '80%', '100%'],
+                              showDescription: true,
+                              graphColor: Colors.black,
+                              graphOpacity: 0.2,
+                              verticalFeatureDirection: false,
+                              descriptionHeight: 100,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -293,6 +243,7 @@ class _TrainingPage extends State<TrainingPage> {
     );
   }
 
+  // Layout del bottone.
   Widget _button({required IconData icon, VoidCallback? onPressed}) {
     return Expanded(
       child: ElevatedButton(
@@ -308,10 +259,106 @@ class _TrainingPage extends State<TrainingPage> {
     );
   }
 
+  // Funzioni copia e incolla dell'acqua slider,
   Widget _buildPickerLabel(String label) {
     return Text(label);
   }
 
+  Widget _buildWaterSlide() {
+    final plain = WaterBottle(
+      key: plainBottleRef,
+      waterColor: Colors.blue,
+      bottleColor: Colors.lightBlue,
+      capColor: Colors.blueGrey,
+    );
+    final sphere = SphericalBottle(
+      key: sphereBottleRef,
+      waterColor: Colors.red,
+      bottleColor: Colors.redAccent,
+      capColor: Colors.grey.shade700,
+    );
+    final triangle = TriangularBottle(
+      key: triangleBottleRef,
+      waterColor: Colors.lime,
+      bottleColor: Colors.limeAccent,
+      capColor: Colors.red,
+    );
+    final bottle = Center(
+      child: SizedBox(
+        width: 200,
+        height: 300,
+        child: selectedStyle == 0
+            ? plain
+            : selectedStyle == 1
+                ? sphere
+                : triangle,
+      ),
+    );
+    final stylePicker = Padding(
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
+      child: Center(
+        child: ToggleButtons(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+              child: Icon(Icons.crop_portrait),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+              child: Icon(Icons.circle_outlined),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+              child: Icon(Icons.change_history),
+            ),
+          ],
+          isSelected: List<bool>.generate(3, (index) => index == selectedStyle),
+          onPressed: (index) {
+            setState(() => selectedStyle = index);
+            plainBottleRef.currentState?.waterLevel = waterLevel;
+            sphereBottleRef.currentState?.waterLevel = waterLevel;
+            triangleBottleRef.currentState?.waterLevel = waterLevel;
+          },
+        ),
+      ),
+    );
+    final waterSlider = Padding(
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.opacity),
+          SizedBox(width: 10),
+          Expanded(
+            child: Slider(
+              value: waterLevel,
+              //max: 1.0,
+              min: 0.0,
+              onChanged: (value) {
+                setState(() {
+                  waterLevel = value;
+                  plainBottleRef.currentState?.waterLevel = waterLevel;
+                  sphereBottleRef.currentState?.waterLevel = waterLevel;
+                  triangleBottleRef.currentState?.waterLevel = waterLevel;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return Column(
+      children: [
+        bottle,
+        stylePicker,
+        waterSlider,
+      ],
+    );
+  }
+
+  // Settaggio del timer slider. Anche qua più o meno copia e incolla.
   Widget _buildDurationInput(
       String label, int value, Function(int, int) onChanged) {
     return SizedBox(
@@ -357,169 +404,6 @@ class _TrainingPage extends State<TrainingPage> {
     );
   }
 
-  void _consumeWater(BuildContext context) {
-    int number = 0;
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Add a Number'),
-          content: TextField(
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              setState(() {
-                number = int.tryParse(value) ?? 0;
-              });
-            },
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                final sp = await SharedPreferences.getInstance();
-                final _total = sp.getInt('counter') ?? 0;
-                if ((_total - number) >= 0) {
-                  setState(() {
-                    sp.setInt('counter', _total - number);
-                  });
-                }
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showTotal(BuildContext context) {
-    int number = 0;
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Add a Number'),
-          content: TextField(
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              setState(() {
-                number = int.tryParse(value) ?? 0;
-              });
-            },
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                final sp = await SharedPreferences.getInstance();
-                final _total = sp.getInt('counter') ?? 0;
-                setState(() {
-                  sp.setInt('counter', _total + number);
-                });
-              },
-              child: Text('Ok'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<int?> _authorize() async {
-    final url = ImpactHR.baseUrl + ImpactHR.tokenEndpoint;
-    final body = {'username': ImpactHR.username, 'password': ImpactHR.password};
-
-    //print('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      final sp = await SharedPreferences.getInstance();
-      sp.setString('access', decodedResponse['access']);
-      sp.setString('refresh', decodedResponse['refresh']);
-    }
-
-    return response.statusCode;
-  }
-
-  Future<List<HeartRate>?> _requestData() async {
-    List<HeartRate>? result;
-
-    final sp = await SharedPreferences.getInstance();
-    var access = sp.getString('access');
-
-    if (JwtDecoder.isExpired(access!)) {
-      await _refreshTokens();
-      access = sp.getString('access');
-    }
-
-    final day = '2023-05-04';
-    final url = ImpactHR.baseUrl +
-        ImpactHR.hrEndpoint +
-        ImpactHR.patientUsername +
-        '/day/$day/';
-    final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};
-
-    //print('Calling: $url');
-    final response = await http.get(Uri.parse(url), headers: headers);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      result = [];
-      for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        result.add(HeartRate.fromJson(decodedResponse['data']['date'],
-            decodedResponse['data']['data'][i]));
-      }
-    } else {
-      result = null;
-    }
-
-    return result;
-  }
-
-  Future<int> _refreshTokens() async {
-    final url = ImpactHR.baseUrl + ImpactHR.refreshEndpoint;
-    final sp = await SharedPreferences.getInstance();
-    final refresh = sp.getString('refresh');
-    final body = {'refresh': refresh};
-
-    //print('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      final sp = await SharedPreferences.getInstance();
-      sp.setString('access', decodedResponse['access']);
-      sp.setString('refresh', decodedResponse['refresh']);
-    }
-
-    return response.statusCode;
-  }
-
-  Future<List<HeartRate>?> _getHeartRate() async {
-    List<HeartRate>? heartRates = await _requestData();
-    if (heartRates != null && heartRates.isNotEmpty) {
-      setState(() {
-        _heartRate = heartRates.first.value.toString();
-      });
-      heartRates.forEach((heartRate) {
-        Provider.of<HeartRateNotifier>(context, listen: false)
-            .addProduct(heartRate);
-      });
-      lista.pulses = heartRates!;
-      print('Number of elements in lista.pulses: ${lista.pulses.length}');
-      // Set data of the first feature
-      features[0].data = _dataPicker();
-      for (int i = 0; i < features[0].data.length; ++i) {
-        features[0].data[i] *= 0.01;
-      }
-    } else {
-      print("Unable to fetch Heart Rate datas...");
-    }
-
-    return heartRates;
-  }
-
   void _updateDuration() {
     setState(() {
       _duration = _selectedMinutes * 60 + _selectedSeconds;
@@ -529,12 +413,13 @@ class _TrainingPage extends State<TrainingPage> {
   @override
   void initState() {
     super.initState();
-    _authorize();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<HeartRateNotifier>(context, listen: false).getHeartRate();
+      Provider.of<HeartRateNotifier>(context, listen: false).authorize();
+    });
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      _getHeartRate();
       updateHeartRateText();
     });
-
     _updateDuration();
   }
 
@@ -560,7 +445,7 @@ class _TrainingPage extends State<TrainingPage> {
 
   List<double> _dataPicker() {
     List<double> heartRatetoList = [];
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < lista.pulses.length; ++i) {
       HeartRate heartRate = lista.pulses[i];
       if (heartRate != null && heartRate.value != null) {
         heartRatetoList.add(heartRate.value.toDouble());

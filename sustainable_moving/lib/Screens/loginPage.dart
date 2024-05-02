@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Screens/navBar.dart';
 
+/* Login page, si passa con ID: "a", PASS: "a" per semplicità, i controller sono
+ * messi nel dispose come suggerito per liberare memoria. 
+ *
+ * TODO: Fare in modo che non richiede ogni volta il login, ma lo salvi in 
+ * shared preference, sicchè lo bypassi */
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 

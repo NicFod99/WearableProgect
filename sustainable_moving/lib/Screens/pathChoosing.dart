@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Models/distance.dart';
 import 'dart:math';
 
+/* Path Choosing page, utilizzata per permettere all'utente di scegliere il per
+ * corso da fare, mettendo le tappe.
+ * 
+ * TODO: Cambiare quel nome de merda HotelBookingScreen -> PathChooser.
+ *       Aggiungere un bottone per inserire la distanza a ogni tappa.
+ *       Confrontare con la total distance e verificare se è fattibile il path.      
+ */
+
 class PathChoosingFeature extends StatefulWidget {
   const PathChoosingFeature({
     this.distance, // Making distance optional
@@ -51,6 +59,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
     _checkOutDate = _checkInDate.add(Duration(days: 1));
   }
 
+  // POP UP Check in
   Future<void> _selectCheckInDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -65,6 +74,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
     }
   }
 
+  // POP UP Check out
   void _selectCheckOutDate(BuildContext context) async {
     DateTime initialDate =
         _checkOutDate.isBefore(_checkInDate.add(Duration(days: 1)))
@@ -83,8 +93,10 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
     }
   }
 
+  // Listato mostrato in basso scorribile.
   void _addChoiceToList() {
-    // Generate a random distance value between 1 and 100 kilometers
+    // Generate a random distance value between 1 and 20 kilometers
+    // Per la verifica per semplicità generavo una distanza random (Togliere).
     int randomDistance = Random().nextInt(20) + 1;
 
     String choice =
@@ -94,7 +106,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
       choices.add(choice);
       totalDistance += randomDistance;
 
-      // Print "Ok" or "Not possible" based on the comparison
+      // Questo è il mio try per la total distance, qualcosa non funziona.
       if (widget.distance != null && widget.distance!.value > totalDistance) {
         print("Ok");
       } else {
@@ -103,6 +115,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
     });
   }
 
+  // Trash button function per rimuovere un item dal listato.
   void _removeChoice(int index) {
     final removedChoice = choices[index];
     final regex = RegExp(r'Distance: (\d+) km');
@@ -115,6 +128,9 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
       });
     }
   }
+
+  /* Questa build l'ho fatta fare praticamente tutta al bro ChatGPT, sono vari 
+   * bottoni che servono per inserire i dati nel path che poi verrà aggiunto. */
 
   @override
   Widget build(BuildContext context) {
@@ -297,6 +313,7 @@ class _HotelBookingScreenState extends State<HotelBookingScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            // TRASH BUTTON
             Expanded(
               child: ListView.builder(
                 itemCount: choices.length,

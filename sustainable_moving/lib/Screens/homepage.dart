@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Screens/loginPage.dart';
 
+/* Pagine HomePage, ho voluto provare Image.Network, richiama un link dove c'è
+ * la foto, ma potete anche scaricarla e aggiungerla negli assets, e poi richia
+ * marla, come ho fatto nella linea 37. C'è una piccola animazione per l'intro. */
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -44,6 +48,7 @@ class HomePage extends StatelessWidget {
                   builder: (context, constraints) {
                     final fontSize = constraints.maxWidth * 0.05;
                     return TweenAnimationBuilder<double>(
+                      // Animazione scritta.
                       tween: Tween<double>(begin: 1, end: 1.5),
                       duration: Duration(seconds: 1),
                       builder: (context, value, child) {

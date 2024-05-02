@@ -19,6 +19,9 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
   late int selectedIndex; // Track the index of the tapped item
   final Catalog catalog = Catalog(); // Define the catalog here
 
+  /* Init state dove viene utilizzato l'animazione di quando si clicca sul cuore
+   *  o sull'info, viene richiamato ogni volta che la pagina si aggiorna. */
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +36,9 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     selectedIndex = -1; // Initialize selectedIndex to -1
   }
 
+  /* Attenti con il dispose, utilizzato per deallocare memoria (è una free),
+   * aiuta a evitare che crashi. */
+
   @override
   void dispose() {
     _controller.dispose();
@@ -46,11 +52,13 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     _controller.forward(); // Start animation
   }
 
+  // E' il push sulla lista item.
   void _addToFavorites(int index) {
     Provider.of<Favorite>(context, listen: false)
         .addProduct(catalog.items[index]);
   }
 
+  // E' il pop dell'info.
   void _showDescription(BuildContext context, String description) {
     showDialog(
       context: context,
@@ -90,6 +98,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
               ),
             ),
           ),
+          // Disegna il listato di item da addare nella lista item di favorite.
           Expanded(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

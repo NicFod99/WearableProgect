@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Models/items.dart';
 
-//THis class extends ChangeNotifier. It will act as data repository to be shared thorugh the application.
+/* NOTIFIER DI FAVORITE, aggiungere qui le funzioni per ottimizzare il codice
+ * (vedi Heart Rate Notifier), è un notifier fatto ad hoc per la pagina favorite.
+ * */
+
 class Favorite extends ChangeNotifier {
   //For simplicity, a product is just a String.
   List<PathData> products = [];

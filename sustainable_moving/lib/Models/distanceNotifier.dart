@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Models/distance.dart';
 
-//THis class extends ChangeNotifier. It will act as data repository to be shared thorugh the application.
+/* NOTIFIER DI DISTANCE, aggiungere qui le funzioni per ottimizzare il codice
+ * (vedi Heart Rate Notifier) */
+
 class DistanceNotifier extends ChangeNotifier {
   //For simplicity, a product is just a String.
   List<Distance> distances = [];

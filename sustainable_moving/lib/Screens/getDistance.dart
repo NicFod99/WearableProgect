@@ -9,6 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:sustainable_moving/Models/distanceNotifier.dart';
 
+/* Pagina getDistance, tramite due bottoni fai l'authorize, il delete, c'è anche
+ * un bottone per fare il get DOPO l'AUTHORIZE (altrimenti crasha).
+ * Printo tutto nella pagina e il totale.
+ * 
+ * TODO: Utilizza tutte le distanze per fare un totaleKM e utilizzarlo nella 
+ * pagina PathChoosing per verificare se l'utente riesca a percorrere tutto il 
+ * percorso preimpostato (ex. Mette un totale di 100 km, la get torna totale 90
+ * e quindi viene printato ("Non riuscirai a completare tutto il percorso così")
+ * */
+
 class GetDistanceFeature extends StatefulWidget {
   const GetDistanceFeature({Key? key}) : super(key: key);
 

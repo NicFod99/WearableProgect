@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+/* Profile page, utilizzata dall'utente per cambiare foto e info.
+ * 
+ * TODO: Migliorare qusta pagina aggiungendo funzionalità per l'utente, fate voi.*/
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -36,6 +40,7 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
     Navigator.pop(context); // Close the dialog
   }
 
+  // Funzione per prendere la foto dalla galleria (funziona bene, testato).
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
