@@ -193,7 +193,7 @@ class _TrainingPage extends State<TrainingPage> {
                      * e dell'acqua bevuta. Sono entrambi presi di PubDev.com */
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      //_buildWaterSlide(), // <- DECOMMENTA QUA PER LO SLIDER ACQUA.
+                      _buildWaterSlide(), // <- DECOMMENTA QUA PER LO SLIDER ACQUA.
                       FittedBox(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -413,10 +413,9 @@ class _TrainingPage extends State<TrainingPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<HeartRateNotifier>(context, listen: false).getHeartRate();
-      Provider.of<HeartRateNotifier>(context, listen: false).authorize();
-    });
+    Provider.of<HeartRateNotifier>(context, listen: false).getHeartRate();
+    Provider.of<HeartRateNotifier>(context, listen: false).authorize();
+
     Timer.periodic(const Duration(seconds: 1), (timer) {
       updateHeartRateText();
     });
@@ -444,15 +443,8 @@ class _TrainingPage extends State<TrainingPage> {
   }
 
   List<double> _dataPicker() {
-    List<double> heartRatetoList = [];
-    for (int i = 0; i < lista.pulses.length; ++i) {
-      HeartRate heartRate = lista.pulses[i];
-      if (heartRate != null && heartRate.value != null) {
-        heartRatetoList.add(heartRate.value.toDouble());
-      } else {
-        print('Invalid HeartRate object at index $i');
-      }
-    }
-    return heartRatetoList;
+    List<double> heartRatetoList =
+        lista.pulses.map((e) => e.value.toDouble()).toList();
+    return heartRatetoList.take(5).toList();
   }
 }

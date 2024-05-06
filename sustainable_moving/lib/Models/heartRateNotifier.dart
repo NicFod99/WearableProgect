@@ -7,10 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sustainable_moving/Models/heartRate.dart';
 import 'package:sustainable_moving/Impact/impact.dart';
+import 'package:draw_graph/models/feature.dart';
 
 /* NOTIFIER DI DISTANCE, aggiungere qui le funzioni per ottimizzare il codice
  * il codice delle get è stato fatto qui per ottimizzare (dovrebbe ottimizzare)
  * */
+
+final List<Feature> features = [
+  Feature(
+    title: "BPM",
+    color: Colors.red,
+    data: 
+  ),
+  
+  Feature(
+    title: "Water",
+    color: Colors.blue,
+    data: [1, 0.8, 0.6, 0.7, 0.3],
+  ),
+];
+
 
 class HeartRateNotifier extends ChangeNotifier {
   List<HeartRate> pulses = [];
@@ -64,7 +80,6 @@ class HeartRateNotifier extends ChangeNotifier {
     List<HeartRate>? heartRates = await _requestData();
     if (heartRates != null && heartRates.isNotEmpty) {
       pulses = heartRates;
-      print('Number of elements in pulses: ${pulses.length}');
     } else {
       print("Unable to fetch Heart Rate datas...");
     }
@@ -103,5 +118,11 @@ class HeartRateNotifier extends ChangeNotifier {
     }
 
     return result;
+  }
+
+  List<double> _dataPicker() {
+    List<double> heartRatetoList =
+        pulses.map((e) => e.value.toDouble()).toList();
+    return heartRatetoList.take(5).toList();
   } //clearCart
 }//Cart

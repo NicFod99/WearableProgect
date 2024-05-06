@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Models/items.dart';
 
 /* NOTIFIER DI FAVORITE, aggiungere qui le funzioni per ottimizzare il codice
- * (vedi Heart Rate Notifier), è un notifier fatto ad hoc per la pagina favorite.
+ * (vedi Heart Rate Notifier), è un notifier fatto ad hoc per la pagina favorite
  * */
 
 class Favorite extends ChangeNotifier {
