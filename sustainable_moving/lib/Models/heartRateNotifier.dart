@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:sustainable_moving/Models/featuresGraph.dart';
+//import 'package:sustainable_moving/Models/featuresGraph.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +17,7 @@ final List<Feature> features = [
   Feature(
     title: "BPM",
     color: Colors.red,
-    data: 
+    data: []
   ),
   
   Feature(
