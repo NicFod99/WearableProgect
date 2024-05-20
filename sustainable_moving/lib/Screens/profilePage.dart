@@ -40,10 +40,20 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
     Navigator.pop(context); // Close the dialog
   }
 
+    void _deletePersonalInfo() {
+    // Clear the personal info and image path
+    // In a real app you would need to call an API to delete the personal info from the server
+    setState(() {
+      _personalInfo = "Your personal info...";
+      _imagePath = "";
+    });
+    Navigator.pop(context); // Close the dialog
+  }
+
   // Funzione per prendere la foto dalla galleria (funziona bene, testato).
   Future<void> _pickImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
@@ -142,6 +152,34 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
                 label: Text("Edit Personal Info"),
               ),
             ),
+            // Button to delete personal info
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Delete Personal Info'),
+                        content: Text('Are you sure you want to delete your personal info?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: _deletePersonalInfo,
+                            child: Text('Delete'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                icon: Icon(Icons.delete),
+                label: Text("Delete Personal Info"),
+              ),
+            ),  
             SizedBox(height: 20),
             Text(
               "About",
