@@ -162,6 +162,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                                     },
                                     icon: Icon(Icons.favorite),
                                     color: Colors.white,
+                                    tooltip: 'Add to Favorites',
                                   ),
                                   IconButton(
                                     onPressed: () {
@@ -173,6 +174,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                                     },
                                     icon: Icon(Icons.info),
                                     color: Colors.white,
+                                    tooltip: 'Show Description',
                                   ),
                                 ],
                               ),
