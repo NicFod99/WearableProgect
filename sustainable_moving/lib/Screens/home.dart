@@ -18,6 +18,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
   late Animation<double> _animation;
   late int selectedIndex; // Track the index of the tapped item
   final Catalog catalog = Catalog(); // Define the catalog here
+  late List<bool> _isFavorite; // Tracks the favorite status of each item
 
   /* Init state dove viene utilizzato l'animazione di quando si clicca sul cuore
    *  o sull'info, viene richiamato ogni volta che la pagina si aggiorna. */
@@ -34,6 +35,8 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
         setState(() {});
       });
     selectedIndex = -1; // Initialize selectedIndex to -1
+    _isFavorite = List<bool>.filled(catalog.items.length,
+        false); // Initialize all elements as non-favorites
   }
 
   /* Attenti con il dispose, utilizzato per deallocare memoria (è una free),
@@ -54,6 +57,9 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
 
   // E' il push sulla lista item.
   void _addToFavorites(int index) {
+    setState(() {
+      _isFavorite[index] = !_isFavorite[index]; // Cambia lo stato dei preferiti
+    });
     Provider.of<Favorite>(context, listen: false)
         .addProduct(catalog.items[index]);
   }
@@ -161,7 +167,10 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                                               0); // Start animation from the beginning
                                     },
                                     icon: Icon(Icons.favorite),
-                                    color: Colors.white,
+                                    color: _isFavorite[index]
+                                        ? Colors.red
+                                        : Colors
+                                            .white, // Change the color according to the status
                                     tooltip: 'Add to Favorites',
                                   ),
                                   IconButton(
