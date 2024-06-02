@@ -6,17 +6,28 @@ import 'package:sustainable_moving/Models/items.dart';
  * */
 
 class Favorite extends ChangeNotifier {
-  //For simplicity, a product is just a String.
+  // For simplicity, a product is just a String.
   List<PathData> products = [];
+
   // Method to add a product to the list
   void addProduct(PathData product) {
-    products.add(product);
-    notifyListeners();
-  } //addProduct
+    if (!products.contains(product)) {
+      products.add(product);
+      notifyListeners();
+    }
+  }
+
+  // Method to remove a product from the list
+  void removeProduct(PathData product) {
+    if (products.contains(product)) {
+      products.remove(product);
+      notifyListeners();
+    }
+  }
 
   void clearFavorite() {
     products.clear();
-    //Call the notifyListeners() method to alert that something happened.
+    // Call the notifyListeners() method to alert that something happened.
     notifyListeners();
-  } //clearCart
-}//Cart
+  }
+}

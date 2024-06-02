@@ -58,10 +58,18 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
   // E' il push sulla lista item.
   void _addToFavorites(int index) {
     setState(() {
-      _isFavorite[index] = !_isFavorite[index]; // Cambia lo stato dei preferiti
+      if (_isFavorite[index]) {
+        // Se l'elemento è già nei preferiti (pulsante rosso), rimuovilo
+        _isFavorite[index] = false;
+        Provider.of<Favorite>(context, listen: false)
+            .removeProduct(catalog.items[index]);
+      } else {
+        // Se l'elemento non è nei preferiti, aggiungilo
+        _isFavorite[index] = true;
+        Provider.of<Favorite>(context, listen: false)
+            .addProduct(catalog.items[index]);
+      }
     });
-    Provider.of<Favorite>(context, listen: false)
-        .addProduct(catalog.items[index]);
   }
 
   // E' il pop dell'info.
