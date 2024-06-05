@@ -10,7 +10,6 @@ import 'package:sustainable_moving/Models/heartRate.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:scroll_datetime_picker/scroll_datetime_picker.dart';
-//import 'package:sustainable_moving/Models/featuresGraph.dart';
 import 'package:water_bottle/water_bottle.dart';
 
 /* Training page pesante, ha diverse funzionalità.

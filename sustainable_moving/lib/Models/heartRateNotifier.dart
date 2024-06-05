@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:jwt_decoder/jwt_decoder.dart';
-//import 'package:sustainable_moving/Models/featuresGraph.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,19 +13,13 @@ import 'package:draw_graph/models/feature.dart';
  * */
 
 final List<Feature> features = [
-  Feature(
-    title: "BPM",
-    color: Colors.red,
-    data: []
-  ),
-  
+  Feature(title: "BPM", color: Colors.red, data: []),
   Feature(
     title: "Water",
     color: Colors.blue,
     data: [1, 0.8, 0.6, 0.7, 0.3],
   ),
 ];
-
 
 class HeartRateNotifier extends ChangeNotifier {
   List<HeartRate> pulses = [];
