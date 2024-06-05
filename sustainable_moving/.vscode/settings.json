@@ -1,4 +1,5 @@
 {
     "git.ignoreLimitWarning": true,
-    "cmake.sourceDirectory": "C:/Users/Nicola/Documents/GitHub/WearableProgect/sustainable_moving/linux"
+    "cmake.sourceDirectory": "C:/Users/Nicola/Documents/GitHub/WearableProgect/sustainable_moving/linux",
+    "cmake.configureOnOpen": false
 }
