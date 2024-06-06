@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Models/favorite.dart';
@@ -54,7 +55,10 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     });
     _controller.forward(); // Start animation
     _showDescription(
-        context, catalog.items[index].description); // Show description on tap
+        context,
+        catalog.items[index].name,
+        catalog.items[index].description,
+        catalog.items[index].length); // Show description and length on tap
   }
 
   // E' il push sulla lista item.
@@ -74,14 +78,34 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     });
   }
 
-  // E' il pop dell'info.
-  void _showDescription(BuildContext context, String description) {
+  // Pop-Up info path
+  void _showDescription(
+      BuildContext context, String name, String description, double length) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Description'),
-          content: Text(description),
+          title: Text(
+            name,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(description),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Text(
+                    'Length: ',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text('$length km'),
+                ],
+              ),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
