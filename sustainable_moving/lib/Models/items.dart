@@ -18,38 +18,38 @@ class PathData {
 class Catalog {
   List<PathData> items = [
     PathData(
-      name: 'Percorso Acquapendente',
+      name: 'Acquapendente path',
       length: 3115,
       description:
-          'Dalla sbarra del Bassanello fino al ponte di Via D’Acquapendente.',
+          'From the Bassanello barrier to the Via D’Acquapendente bridge.',
       imagePath: 'assets/Pd1.jpg',
     ),
     PathData(
-      name: 'Percorso Città Giardino',
+      name: 'Città Giardino path',
       length: 2300,
       description:
-          'Dalla sbarra del Bassanello attraversate l incrocio tenendovi sulla destra del ponte. Appena fatta la curva verso destra scendete dal marciapiede e correte accanto al fiume sulla stradina di erba/terra battuta. Passate sotto il ponte passerella e percorrete la strada fino ad arrivare al ponte Saracinesca. Attraversate il ponte e svoltate subito a destra per percorrere l argine alto alberato di Città Giardino fino ad arrivare al ponte passerella di ferro. Percorretela e svoltare a sinistra. scendete dal marciapiede e ripercorrerete il percorso fatto all andata.',
+          'From the Bassanello barrier cross the intersection keeping to the right of the bridge. As soon as you make the curve to the right, get off the sidewalk and run next to the river on the small grass/beaten earth road. Pass under the footbridge and walk along the road until you reach the Saracensca Bridge. Cross the bridge and turn immediately right to walk along the high tree-lined embankment of Garden City until you reach the iron footbridge. Walk along it and turn left. Get off the sidewalk and retrace the route taken on the way out.',
       imagePath: 'assets/Pd2.jpg',
     ),
     PathData(
-      name: 'Percorso Facciolati',
+      name: 'Facciolati path',
       length: 5000,
       description:
-          'Dalla sbarra del Bassanello fino al ponte di Via Facciolati. Fermatevi prima del secondo ponte all’incrocio con la strada e ritornate. Al ponte con via Acquapendente passate sotto il ponte con stradina in discesa che trovate a destra prima del ponte.',
+          'From the Bassanello barrier to the Via Facciolati bridge. Stop before the second bridge at the intersection with the road and return. At the bridge with Acquapendente Street go under the bridge with small downhill road you find on the right before the bridge.',
       imagePath: 'assets/Pd3.jpg',
     ),
     PathData(
-      name: 'Percorso Terranegra',
+      name: 'Terranegra path',
       length: 8220,
       description:
-          'Dalla sbarra del Bassanello fino al ponte di Terranegra; fermatevi alla sbarra di ferro prima del ponte di Terranegra e ritornate. Al ponte con via Acquapendente e al ponte di Via Facciolati prendete la stradina in discesa che trovate a destra prima di entrambi i ponti. Dopo il passaggio sottoponte di via Facciolati attraversare la strada per rimettervi sul percorso.',
+          'From the Bassanello barrier to the Terranegra bridge; Stop at the iron bar before the Terranegra bridge and return. At the bridge with Via Acquapendente and at the Via Facciolati bridge, take the small downhill road on the right before both bridges. After the underbridge crossing of Via Facciolati cross the road to put yourself back on the path.',
       imagePath: 'assets/Pd4.jpg',
     ),
     PathData(
-      name: 'Percorso Camin',
+      name: 'Camin path',
       length: 10880,
       description:
-          'Dalla sbarra del Bassanello fino al ponte di Terranegra; fermatevi alla sbarra di ferro prima del ponte di Terranegra e ritornate. Al ponte con via Acquapendente e al ponte di Via Facciolati prendete la stradina in discesa che trovate a destra prima di entrambi i ponti. Dopo il passaggio sottoponte di via Facciolati attraversare la strada per rimettervi sul percorso. Al ponte di Terranegra attraversate la strada e proseguire dritti. ',
+          'From the Bassanello barrier to the Terranegra bridge; stop at the iron bar before the Terranegra bridge and return. At the bridge with Via Acquapendente and at the Via Facciolati bridge take the small downhill road on the right before both bridges. After the underbridge crossing of Via Facciolati cross the road to put yourself back on the path. At the Terranegra bridge cross the road and continue straight ahead.',
       imagePath: 'assets/Pd5.jpg',
     ),
   ];
