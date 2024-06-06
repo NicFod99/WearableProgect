@@ -53,6 +53,8 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
       selectedIndex = index; // Update selected index
     });
     _controller.forward(); // Start animation
+    _showDescription(
+        context, catalog.items[index].description); // Show description on tap
   }
 
   // E' il push sulla lista item.
@@ -180,18 +182,6 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                                         : Colors
                                             .white, // Change the color according to the status
                                     tooltip: 'Add to Favorites',
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      _showDescription(context,
-                                          catalog.items[index].description);
-                                      _controller.forward(
-                                          from:
-                                              0); // Start animation from the beginning
-                                    },
-                                    icon: Icon(Icons.info),
-                                    color: Colors.white,
-                                    tooltip: 'Show Description',
                                   ),
                                 ],
                               ),
