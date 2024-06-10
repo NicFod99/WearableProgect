@@ -4,7 +4,7 @@ class Impact {
   static String tokenEndpoint = 'gate/v1/token/';
   static String refreshEndpoint = 'gate/v1/refresh/';
 
-  static String distanceEndpoint = 'data/v1/steps/patients/';
+  static String distanceEndpoint = 'data/v1/distance/patients/';
   static String hrEndpoint = 'data/v1/heart_rate/patients/';
 
   static String username = 'qDBhiJ4dRo';

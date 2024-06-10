@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sustainable_moving/Models/heartRate.dart';
 import 'package:sustainable_moving/Impact/impact.dart';
 import 'package:draw_graph/models/feature.dart';
+import 'package:sustainable_moving/utils/authorize_utils.dart';
 
 /* NOTIFIER DI DISTANCE, aggiungere qui le funzioni per ottimizzare il codice
  * il codice delle get è stato fatto qui per ottimizzare (dovrebbe ottimizzare)
@@ -35,40 +36,6 @@ class HeartRateNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<int?> authorize() async {
-    final url = Impact.baseUrl + Impact.tokenEndpoint;
-    final body = {'username': Impact.username, 'password': Impact.password};
-
-    //print('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      final sp = await SharedPreferences.getInstance();
-      sp.setString('access', decodedResponse['access']);
-      sp.setString('refresh', decodedResponse['refresh']);
-    }
-
-    return response.statusCode;
-  }
-
-  Future<int> refreshTokens() async {
-    final url = Impact.baseUrl + Impact.refreshEndpoint;
-    final sp = await SharedPreferences.getInstance();
-    final refresh = sp.getString('refresh');
-    final body = {'refresh': refresh};
-
-    final response = await http.post(Uri.parse(url), body: body);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      sp.setString('access', decodedResponse['access']);
-      sp.setString('refresh', decodedResponse['refresh']);
-    }
-
-    return response.statusCode;
-  }
-
   Future<void> getHeartRate() async {
     List<HeartRate>? heartRates = await _requestData();
     if (heartRates != null && heartRates.isNotEmpty) {
@@ -86,7 +53,7 @@ class HeartRateNotifier extends ChangeNotifier {
     var access = sp.getString('access');
 
     if (JwtDecoder.isExpired(access!)) {
-      await refreshTokens();
+      await AuthorizeUtils.refreshTokens();
       access = sp.getString('access');
     }
 

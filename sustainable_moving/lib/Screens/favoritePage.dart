@@ -60,7 +60,7 @@ class FavoritePage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "Length: ${pathData.length} km",
+                            "Length: ${pathData.length} m",
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white,

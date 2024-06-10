@@ -157,7 +157,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                                     ),
                                   ),
                                   Text(
-                                    "Length: ${catalog.items[index].length} km",
+                                    "Length: ${catalog.items[index].length} m",
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.white,

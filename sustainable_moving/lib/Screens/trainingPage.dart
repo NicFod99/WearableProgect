@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:draw_graph/draw_graph.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:sustainable_moving/Models/heartRate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:scroll_datetime_picker/scroll_datetime_picker.dart';
+import 'package:sustainable_moving/utils/authorize_utils.dart';
 import 'package:water_bottle/water_bottle.dart';
 
 /* Training page pesante, ha diverse funzionalità.
@@ -412,8 +411,8 @@ class _TrainingPage extends State<TrainingPage> {
   @override
   void initState() {
     super.initState();
+
     Provider.of<HeartRateNotifier>(context, listen: false).getHeartRate();
-    Provider.of<HeartRateNotifier>(context, listen: false).authorize();
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
       updateHeartRateText();
