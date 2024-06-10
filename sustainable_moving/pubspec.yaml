@@ -44,12 +44,12 @@ dependencies:
   scroll_datetime_picker: ^0.1.1
   draw_graph: ^1.0.0
   water_bottle: ^0.0.7
+  image_picker: ^0.8.4+4
+  http: ^1.2.1
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  http: ^1.2.1
-  image_picker: ^0.8.4+4
   
   
   # The "flutter_lints" package below contains a set of recommended lints to

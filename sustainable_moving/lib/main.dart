@@ -5,7 +5,6 @@ import 'package:sustainable_moving/Models/distanceNotifier.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:sustainable_moving/Screens/PathChoosing.dart';
 import 'package:sustainable_moving/Screens/editProfile.dart';
-import 'package:sustainable_moving/Screens/getDistance.dart';
 import 'package:sustainable_moving/Screens/home.dart';
 import 'package:sustainable_moving/Screens/navBar.dart';
 import 'package:sustainable_moving/Screens/homepage.dart';
@@ -41,7 +40,6 @@ class SustainableMovingApp extends StatelessWidget {
                 .routename,
         routes: {
           HomePage.routename: (context) => HomePage(),
-          GetDistanceFeature.routename: (context) => GetDistanceFeature(),
           NavBar.routename: (context) => NavBar(),
           ChoosePage.routename: (context) => ChoosePage(),
           PathChoosingFeature.routename: (context) => PathChoosingFeature(),

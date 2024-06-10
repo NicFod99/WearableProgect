@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'dart:convert';
+import 'package:sustainable_moving/Impact/impact.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 /* Profile page, utilizzata dall'utente per cambiare foto e info.
  * 
@@ -265,6 +269,30 @@ Widget build(BuildContext context) {
               },
               child: Text("Delete Personal Info"),
             ),
+            ElevatedButton(
+                  onPressed: () async {
+                    final result = await _authorize();
+                    final message =
+                        result == 200 ? 'Request successful' : 'Request failed';
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(SnackBar(content: Text(message)));
+                  },
+                  child: Text('Authorize the app')),
+              SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    final sp = await SharedPreferences.getInstance();
+                    await sp.remove('access');
+                    await sp.remove('refresh');
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(
+                          SnackBar(content: Text('Tokens have been deleted')));
+                  },
+                  child: Text('Unauthorize the app')),
             SizedBox(height: 20),
             Text(
               "About",
@@ -292,3 +320,25 @@ Widget build(BuildContext context) {
   );
 }
 }
+
+//This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
+  Future<int?> _authorize() async {
+    //Create the request
+    final url = Impact.baseUrl + Impact.tokenEndpoint;
+    final body = {'username': Impact.username, 'password': Impact.password};
+
+    //Get the response
+    print('Calling: $url');
+    final response = await http.post(Uri.parse(url), body: body);
+
+    //If 200, set the token
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      final sp = await SharedPreferences.getInstance();
+      sp.setString('access', decodedResponse['access']);
+      sp.setString('refresh', decodedResponse['refresh']);
+    } //if
+
+    //Just return the status code
+    return response.statusCode;
+  } //_authorize
