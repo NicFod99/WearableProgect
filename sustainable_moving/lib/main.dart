@@ -14,7 +14,7 @@ import 'package:sustainable_moving/Models/favorite.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(SustainableMovingApp());
+  runApp(const SustainableMovingApp());
 }
 
 /* MAIN, ci sono 3 provider, Heart e Distance fanno una get e prelevano roba. 
@@ -22,7 +22,7 @@ void main() {
  * Non c'è bisogno di aggiungere le pagine qui. */
 
 class SustainableMovingApp extends StatelessWidget {
-  const SustainableMovingApp({Key? key}) : super(key: key);
+  const SustainableMovingApp({super.key});
   // WRAPPARE IN A FUTUREBUILDER PER IL LOGIN,
   @override
   Widget build(BuildContext context) {
@@ -39,13 +39,13 @@ class SustainableMovingApp extends StatelessWidget {
             NavBar // <- CAMBIA QUA PER LAVORARE DIRETTAMENTE SU UNA PAGINA
                 .routename,
         routes: {
-          HomePage.routename: (context) => HomePage(),
-          NavBar.routename: (context) => NavBar(),
-          ChoosePage.routename: (context) => ChoosePage(),
-          PathChoosingFeature.routename: (context) => PathChoosingFeature(),
-          LoginPage.routename: (context) => LoginPage(),
-          EditProfile.routename: (context) => EditProfile(),
-          TrainingPage.routename: (context) => TrainingPage(),
+          HomePage.routename: (context) => const HomePage(),
+          NavBar.routename: (context) => const NavBar(),
+          ChoosePage.routename: (context) => const ChoosePage(),
+          PathChoosingFeature.routename: (context) => const PathChoosingFeature(),
+          LoginPage.routename: (context) => const LoginPage(),
+          EditProfile.routename: (context) => const EditProfile(),
+          TrainingPage.routename: (context) => const TrainingPage(),
         },
       ),
     );

@@ -34,7 +34,7 @@ class _PathChoosingFeatureState extends State<PathChoosingFeature> {
 
 class HotelBookingScreen extends StatefulWidget {
   final Distance? distance; // Receive distance from PathChoosingFeature
-  const HotelBookingScreen({Key? key, this.distance}) : super(key: key);
+  const HotelBookingScreen({super.key, this.distance});
 
   @override
   _HotelBookingScreenState createState() => _HotelBookingScreenState();

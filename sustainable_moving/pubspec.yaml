@@ -47,6 +47,7 @@ dependencies:
   image_picker: ^0.8.4+4
   http: ^1.2.1
   circular_countdown_timer: ^0.2.3
+  numberpicker: ^2.1.2
   
 dev_dependencies:
   flutter_test:

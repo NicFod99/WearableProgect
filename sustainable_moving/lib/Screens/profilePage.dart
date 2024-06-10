@@ -108,11 +108,11 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'Profile',
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Center(
                 child: Stack(
                   alignment: Alignment.center,
@@ -133,7 +133,7 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
                                 height: 120,
                               ),
                             )
-                          : Icon(Icons.person,
+                          : const Icon(Icons.person,
                               size: 80), // Placeholder icon if no image
                     ),
                     Positioned(
@@ -141,68 +141,68 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
                       right: 0,
                       child: ElevatedButton(
                         onPressed: _pickImage,
-                        child: Icon(Icons.edit),
+                        child: const Icon(Icons.edit),
                         style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(),
-                          padding: EdgeInsets.all(10),
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(10),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 "Name: $_name",
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
               Text(
                 "Surname: $_surname",
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
               Text(
                 "Height: $_height cm",
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
               Text(
                 "Weight: $_weight kg",
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
               Text(
                 "Sex: $_sex",
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
               Text(
                 "Age: $_age",
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Modify Profile Info'),
+                        title: const Text('Modify Profile Info'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextField(
                               controller: _nameController,
-                              decoration: InputDecoration(labelText: 'Name'),
+                              decoration: const InputDecoration(labelText: 'Name'),
                             ),
                             TextField(
                               controller: _surnameController,
-                              decoration: InputDecoration(labelText: 'Surname'),
+                              decoration: const InputDecoration(labelText: 'Surname'),
                             ),
                             TextField(
                               controller: _heightController,
-                              decoration: InputDecoration(labelText: 'Height'),
+                              decoration: const InputDecoration(labelText: 'Height'),
                               keyboardType: TextInputType.number,
                             ),
                             TextField(
                               controller: _weightController,
-                              decoration: InputDecoration(labelText: 'Weight'),
+                              decoration: const InputDecoration(labelText: 'Weight'),
                               keyboardType: TextInputType.number,
                             ),
                             DropdownButtonFormField<String>(
@@ -224,7 +224,7 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
                             ),
                             TextField(
                               controller: _ageController,
-                              decoration: InputDecoration(labelText: 'Age'),
+                              decoration: const InputDecoration(labelText: 'Age'),
                               keyboardType: TextInputType.number,
                             ),
                           ],
@@ -232,18 +232,18 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: Text('Cancel'),
+                            child: const Text('Cancel'),
                           ),
                           TextButton(
                             onPressed: _modifyProfileInfo,
-                            child: Text('Save'),
+                            child: const Text('Save'),
                           ),
                         ],
                       );
                     },
                   );
                 },
-                child: Text("Edit Profile Info"),
+                child: const Text("Edit Profile Info"),
               ),
               // Button to delete personal info
               ElevatedButton(
@@ -252,24 +252,24 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Delete Personal Info'),
-                        content: Text(
+                        title: const Text('Delete Personal Info'),
+                        content: const Text(
                             'Are you sure you want to delete your personal info?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: Text('Cancel'),
+                            child: const Text('Cancel'),
                           ),
                           TextButton(
                             onPressed: _deletePersonalInfo,
-                            child: Text('Delete'),
+                            child: const Text('Delete'),
                           ),
                         ],
                       );
                     },
                   );
                 },
-                child: Text("Delete Personal Info"),
+                child: const Text("Delete Personal Info"),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -278,19 +278,19 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => NavBar()),
+                          builder: (BuildContext context) => const NavBar()),
                     );
                     ScaffoldMessenger.of(context)
                       ..removeCurrentSnackBar()
                       ..showSnackBar(
-                          SnackBar(content: Text('Request successful')));
+                          const SnackBar(content: Text('Request successful')));
                   } else {
                     ScaffoldMessenger.of(context)
                       ..removeCurrentSnackBar()
-                      ..showSnackBar(SnackBar(content: Text('Request failed')));
+                      ..showSnackBar(const SnackBar(content: Text('Request failed')));
                   }
                 },
-                child: Text('Authorize the app'),
+                child: const Text('Authorize the app'),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -301,17 +301,17 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => NavBar()),
+                        builder: (BuildContext context) => const NavBar()),
                   );    
                   ScaffoldMessenger.of(context)
                     ..removeCurrentSnackBar()
                     ..showSnackBar(
-                        SnackBar(content: Text('Tokens have been deleted')));
+                        const SnackBar(content: Text('Tokens have been deleted')));
                 },
-                child: Text('Unauthorize the app'),
+                child: const Text('Unauthorize the app'),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 "About",
                 style: TextStyle(
                   fontSize: 20,
@@ -325,8 +325,8 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
                   color: Colors.black.withOpacity(0.6),
                 ),
               ),
-              SizedBox(height: 10),
-              Align(
+              const SizedBox(height: 10),
+              const Align(
                 alignment: Alignment.center,
                 child: Text("Version alpha 1.0.0"),
               ),

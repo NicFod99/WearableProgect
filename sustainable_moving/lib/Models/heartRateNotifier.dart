@@ -36,7 +36,7 @@ class HeartRateNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getHeartRate() async {
+  /*Future<List<HeartRate>?> getHeartRate() async {
     List<HeartRate>? heartRates = await _requestData();
     if (heartRates != null && heartRates.isNotEmpty) {
       pulses = heartRates;
@@ -44,7 +44,7 @@ class HeartRateNotifier extends ChangeNotifier {
       print("Unable to fetch Heart Rate datas...");
     }
     notifyListeners();
-  }
+  }*/
 
   Future<List<HeartRate>?> _requestData() async {
     List<HeartRate>? result;
@@ -52,16 +52,14 @@ class HeartRateNotifier extends ChangeNotifier {
     final sp = await SharedPreferences.getInstance();
     var access = sp.getString('access');
 
-    if (JwtDecoder.isExpired(access!)) {
+    if (access != null && JwtDecoder.isExpired(access)) {
       await AuthorizeUtils.refreshTokens();
       access = sp.getString('access');
     }
 
-    final day = '2023-05-04';
-    final url = Impact.baseUrl +
-        Impact.hrEndpoint +
-        Impact.patientUsername +
-        '/day/$day/';
+    const day = '2023-05-04';
+    final url =
+        '${Impact.baseUrl}${Impact.hrEndpoint}${Impact.patientUsername}/day/$day/';
     final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};
 
     final response = await http.get(Uri.parse(url), headers: headers);
@@ -79,6 +77,11 @@ class HeartRateNotifier extends ChangeNotifier {
 
     return result;
   }
+
+  Future<List<HeartRate>?> fetchData() async {
+    return _requestData();
+  }
+
 
   List<double> _dataPicker() {
     List<double> heartRatetoList =
