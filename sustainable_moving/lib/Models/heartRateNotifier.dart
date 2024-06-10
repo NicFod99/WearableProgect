@@ -36,8 +36,8 @@ class HeartRateNotifier extends ChangeNotifier {
   }
 
   Future<int?> authorize() async {
-    final url = ImpactHR.baseUrl + ImpactHR.tokenEndpoint;
-    final body = {'username': ImpactHR.username, 'password': ImpactHR.password};
+    final url = Impact.baseUrl + Impact.tokenEndpoint;
+    final body = {'username': Impact.username, 'password': Impact.password};
 
     //print('Calling: $url');
     final response = await http.post(Uri.parse(url), body: body);
@@ -53,7 +53,7 @@ class HeartRateNotifier extends ChangeNotifier {
   }
 
   Future<int> refreshTokens() async {
-    final url = ImpactHR.baseUrl + ImpactHR.refreshEndpoint;
+    final url = Impact.baseUrl + Impact.refreshEndpoint;
     final sp = await SharedPreferences.getInstance();
     final refresh = sp.getString('refresh');
     final body = {'refresh': refresh};
@@ -91,9 +91,9 @@ class HeartRateNotifier extends ChangeNotifier {
     }
 
     final day = '2023-05-04';
-    final url = ImpactHR.baseUrl +
-        ImpactHR.hrEndpoint +
-        ImpactHR.patientUsername +
+    final url = Impact.baseUrl +
+        Impact.hrEndpoint +
+        Impact.patientUsername +
         '/day/$day/';
     final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};
 
