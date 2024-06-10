@@ -21,12 +21,12 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
   late TextEditingController _sexController;
   late TextEditingController _ageController;
 
-  String _name = "John";
-  String _surname = "Doe";
-  int _height = 180;
-  double _weight = 75;
+  String _name = "Antonio";
+  String _surname = "Ramirez";
+  int _height = 182;
+  double _weight = 72;
   String _sex = "M";
-  int _age = 30;
+  int _age = 36;
   late String _imagePath; // Variable to store the selected image path
 
   @override
