@@ -30,4 +30,8 @@ class Favorite extends ChangeNotifier {
     // Call the notifyListeners() method to alert that something happened.
     notifyListeners();
   }
+
+  bool isFavorite(PathData product) {
+    return products.contains(product);
+  }
 }

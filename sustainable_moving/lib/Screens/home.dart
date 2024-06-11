@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Models/favorite.dart';
@@ -37,6 +38,13 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     selectedIndex = -1; // Initialize selectedIndex to -1
     _isFavorite = List<bool>.filled(catalog.items.length,
         false); // Initialize all elements as non-favorites
+
+    // Listener per aggiornare _isFavorite quando i preferiti cambiano
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<Favorite>(context, listen: false)
+          .addListener(_updateFavorites);
+      _updateFavorites(); // Assicurarsi che _isFavorite sia inizializzato correttamente
+    });
   }
 
   /* Attenti con il dispose, utilizzato per deallocare memoria (è una free),
@@ -45,7 +53,18 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
+    Provider.of<Favorite>(context, listen: false)
+        .removeListener(_updateFavorites);
     super.dispose();
+  }
+
+  void _updateFavorites() {
+    final favorites = Provider.of<Favorite>(context, listen: false);
+    setState(() {
+      for (int i = 0; i < catalog.items.length; i++) {
+        _isFavorite[i] = favorites.isFavorite(catalog.items[i]);
+      }
+    });
   }
 
   void _handleTap(int index) {
@@ -53,6 +72,11 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
       selectedIndex = index; // Update selected index
     });
     _controller.forward(); // Start animation
+    _showDescription(
+        context,
+        catalog.items[index].name,
+        catalog.items[index].description,
+        catalog.items[index].length); // Show description and length on tap
   }
 
   // E' il push sulla lista item.
@@ -72,14 +96,34 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     });
   }
 
-  // E' il pop dell'info.
-  void _showDescription(BuildContext context, String description) {
+  // Pop-Up info path
+  void _showDescription(
+      BuildContext context, String name, String description, double length) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Description'),
-          content: Text(description),
+          title: Text(
+            name,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(description),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Text(
+                    'Length: ',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text('$length km'),
+                ],
+              ),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -180,18 +224,6 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                                         : Colors
                                             .white, // Change the color according to the status
                                     tooltip: 'Add to Favorites',
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      _showDescription(context,
-                                          catalog.items[index].description);
-                                      _controller.forward(
-                                          from:
-                                              0); // Start animation from the beginning
-                                    },
-                                    icon: const Icon(Icons.info),
-                                    color: Colors.white,
-                                    tooltip: 'Show Description',
                                   ),
                                 ],
                               ),
