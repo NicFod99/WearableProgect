@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:draw_graph/draw_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sustainable_moving/Models/heartRate.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:scroll_datetime_picker/scroll_datetime_picker.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:water_bottle/water_bottle.dart';
 
 /* Training page pesante, ha diverse funzionalità.
@@ -27,22 +25,21 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPage extends State<TrainingPage> {
-  //HeartRateNotifier lista = HeartRateNotifier();
   List pulses = [];
   final Random random = Random();
   String heartRateText = 'No data';
   final CountDownController _controller = CountDownController();
   int _duration = 0;
+  int _selectedHours = 0;
   int _selectedMinutes = 0;
   int _selectedSeconds = 0;
   DateTime time = DateTime.now();
-  /* Variabili per l'animazione, consiglio di cercare il main dell'example su git
-   * della relativa funzione (ho fatto quasi copia e incolla), se serve. */
   final plainBottleRef = GlobalKey<WaterBottleState>();
   final sphereBottleRef = GlobalKey<SphericalBottleState>();
   final triangleBottleRef = GlobalKey<TriangularBottleState>();
   var waterLevel = 0.5;
   var selectedStyle = 0;
+  int _waterIntake = 0; // In half-liters
 
   @override
   Widget build(BuildContext context) {
@@ -70,19 +67,16 @@ class _TrainingPage extends State<TrainingPage> {
                           scale: 9.0,
                           child: const Icon(Icons.favorite, color: Colors.red),
                         ),
-                        /* E' il cuore che prende un valore random dal listato
-                         * pulses del notifier di heartRate e lo mostra a schermo
-                         * ci sono stacked la scritta e l'icona del cuore. */
                         Column(
                           children: [
-                            Text(pulses.isNotEmpty
-                                ? getRandomHeartRate()
-                                : 'No data',style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.bold,
-                                    ))
-                              ,
+                            Text(
+                              pulses.isNotEmpty ? getRandomHeartRate() : 'No data',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             const Text(
                               "BPM",
                               style: TextStyle(
@@ -95,8 +89,6 @@ class _TrainingPage extends State<TrainingPage> {
                         )
                       ],
                     ),
-                    /* Timer settato da _Duration a 0, collegato al widget che 
-                     * crea lo slider del tempo, con cui è incolonnato. */
                     const SizedBox(width: 90),
                     CircularCountDownTimer(
                       duration: _duration,
@@ -115,7 +107,7 @@ class _TrainingPage extends State<TrainingPage> {
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
-                      textFormat: CountdownTextFormat.MM_SS,
+                      textFormat: CountdownTextFormat.HH_MM_SS,
                       isReverse: true,
                       isReverseAnimation: false,
                       isTimerTextShown: true,
@@ -124,15 +116,15 @@ class _TrainingPage extends State<TrainingPage> {
                   ],
                 ),
               ),
-              _buildDurationInput('Timer', _selectedMinutes, _selectedSeconds,
-                  (minutes, seconds) {
+              _buildDurationInput('Timer', _selectedHours, _selectedMinutes, _selectedSeconds,
+                  (hours, minutes, seconds) {
                 setState(() {
+                  _selectedHours = hours;
                   _selectedMinutes = minutes;
                   _selectedSeconds = seconds;
                   _updateDuration();
                 });
               }),
-              // BOTTONI IN ROW DEL TIMER.
               const SizedBox(height: 20),
               Center(
                 child: Row(
@@ -165,13 +157,58 @@ class _TrainingPage extends State<TrainingPage> {
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Column(
                 children: [
-                  
-                                  ],
+                  const Text(
+                    'Water Tracker',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 10,
+                    children: List.generate(
+                      _waterIntake,
+                      (index) => Icon(Icons.local_drink, size: 50, color: Colors.blue),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            _waterIntake++;
+                          });
+                        },
+                        icon: const Icon(Icons.local_drink_outlined, size: 24, color: Colors.blue),
+                        label: const Text('Add 0.5L'),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            if (_waterIntake > 0) _waterIntake--;
+                          });
+                        },
+                        icon: const Icon(Icons.remove, size: 24, color: Colors.blue),
+                        label: const Text('Remove 0.5L'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Total: ${(_waterIntake * 0.5).toStringAsFixed(1)} liters',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -180,7 +217,6 @@ class _TrainingPage extends State<TrainingPage> {
     );
   }
 
-  // Layout del bottone.
   Widget _button({required IconData icon, VoidCallback? onPressed}) {
     return Expanded(
       child: ElevatedButton(
@@ -196,9 +232,8 @@ class _TrainingPage extends State<TrainingPage> {
     );
   }
 
-  // Settaggio del timer slider. Anche qua più o meno copia e incolla.
   Widget _buildDurationInput(
-      String label, int minutes, int seconds, Function(int, int) onChanged) {
+      String label, int hours, int minutes, int seconds, Function(int, int, int) onChanged) {
     return SizedBox(
       width: 300, // Increase width
       child: Column(
@@ -208,37 +243,33 @@ class _TrainingPage extends State<TrainingPage> {
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  const Text('Minutes'),
-                  NumberPicker(
-                    value: minutes,
-                    minValue: 0,
-                    maxValue: 59,
-                    onChanged: (value) {
-                      onChanged(value, seconds);
-                    },
+          ScrollDateTimePicker(
+            itemExtent: 40, // Adjust item extent for wider scroll
+            infiniteScroll: true,
+            dateOption: DateTimePickerOption(
+              dateFormat: DateFormat('HHmmss'),
+              minDate: DateTime(2000, 1, 1, 0, 0, 0), // Start from 0 hours
+              maxDate: DateTime(2000, 1, 1, 23, 59, 59),
+              initialDate: DateTime(2000, 1, 1, hours, minutes, seconds),
+            ),
+            onChange: (datetime) {
+              setState(() {
+                _selectedHours = datetime.hour;
+                _selectedMinutes = datetime.minute;
+                _selectedSeconds = datetime.second;
+              });
+              onChanged(datetime.hour, datetime.minute, datetime.second);
+            },
+            centerWidget: DateTimePickerCenterWidget(
+              builder: (context, constraints, child) => const DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(width: 3),
+                    bottom: BorderSide(width: 3),
                   ),
-                ],
+                ),
               ),
-              const SizedBox(width: 10),
-              Column(
-                children: [
-                  const Text('Seconds'),
-                  NumberPicker(
-                    value: seconds,
-                    minValue: 0,
-                    maxValue: 59,
-                    onChanged: (value) {
-                      onChanged(minutes, value);
-                    },
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
         ],
       ),
@@ -247,7 +278,7 @@ class _TrainingPage extends State<TrainingPage> {
 
   void _updateDuration() {
     setState(() {
-      _duration = _selectedMinutes * 60 + _selectedSeconds;
+      _duration = _selectedHours * 3600 + _selectedMinutes * 60 + _selectedSeconds;
     });
   }
 
