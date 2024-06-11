@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Screens/FavoritePage.dart';
-import 'package:sustainable_moving/Screens/getDistance.dart';
 import 'package:sustainable_moving/Screens/pathChoosing.dart';
 import 'package:sustainable_moving/Screens/home.dart';
 import 'package:sustainable_moving/Screens/profilePage.dart';
@@ -35,11 +34,10 @@ class _NavBar extends State<NavBar> {
         index: _selectedIndex,
         children: const [
           ChoosePage(),
-          PathChoosingFeature(),
-          ProfilePage(),
+          PathChoosingFeature(), 
           FavoritePage(),
           TrainingPage(),
-          GetDistanceFeature(),
+          ProfilePage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -63,10 +61,6 @@ class _NavBar extends State<NavBar> {
             label: 'Path',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Favorite',
           ),
@@ -75,8 +69,8 @@ class _NavBar extends State<NavBar> {
             label: 'Activity',
           ),
           BottomNavigationBarItem(
-            icon: Icon(EvaIcons.arrowCircleDownOutline),
-            label: 'Distance',
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),
