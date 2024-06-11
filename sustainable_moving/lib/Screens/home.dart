@@ -38,6 +38,13 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     selectedIndex = -1; // Initialize selectedIndex to -1
     _isFavorite = List<bool>.filled(catalog.items.length,
         false); // Initialize all elements as non-favorites
+
+    // Listener per aggiornare _isFavorite quando i preferiti cambiano
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<Favorite>(context, listen: false)
+          .addListener(_updateFavorites);
+      _updateFavorites(); // Assicurarsi che _isFavorite sia inizializzato correttamente
+    });
   }
 
   /* Attenti con il dispose, utilizzato per deallocare memoria (è una free),
@@ -46,7 +53,18 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
+    Provider.of<Favorite>(context, listen: false)
+        .removeListener(_updateFavorites);
     super.dispose();
+  }
+
+  void _updateFavorites() {
+    final favorites = Provider.of<Favorite>(context, listen: false);
+    setState(() {
+      for (int i = 0; i < catalog.items.length; i++) {
+        _isFavorite[i] = favorites.isFavorite(catalog.items[i]);
+      }
+    });
   }
 
   void _handleTap(int index) {
