@@ -42,7 +42,7 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text("Distance Page"),
+          title: const Text("Distance Page"),
         ),
         body: Center(
           child: Column(
@@ -57,8 +57,8 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
                       ..removeCurrentSnackBar()
                       ..showSnackBar(SnackBar(content: Text(message)));
                   },
-                  child: Text('Authorize the app')),
-              SizedBox(
+                  child: const Text('Authorize the app')),
+              const SizedBox(
                 height: 10,
               ),
               ElevatedButton(
@@ -69,9 +69,9 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
                     ScaffoldMessenger.of(context)
                       ..removeCurrentSnackBar()
                       ..showSnackBar(
-                          SnackBar(content: Text('Tokens have been deleted')));
+                          const SnackBar(content: Text('Tokens have been deleted')));
                   },
-                  child: Text('Unauthorize the app')),
+                  child: const Text('Unauthorize the app')),
               ElevatedButton(
                 onPressed: () async {
                   final result = await _requestData();
@@ -85,9 +85,9 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
                         .addProduct(distance);
                   }
                 },
-                child: Text('Distance'),
+                child: const Text('Distance'),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -100,12 +100,12 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
                   ),
                   Text(
                     _totalDistance.toStringAsFixed(2),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
+                  const Text(
                     " km",
                     style: TextStyle(
                       fontSize: 22,
@@ -115,7 +115,7 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
                 ],
               ),
 
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               // Show distances in a ListView
               Expanded(
                 child: ListView.builder(
@@ -134,7 +134,7 @@ class _GetDistanceFeatureState extends State<GetDistanceFeature> {
                     // Go back to the previous page
                     Navigator.popUntil(context, ModalRoute.withName('/home/'));
                   },
-                  child: Text('Back to Home'),
+                  child: const Text('Back to Home'),
                 ),
               ),
             ],

@@ -5,7 +5,7 @@ import 'package:sustainable_moving/Models/items.dart';
 import 'package:provider/provider.dart';
 
 class ChoosePage extends StatefulWidget {
-  const ChoosePage({Key? key}) : super(key: key);
+  const ChoosePage({super.key});
 
   static const routename = 'ChoosePage';
 
@@ -78,14 +78,14 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Description'),
+          title: const Text('Description'),
           content: Text(description),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -98,7 +98,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Welcome back Runner!"),
+        title: const Text("Welcome back Runner!"),
       ),
       body: Column(
         children: [
@@ -127,7 +127,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                   onTap: () => _handleTap(index), // Pass index to _handleTap
                   child: Stack(
                     children: [
-                      Container(
+                      SizedBox(
                         height: double.infinity,
                         width: double.infinity,
                         child: Image.asset(
@@ -141,7 +141,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                         bottom: 0,
                         child: Container(
                           color: Colors.black.withOpacity(0.5),
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -150,15 +150,15 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                                 children: [
                                   Text(
                                     catalog.items[index].name,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
                                   ),
                                   Text(
-                                    "Length: ${catalog.items[index].length} km",
-                                    style: TextStyle(
+                                    "Length: ${catalog.items[index].length} m",
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.white,
                                     ),
@@ -189,7 +189,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                                           from:
                                               0); // Start animation from the beginning
                                     },
-                                    icon: Icon(Icons.info),
+                                    icon: const Icon(Icons.info),
                                     color: Colors.white,
                                     tooltip: 'Show Description',
                                   ),

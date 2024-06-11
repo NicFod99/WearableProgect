@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sustainable_moving/Models/heartRate.dart';
 import 'package:sustainable_moving/Impact/impact.dart';
 import 'package:draw_graph/models/feature.dart';
+import 'package:sustainable_moving/utils/authorize_utils.dart';
 
 /* NOTIFIER DI DISTANCE, aggiungere qui le funzioni per ottimizzare il codice
  * il codice delle get è stato fatto qui per ottimizzare (dovrebbe ottimizzare)
@@ -35,41 +36,7 @@ class HeartRateNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<int?> authorize() async {
-    final url = ImpactHR.baseUrl + ImpactHR.tokenEndpoint;
-    final body = {'username': ImpactHR.username, 'password': ImpactHR.password};
-
-    //print('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      final sp = await SharedPreferences.getInstance();
-      sp.setString('access', decodedResponse['access']);
-      sp.setString('refresh', decodedResponse['refresh']);
-    }
-
-    return response.statusCode;
-  }
-
-  Future<int> refreshTokens() async {
-    final url = ImpactHR.baseUrl + ImpactHR.refreshEndpoint;
-    final sp = await SharedPreferences.getInstance();
-    final refresh = sp.getString('refresh');
-    final body = {'refresh': refresh};
-
-    final response = await http.post(Uri.parse(url), body: body);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      sp.setString('access', decodedResponse['access']);
-      sp.setString('refresh', decodedResponse['refresh']);
-    }
-
-    return response.statusCode;
-  }
-
-  Future<void> getHeartRate() async {
+  /*Future<List<HeartRate>?> getHeartRate() async {
     List<HeartRate>? heartRates = await _requestData();
     if (heartRates != null && heartRates.isNotEmpty) {
       pulses = heartRates;
@@ -77,7 +44,7 @@ class HeartRateNotifier extends ChangeNotifier {
       print("Unable to fetch Heart Rate datas...");
     }
     notifyListeners();
-  }
+  }*/
 
   Future<List<HeartRate>?> _requestData() async {
     List<HeartRate>? result;
@@ -85,16 +52,14 @@ class HeartRateNotifier extends ChangeNotifier {
     final sp = await SharedPreferences.getInstance();
     var access = sp.getString('access');
 
-    if (JwtDecoder.isExpired(access!)) {
-      await refreshTokens();
+    if (access != null && JwtDecoder.isExpired(access)) {
+      await AuthorizeUtils.refreshTokens();
       access = sp.getString('access');
     }
 
-    final day = '2023-05-04';
-    final url = ImpactHR.baseUrl +
-        ImpactHR.hrEndpoint +
-        ImpactHR.patientUsername +
-        '/day/$day/';
+    const day = '2023-05-04';
+    final url =
+        '${Impact.baseUrl}${Impact.hrEndpoint}${Impact.patientUsername}/day/$day/';
     final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};
 
     final response = await http.get(Uri.parse(url), headers: headers);
@@ -112,6 +77,11 @@ class HeartRateNotifier extends ChangeNotifier {
 
     return result;
   }
+
+  Future<List<HeartRate>?> fetchData() async {
+    return _requestData();
+  }
+
 
   List<double> _dataPicker() {
     List<double> heartRatetoList =

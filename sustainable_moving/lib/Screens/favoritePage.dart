@@ -7,7 +7,7 @@ import 'package:sustainable_moving/Models/items.dart';
  * che è presente nella lista item del provider Favorite */
 
 class FavoritePage extends StatelessWidget {
-  const FavoritePage({Key? key}) : super(key: key);
+  const FavoritePage({super.key});
 
   static const routename = 'Favoritepage';
 
@@ -21,11 +21,11 @@ class FavoritePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () => item.clearFavorite(),
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
           )
         ],
         centerTitle: true,
-        title: Text("Favorite places"),
+        title: const Text("Favorite places"),
       ),
       body: ListView.builder(
         itemCount: item.products.length,
@@ -53,15 +53,15 @@ class FavoritePage extends StatelessWidget {
                         children: [
                           Text(
                             pathData.name,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                           Text(
-                            "Length: ${pathData.length} km",
-                            style: TextStyle(
+                            "Length: ${pathData.length} m",
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Colors.white,
                             ),
