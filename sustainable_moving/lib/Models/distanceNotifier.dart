@@ -34,7 +34,7 @@ class DistanceNotifier extends ChangeNotifier {
   // Method to get the distance
   Future<void> getDistance() async {
     // Request the data
-    List<Distance>? distance = await _requestData();
+    List<Distance>? distance = await _requestData('2023-05-04');
     // If the data is not null and not empty, update the distances
     if (distance != null && distance.isNotEmpty) {
       distances = distance;
@@ -47,7 +47,7 @@ class DistanceNotifier extends ChangeNotifier {
   }
 
   // Method to request the data
-  Future<List<Distance>?> _requestData() async {
+  Future<List<Distance>?> _requestData(String day) async {
     List<Distance>? result;
     final sp = await SharedPreferences.getInstance();
     var access = sp.getString('access');
@@ -56,8 +56,6 @@ class DistanceNotifier extends ChangeNotifier {
       await AuthorizeUtils.refreshTokens();
       access = sp.getString('access');
     }
-
-    const day = '2023-05-04';
     final url = '${Impact.baseUrl}${Impact.distanceEndpoint}${Impact.patientUsername}/day/$day/';
 
     // Send the GET request
@@ -78,6 +76,10 @@ class DistanceNotifier extends ChangeNotifier {
 
     // Return the result
     return result;
+  }
+
+  Future<List<Distance>?> fetchData(String day) async {
+    return _requestData(day);
   }
 
   // Method to pick the data

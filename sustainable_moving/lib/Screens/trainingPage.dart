@@ -4,16 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sustainable_moving/Models/heartRate.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
+import 'package:sustainable_moving/Models/distance.dart';
+import 'package:sustainable_moving/Models/distanceNotifier.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:scroll_datetime_picker/scroll_datetime_picker.dart';
 import 'package:water_bottle/water_bottle.dart';
-
-/* Training page pesante, ha diverse funzionalità.
- * 
- * TODO: Migliorare la grafica della pagina.
- *       Evitare che crashi l'app.
- *       Collegare il grafico con gli HeartRate e ridimensionarlo.
- *       Collegare nel timer anche le Ore. */
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({Key? key}) : super(key: key);
@@ -25,7 +20,11 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPage extends State<TrainingPage> {
+  String today = '2023-05-04';
   List pulses = [];
+  List todayDistances = [];
+  double _todayDistance = 0.0;
+  double weeklyDistanceMean = 0.0;
   final Random random = Random();
   String heartRateText = 'No data';
   final CountDownController _controller = CountDownController();
@@ -70,7 +69,9 @@ class _TrainingPage extends State<TrainingPage> {
                         Column(
                           children: [
                             Text(
-                              pulses.isNotEmpty ? getRandomHeartRate() : 'No data',
+                              pulses.isNotEmpty
+                                  ? getRandomHeartRate()
+                                  : 'No data',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 40,
@@ -116,7 +117,8 @@ class _TrainingPage extends State<TrainingPage> {
                   ],
                 ),
               ),
-              _buildDurationInput('Timer', _selectedHours, _selectedMinutes, _selectedSeconds,
+              _buildDurationInput(
+                  'Timer', _selectedHours, _selectedMinutes, _selectedSeconds,
                   (hours, minutes, seconds) {
                 setState(() {
                   _selectedHours = hours;
@@ -158,63 +160,121 @@ class _TrainingPage extends State<TrainingPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              Column(
+              _buildDistanceTracker(),
+              const SizedBox(height: 20),
+              const Text(
+                'Water Tracker',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 10,
+                children: List.generate(
+                  _waterIntake,
+                  (index) =>
+                      Icon(Icons.local_drink, size: 50, color: Colors.blue),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Water Tracker',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _waterIntake++;
+                      });
+                    },
+                    icon: const Icon(Icons.local_drink_outlined,
+                        size: 24, color: Colors.blue),
+                    label: const Text('Add 0.5L'),
                   ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 10,
-                    children: List.generate(
-                      _waterIntake,
-                      (index) => Icon(Icons.local_drink, size: 50, color: Colors.blue),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            _waterIntake++;
-                          });
-                        },
-                        icon: const Icon(Icons.local_drink_outlined, size: 24, color: Colors.blue),
-                        label: const Text('Add 0.5L'),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            if (_waterIntake > 0) _waterIntake--;
-                          });
-                        },
-                        icon: const Icon(Icons.remove, size: 24, color: Colors.blue),
-                        label: const Text('Remove 0.5L'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Total: ${(_waterIntake * 0.5).toStringAsFixed(1)} liters',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const SizedBox(width: 10),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        if (_waterIntake > 0) _waterIntake--;
+                      });
+                    },
+                    icon: const Icon(Icons.remove, size: 24, color: Colors.blue),
+                    label: const Text('Remove 0.5L'),
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
+              Text(
+                'Total: ${(_waterIntake * 0.5).toStringAsFixed(1)} liters',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildDistanceTracker() {
+    double progress = weeklyDistanceMean > 0
+        ? _todayDistance / weeklyDistanceMean
+        : 0.0;
+
+    return Column(
+      children: [
+        const Text(
+          'Distance Tracker',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          _getDistanceComparisonMessage(),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: LinearProgressIndicator(
+            value: progress,
+            backgroundColor: Colors.grey[300],
+            color: Colors.blue,
+            minHeight: 20,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          '${_todayDistance.toStringAsFixed(2)} km / ${weeklyDistanceMean.toStringAsFixed(2)} km',
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _getDistanceComparisonMessage() {
+    double difference = _todayDistance - weeklyDistanceMean;
+    String comparison = difference > 0
+        ? 'more'
+        : difference < 0
+            ? 'less'
+            : 'equal to';
+
+    return 'Today you walked ${difference.abs().toStringAsFixed(2)} km $comparison than your weekly average.';
   }
 
   Widget _button({required IconData icon, VoidCallback? onPressed}) {
@@ -232,8 +292,8 @@ class _TrainingPage extends State<TrainingPage> {
     );
   }
 
-  Widget _buildDurationInput(
-      String label, int hours, int minutes, int seconds, Function(int, int, int) onChanged) {
+  Widget _buildDurationInput(String label, int hours, int minutes, int seconds,
+      Function(int, int, int) onChanged) {
     return SizedBox(
       width: 300, // Increase width
       child: Column(
@@ -278,7 +338,8 @@ class _TrainingPage extends State<TrainingPage> {
 
   void _updateDuration() {
     setState(() {
-      _duration = _selectedHours * 3600 + _selectedMinutes * 60 + _selectedSeconds;
+      _duration =
+          _selectedHours * 3600 + _selectedMinutes * 60 + _selectedSeconds;
     });
   }
 
@@ -287,6 +348,8 @@ class _TrainingPage extends State<TrainingPage> {
     super.initState();
 
     getHeartRate();
+    getDistance();
+    getWeeklyDistanceMean();
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
       updateHeartRateText();
@@ -296,8 +359,8 @@ class _TrainingPage extends State<TrainingPage> {
   void updateHeartRateText() {
     setState(() {
       if (pulses.isNotEmpty) {
-        final randomIndex = random.nextInt(pulses.length);   
-        final randomHeartRate =pulses[randomIndex].value;
+        final randomIndex = random.nextInt(pulses.length);
+        final randomHeartRate = pulses[randomIndex].value;
         heartRateText = randomHeartRate.toString();
       } else {
         heartRateText = 'No data';
@@ -318,5 +381,52 @@ class _TrainingPage extends State<TrainingPage> {
     final randomIndex = Random().nextInt(pulses.length);
     final randomHeartRate = pulses[randomIndex].value;
     return randomHeartRate.toString();
+  }
+
+  //Get distance
+  Future<void> getDistance() async {
+    List<Distance>? distance = await DistanceNotifier().fetchData(today);
+    if (distance != null && distance.isNotEmpty) {
+      //Distance is in cm, convert it to meters
+      for (int i = 0; i < distance.length; i++) {
+        todayDistances.add(distance[i].value / 100000);
+      }
+      for (int i = 0; i < todayDistances.length; i++) {
+        _todayDistance += todayDistances[i];
+      }
+    } else {
+      print("Unable to fetch Distance datas...");
+    }
+  }
+
+  //Get the mean of the weekly distance
+  Future<void> getWeeklyDistanceMean() async {
+    //List of 7 days before today
+    final List<String> days = [];
+    //Use today variable to get the current date
+    final DateTime todayDate = DateTime.parse(today);
+    //Get the day of the week
+    final int dayOfWeek = todayDate.weekday;
+    //Get the date of the last 7 days
+    for (int i = 0; i < 7; i++) {
+      final DateTime day = todayDate.subtract(Duration(days: dayOfWeek + i));
+      days.add(day.toString().substring(0, 10));
+    }
+    //Get the distance of the last 7 days
+    double totalDistance = 0.0;
+    for (int i = 0; i < days.length; i++) {
+      List<Distance>? distance = await DistanceNotifier().fetchData(days[i]);
+      //If the distance is not null and not empty add it to the list
+      //Otherwise print an error message
+      if (distance != null && distance.isNotEmpty) {
+        for (int j = 0; j < distance.length; j++) {
+          totalDistance += distance[j].value;
+        }
+      } else {
+        print("Unable to fetch Distance datas...");
+      }
+    }
+    //Calculate the mean
+      weeklyDistanceMean = totalDistance / days.length / 100000;
   }
 }
