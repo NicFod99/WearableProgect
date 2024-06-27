@@ -10,6 +10,7 @@ import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:scroll_datetime_picker/scroll_datetime_picker.dart';
 import 'package:water_bottle/water_bottle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class _TrainingPage extends State<TrainingPage> {
   List todayDistances = [];
   double _todayDistance = 0.0;
   List weeklyDistances = [];
+  List weeklyDistancesGraph = [];
   double weeklyDistanceMean = 0.0;
   double _distanceGoal = 5.0; // Default goal
   final Random random = Random();
@@ -326,26 +328,136 @@ class _TrainingPage extends State<TrainingPage> {
   void _showWeeklyChart(BuildContext context) {
     showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Your weekly chart'),
-          content: _buildWeeklyChartContent(),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
+        return Dialog(
+          insetPadding: EdgeInsets.all(0),
+          backgroundColor: Colors.transparent,
+          child: Container(
+            width: MediaQuery.of(context).size.width*0.9,
+            height: MediaQuery.of(context).size.height*0.5,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
             ),
-          ],
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Your weekly chart',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Expanded(
+                      child: _buildWeeklyChartContent(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
   }
 
   Widget _buildWeeklyChartContent() {
-    //Return empty sized box
-      return const SizedBox();
+    // Calculate the maximum distance for the y-axis range
+    double maxDistance = 0;
+    for (int i = 0; i < weeklyDistancesGraph.length; i++) {
+      if (weeklyDistancesGraph[i] > maxDistance) {
+        maxDistance = weeklyDistancesGraph[i];
+      }
+    }
+    double yAxisMax = maxDistance + 5;
+
+    return SizedBox(
+      child: BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.spaceAround,
+          barTouchData: BarTouchData(enabled: true),
+          titlesData: FlTitlesData(
+            show: true,
+            bottomTitles: SideTitles(
+              showTitles: true,
+              getTitles: (double value) {
+                switch (value.toInt()) {
+                  case 0:
+                    return 'Mon';
+                  case 1:
+                    return 'Tue';
+                  case 2:
+                    return 'Wed';
+                  case 3:
+                    return 'Thu';
+                  case 4:
+                    return 'Fri';
+                  case 5:
+                    return 'Sat';
+                  case 6:
+                    return 'Sun';
+                  default:
+                    return '';
+                }
+              },
+              getTextStyles: (context, value) => const TextStyle(
+                color: Color(0xff7589a2),
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+              margin: 16,
+            ),
+            leftTitles: SideTitles(
+              showTitles: true,
+              getTitles: (double value) {
+                return '${value.toInt()} km';
+              },
+              getTextStyles: (context, value) => const TextStyle(
+                color: Color(0xff7589a2),
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+              interval: 5,
+              margin: 16,
+            ),
+            topTitles: SideTitles(showTitles: false), // Hide top titles
+            rightTitles: SideTitles(showTitles: false), // Hide right titles
+          ),
+          borderData: FlBorderData(
+            show: false,
+          ),
+          barGroups: weeklyDistancesGraph.asMap().entries.map((entry) {
+            int index = entry.key;
+            double distance = entry.value;
+            return BarChartGroupData(
+              x: index,
+              barRods: [
+                BarChartRodData(
+                  y: distance,
+                  width: 16,
+                ),
+              ],
+            );
+          }).toList(),
+          maxY: yAxisMax, // Set the maximum y-axis value
+        ),
+      ),
+    );
   }
 
   void _showGoalSettingDialog(BuildContext context) {
@@ -533,6 +645,7 @@ class _TrainingPage extends State<TrainingPage> {
     }
     //Get the distance of the last 7 days
     double totalDistance = 0.0;
+    weeklyDistances.clear();
     for (int i = 0; i < days.length; i++) {
       List<Distance>? distance = await DistanceNotifier().fetchData(days[i]);
       //If the distance is not null and not empty add it to the list
@@ -550,6 +663,7 @@ class _TrainingPage extends State<TrainingPage> {
     }
     //Calculate the mean
     weeklyDistanceMean = totalDistance / days.length / 100000;
+    weeklyDistancesGraph = weeklyDistances;
   }
 
   // Get user weight from shared preferences and update water goal
