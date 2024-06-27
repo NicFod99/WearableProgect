@@ -36,7 +36,7 @@ class HeartRateNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /*Future<List<HeartRate>?> getHeartRate() async {
+  Future<List<HeartRate>?> getHeartRate() async {
     List<HeartRate>? heartRates = await _requestData();
     if (heartRates != null && heartRates.isNotEmpty) {
       pulses = heartRates;
@@ -44,7 +44,7 @@ class HeartRateNotifier extends ChangeNotifier {
       print("Unable to fetch Heart Rate datas...");
     }
     notifyListeners();
-  }*/
+  }
 
   Future<List<HeartRate>?> _requestData() async {
     List<HeartRate>? result;
