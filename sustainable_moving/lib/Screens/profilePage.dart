@@ -5,6 +5,8 @@ import 'dart:io';
 import '/utils/authorize_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
+import 'package:sustainable_moving/Models/favorite.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /* Profile page, utilizzata dall'utente per cambiare foto e info.
  * 
@@ -17,7 +19,7 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State with SingleTickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin {
   late TextEditingController _nameController;
   late TextEditingController _surnameController;
   late TextEditingController _heightController;
@@ -43,6 +45,50 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
     _sexController = TextEditingController(text: _sex);
     _ageController = TextEditingController(text: _age.toString());
     _imagePath = "";
+
+    _loadProfileInfo();
+  }
+
+  Future<void> _loadProfileInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _name = prefs.getString('name') ?? _name;
+      _surname = prefs.getString('surname') ?? _surname;
+      _height = prefs.getInt('height') ?? _height;
+      _weight = prefs.getDouble('weight') ?? _weight;
+      _sex = prefs.getString('sex') ?? _sex;
+      _age = prefs.getInt('age') ?? _age;
+      _imagePath = prefs.getString('imagePath') ?? _imagePath;
+
+      _nameController.text = _name;
+      _surnameController.text = _surname;
+      _heightController.text = _height.toString();
+      _weightController.text = _weight.toString();
+      _sexController.text = _sex;
+      _ageController.text = _age.toString();
+    });
+  }
+
+  Future<void> _saveProfileInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('name', _name);
+    await prefs.setString('surname', _surname);
+    await prefs.setInt('height', _height);
+    await prefs.setDouble('weight', _weight);
+    await prefs.setString('sex', _sex);
+    await prefs.setInt('age', _age);
+    await prefs.setString('imagePath', _imagePath);
+  }
+
+  Future<void> _deleteProfileInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('name', '');
+    await prefs.setString('surname', '');
+    await prefs.setInt('height', 0);
+    await prefs.setDouble('weight', 0);
+    await prefs.setString('sex', 'M');
+    await prefs.setInt('age', 0);
+    await prefs.setString('imagePath', '');
   }
 
   @override
@@ -65,6 +111,7 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
       _sex = _sexController.text;
       _age = int.tryParse(_ageController.text) ?? 0;
     });
+    _saveProfileInfo();
     Navigator.pop(context);
   }
 
@@ -84,7 +131,17 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
       _weightController.text = "";
       _ageController.text = "";
     });
+    _deleteProfileInfo();
+    //Remove data in the providers
+    Provider.of<HeartRateNotifier>(context, listen: false).clearFavorite();
+    Provider.of<Favorite>(context, listen: false).clearFavorite();
     Navigator.pop(context); // Close the dialog
+    AuthorizeUtils.unauthorize();
+    Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const NavBar()),
+                  );
   }
 
   // Funzione per prendere la foto dalla galleria (funziona bene, testato).
@@ -96,6 +153,7 @@ class _ProfilePageState extends State with SingleTickerProviderStateMixin {
       setState(() {
         _imagePath = pickedFile.path;
       });
+      _saveProfileInfo();
     }
   }
 
