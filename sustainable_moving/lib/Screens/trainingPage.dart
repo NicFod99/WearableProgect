@@ -458,6 +458,7 @@ class _TrainingPage extends State<TrainingPage> {
         _todayDistance = 0;
         _waterIntake = 0;
         _distanceGoal = 5.0; // Reset to default goal
+        weeklyDistances.clear();
       });
       prefs.remove('delete_personal');
     }
