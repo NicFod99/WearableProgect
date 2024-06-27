@@ -53,6 +53,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
+    //Check if provider is active before removing the listener
     Provider.of<Favorite>(context, listen: false)
         .removeListener(_updateFavorites);
     super.dispose();

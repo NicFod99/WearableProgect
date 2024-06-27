@@ -9,6 +9,7 @@ import 'package:sustainable_moving/Models/distanceNotifier.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:scroll_datetime_picker/scroll_datetime_picker.dart';
 import 'package:water_bottle/water_bottle.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({Key? key}) : super(key: key);
@@ -39,6 +40,8 @@ class _TrainingPage extends State<TrainingPage> {
   var waterLevel = 0.5;
   var selectedStyle = 0;
   int _waterIntake = 0; // In half-liters
+  double _userWeight = 0.0;
+  double _waterGoal = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -199,14 +202,15 @@ class _TrainingPage extends State<TrainingPage> {
                         if (_waterIntake > 0) _waterIntake--;
                       });
                     },
-                    icon: const Icon(Icons.remove, size: 24, color: Colors.blue),
+                    icon:
+                        const Icon(Icons.remove, size: 24, color: Colors.blue),
                     label: const Text('Remove 0.5L'),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
               Text(
-                'Total: ${(_waterIntake * 0.5).toStringAsFixed(1)} liters',
+                'Total: ${(_waterIntake * 0.5).toStringAsFixed(1)} liters / Goal: ${_waterGoal.toStringAsFixed(1)} liters',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -221,9 +225,8 @@ class _TrainingPage extends State<TrainingPage> {
   }
 
   Widget _buildDistanceTracker() {
-    double progress = weeklyDistanceMean > 0
-        ? _todayDistance / weeklyDistanceMean
-        : 0.0;
+    double progress =
+        weeklyDistanceMean > 0 ? _todayDistance / weeklyDistanceMean : 0.0;
 
     return Column(
       children: [
@@ -347,12 +350,16 @@ class _TrainingPage extends State<TrainingPage> {
   void initState() {
     super.initState();
 
-    getHeartRate();
-    getDistance();
-    getWeeklyDistanceMean();
+    Timer.periodic(const Duration(seconds: 5), (timer) {
+      getHeartRate();
+      getDistance();
+      getWeeklyDistanceMean();
+      _checkPersonalInfoDeletion();
+    });
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
       updateHeartRateText();
+      getUserWeight();
     });
   }
 
@@ -373,6 +380,7 @@ class _TrainingPage extends State<TrainingPage> {
     if (heartRates != null && heartRates.isNotEmpty) {
       pulses = heartRates;
     } else {
+      pulses = [];
       print("Unable to fetch Heart Rate datas...");
     }
   }
@@ -383,14 +391,31 @@ class _TrainingPage extends State<TrainingPage> {
     return randomHeartRate.toString();
   }
 
+  void _checkPersonalInfoDeletion() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool deleted =prefs.getBool('delete_personal') ?? false;
+    if (deleted) {
+      //Update text in distance tracker
+      setState(() {
+        weeklyDistanceMean = 0;
+        todayDistances.clear();
+        _todayDistance =0;
+        _waterIntake = 0;
+      });
+      prefs.remove('delete_personal');
+    }
+  }
+
   //Get distance
   Future<void> getDistance() async {
     List<Distance>? distance = await DistanceNotifier().fetchData(today);
     if (distance != null && distance.isNotEmpty) {
+      todayDistances.clear();
       //Distance is in cm, convert it to meters
       for (int i = 0; i < distance.length; i++) {
         todayDistances.add(distance[i].value / 100000);
       }
+      _todayDistance = 0.0;
       for (int i = 0; i < todayDistances.length; i++) {
         _todayDistance += todayDistances[i];
       }
@@ -427,6 +452,15 @@ class _TrainingPage extends State<TrainingPage> {
       }
     }
     //Calculate the mean
-      weeklyDistanceMean = totalDistance / days.length / 100000;
+    weeklyDistanceMean = totalDistance / days.length / 100000;
+  }
+
+  // Get user weight from shared preferences and update water goal
+  Future<void> getUserWeight() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userWeight = prefs.getDouble('weight') ?? 0.0;
+      _waterGoal = _userWeight * 0.03; // 30 ml per kg converted to liters
+    });
   }
 }

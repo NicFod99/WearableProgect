@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Screens/trainingPage.dart';
 
-/* TODO EDIT PROFILE Si dovrebbe fare, anche se non è obbligatorio, non saprei
- * neanche cosa metterci, però vedete se avete idee */
-
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
 

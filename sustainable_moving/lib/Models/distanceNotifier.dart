@@ -52,7 +52,7 @@ class DistanceNotifier extends ChangeNotifier {
     final sp = await SharedPreferences.getInstance();
     var access = sp.getString('access');
 
-    if (JwtDecoder.isExpired(access!)) {
+    if (access!= null && JwtDecoder.isExpired(access!)) {
       await AuthorizeUtils.refreshTokens();
       access = sp.getString('access');
     }
