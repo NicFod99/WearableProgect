@@ -305,12 +305,47 @@ class _TrainingPage extends State<TrainingPage> {
           ),
         ),
         const SizedBox(height: 10),
-        ElevatedButton(
-          onPressed: () => _showGoalSettingDialog(context),
-          child: const Text('Set Distance Goal'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () => _showGoalSettingDialog(context),
+              child: const Text('Set Distance Goal'),
+            ),
+            const SizedBox(width: 10), // Add some spacing between buttons
+            ElevatedButton(
+              onPressed: () => _showWeeklyChart(context),
+              child: const Text('Your weekly chart'),
+            ),
+          ],
         ),
       ],
     );
+  }
+
+  void _showWeeklyChart(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Your weekly chart'),
+          content: _buildWeeklyChartContent(),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildWeeklyChartContent() {
+    //Return empty sized box
+      return const SizedBox();
   }
 
   void _showGoalSettingDialog(BuildContext context) {
@@ -330,7 +365,8 @@ class _TrainingPage extends State<TrainingPage> {
           actions: [
             ElevatedButton(
               onPressed: () {
-                double newGoal = double.tryParse(goalController.text) ?? _distanceGoal;
+                double newGoal =
+                    double.tryParse(goalController.text) ?? _distanceGoal;
                 _updateDistanceGoal(newGoal);
                 Navigator.of(context).pop();
               },
@@ -510,7 +546,7 @@ class _TrainingPage extends State<TrainingPage> {
       } else {
         print("Unable to fetch Distance datas...");
       }
-    weeklyDistances.add(dailyDistance/ 100000);
+      weeklyDistances.add(dailyDistance / 100000);
     }
     //Calculate the mean
     weeklyDistanceMean = totalDistance / days.length / 100000;
