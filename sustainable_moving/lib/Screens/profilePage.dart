@@ -89,6 +89,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     await prefs.setString('sex', 'M');
     await prefs.setInt('age', 0);
     await prefs.setString('imagePath', '');
+    await prefs.setBool('delete_personal',true);
   }
 
   @override
@@ -137,11 +138,6 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     Provider.of<Favorite>(context, listen: false).clearFavorite();
     Navigator.pop(context); // Close the dialog
     AuthorizeUtils.unauthorize();
-    Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => const NavBar()),
-                  );
   }
 
   // Funzione per prendere la foto dalla galleria (funziona bene, testato).
@@ -333,11 +329,6 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 onPressed: () async {
                   final result = await AuthorizeUtils.authorize();
                   if (result == 200) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => const NavBar()),
-                    );
                     ScaffoldMessenger.of(context)
                       ..removeCurrentSnackBar()
                       ..showSnackBar(
@@ -355,12 +346,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                   await AuthorizeUtils.unauthorize();
                   //Remove data in the providers
                   Provider.of<HeartRateNotifier>(context, listen: false)
-                      .clearFavorite();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => const NavBar()),
-                  );    
+                      .clearFavorite();    
                   ScaffoldMessenger.of(context)
                     ..removeCurrentSnackBar()
                     ..showSnackBar(
