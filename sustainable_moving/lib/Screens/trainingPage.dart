@@ -25,7 +25,9 @@ class _TrainingPage extends State<TrainingPage> {
   List pulses = [];
   List todayDistances = [];
   double _todayDistance = 0.0;
+  List weeklyDistances = [];
   double weeklyDistanceMean = 0.0;
+  double _distanceGoal = 5.0; // Default goal
   final Random random = Random();
   String heartRateText = 'No data';
   final CountDownController _controller = CountDownController();
@@ -42,6 +44,44 @@ class _TrainingPage extends State<TrainingPage> {
   int _waterIntake = 0; // In half-liters
   double _userWeight = 0.0;
   double _waterGoal = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Timer.periodic(const Duration(seconds: 5), (timer) {
+      getHeartRate();
+      getDistance();
+      getWeeklyDistanceMean();
+      _checkPersonalInfoDeletion();
+    });
+
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      updateHeartRateText();
+      getUserWeight();
+    });
+
+    _loadDistanceGoal();
+  }
+
+  Future<void> _loadDistanceGoal() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _distanceGoal = prefs.getDouble('distanceGoal') ?? 5.0;
+    });
+  }
+
+  Future<void> _saveDistanceGoal(double goal) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('distanceGoal', goal);
+  }
+
+  void _updateDistanceGoal(double goal) {
+    setState(() {
+      _distanceGoal = goal;
+    });
+    _saveDistanceGoal(goal);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -225,8 +265,7 @@ class _TrainingPage extends State<TrainingPage> {
   }
 
   Widget _buildDistanceTracker() {
-    double progress =
-        weeklyDistanceMean > 0 ? _todayDistance / weeklyDistanceMean : 0.0;
+    double progress = _distanceGoal > 0 ? _todayDistance / _distanceGoal : 0.0;
 
     return Column(
       children: [
@@ -259,13 +298,47 @@ class _TrainingPage extends State<TrainingPage> {
         ),
         const SizedBox(height: 10),
         Text(
-          '${_todayDistance.toStringAsFixed(2)} km / ${weeklyDistanceMean.toStringAsFixed(2)} km',
+          '${_todayDistance.toStringAsFixed(2)} km / ${_distanceGoal.toStringAsFixed(2)} km',
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: () => _showGoalSettingDialog(context),
+          child: const Text('Set Distance Goal'),
+        ),
       ],
+    );
+  }
+
+  void _showGoalSettingDialog(BuildContext context) {
+    TextEditingController goalController = TextEditingController();
+    goalController.text = _distanceGoal.toString();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Set Distance Goal'),
+          content: TextField(
+            controller: goalController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(labelText: 'Distance Goal (km)'),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                double newGoal = double.tryParse(goalController.text) ?? _distanceGoal;
+                _updateDistanceGoal(newGoal);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -346,23 +419,6 @@ class _TrainingPage extends State<TrainingPage> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    Timer.periodic(const Duration(seconds: 5), (timer) {
-      getHeartRate();
-      getDistance();
-      getWeeklyDistanceMean();
-      _checkPersonalInfoDeletion();
-    });
-
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      updateHeartRateText();
-      getUserWeight();
-    });
-  }
-
   void updateHeartRateText() {
     setState(() {
       if (pulses.isNotEmpty) {
@@ -393,14 +449,15 @@ class _TrainingPage extends State<TrainingPage> {
 
   void _checkPersonalInfoDeletion() async {
     final prefs = await SharedPreferences.getInstance();
-    bool deleted =prefs.getBool('delete_personal') ?? false;
+    bool deleted = prefs.getBool('delete_personal') ?? false;
     if (deleted) {
       //Update text in distance tracker
       setState(() {
         weeklyDistanceMean = 0;
         todayDistances.clear();
-        _todayDistance =0;
+        _todayDistance = 0;
         _waterIntake = 0;
+        _distanceGoal = 5.0; // Reset to default goal
       });
       prefs.remove('delete_personal');
     }
@@ -443,13 +500,16 @@ class _TrainingPage extends State<TrainingPage> {
       List<Distance>? distance = await DistanceNotifier().fetchData(days[i]);
       //If the distance is not null and not empty add it to the list
       //Otherwise print an error message
+      double dailyDistance = 0.0;
       if (distance != null && distance.isNotEmpty) {
         for (int j = 0; j < distance.length; j++) {
+          dailyDistance += distance[j].value;
           totalDistance += distance[j].value;
         }
       } else {
         print("Unable to fetch Distance datas...");
       }
+    weeklyDistances.add(dailyDistance/ 100000);
     }
     //Calculate the mean
     weeklyDistanceMean = totalDistance / days.length / 100000;
