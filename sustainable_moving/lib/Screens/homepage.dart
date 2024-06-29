@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
           children: [
             // Background image covering the entire screen
             Image.asset(
-              'assets/homepage.png',
+              'assets/whiteHome.png',
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,

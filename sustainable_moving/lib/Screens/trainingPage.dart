@@ -496,14 +496,19 @@ class _TrainingPage extends State<TrainingPage> {
             decoration: const InputDecoration(labelText: 'Distance Goal (km)'),
           ),
           actions: [
-            ElevatedButton(
+            PrettyCapsuleButton(
+              label: 'Save',
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.w700,
+              ),
+              icon: Icons.save,
+              bgColor: Colors.blue,
               onPressed: () {
                 double newGoal =
                     double.tryParse(goalController.text) ?? _distanceGoal;
                 _updateDistanceGoal(newGoal);
                 Navigator.of(context).pop();
               },
-              child: const Text('Save'),
             ),
           ],
         );

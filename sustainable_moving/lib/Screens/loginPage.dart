@@ -71,6 +71,7 @@ class _LoginPage extends State<LoginPage> {
                       labelStyle: const TextStyle(
                         fontWeight: FontWeight.w700,
                       ),
+                      icon: Icons.login,
                       bgColor: Colors.blue,
                       onPressed: () {
                         _login();
