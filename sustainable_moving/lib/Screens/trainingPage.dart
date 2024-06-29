@@ -11,6 +11,7 @@ import 'package:scroll_datetime_picker/scroll_datetime_picker.dart';
 import 'package:water_bottle/water_bottle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:pretty_animated_buttons/pretty_animated_buttons.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({Key? key}) : super(key: key);
@@ -227,26 +228,36 @@ class _TrainingPage extends State<TrainingPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton.icon(
+                  PrettyCapsuleButton(
+                    label: 'Add 0.5L'.toUpperCase(),
+                    labelStyle: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                    ),
+                    icon: Icons.local_drink,
+                    bgColor: Colors.blue,
                     onPressed: () {
                       setState(() {
                         _waterIntake++;
                       });
                     },
-                    icon: const Icon(Icons.local_drink_outlined,
-                        size: 24, color: Colors.blue),
-                    label: const Text('Add 0.5L'),
+                    /*icon: const Icon(Icons.local_drink_outlined,
+                        size: 24, color: Colors.white),*/
                   ),
                   const SizedBox(width: 10),
-                  ElevatedButton.icon(
+                  PrettyCapsuleButton(
+                    label: 'Remove 0.5L'.toUpperCase(),
+                    labelStyle: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                    ),
+                    icon: Icons.delete,
+                    bgColor: Colors.blue,
                     onPressed: () {
                       setState(() {
                         if (_waterIntake > 0) _waterIntake--;
                       });
                     },
-                    icon:
-                        const Icon(Icons.remove, size: 24, color: Colors.blue),
-                    label: const Text('Remove 0.5L'),
+                    /*icon:
+                        const Icon(Icons.remove, size: 24, color: Colors.white),*/
                   ),
                 ],
               ),
@@ -307,17 +318,27 @@ class _TrainingPage extends State<TrainingPage> {
           ),
         ),
         const SizedBox(height: 10),
-        Row(
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
+            PrettyCapsuleButton(
+              label: 'Set Distance Goal'.toUpperCase(),
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.w700,
+              ),
+              icon: Icons.directions_run,
+              bgColor: Colors.blue,
               onPressed: () => _showGoalSettingDialog(context),
-              child: const Text('Set Distance Goal'),
             ),
-            const SizedBox(width: 10), // Add some spacing between buttons
-            ElevatedButton(
+            const SizedBox(height: 10), // Add some spacing between buttons
+            PrettyCapsuleButton(
+              label: 'Your weekly chart'.toUpperCase(),
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.w700,
+              ),
+              icon: Icons.bar_chart,
+              bgColor: Colors.blue,
               onPressed: () => _showWeeklyChart(context),
-              child: const Text('Your weekly chart'),
             ),
           ],
         ),
@@ -334,8 +355,8 @@ class _TrainingPage extends State<TrainingPage> {
           insetPadding: EdgeInsets.all(0),
           backgroundColor: Colors.transparent,
           child: Container(
-            width: MediaQuery.of(context).size.width*0.9,
-            height: MediaQuery.of(context).size.height*0.5,
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.5,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
