@@ -168,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage>
                 'Profile',
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               Center(
                 child: Stack(
                   alignment: Alignment.center,
@@ -238,6 +238,7 @@ class _ProfilePageState extends State<ProfilePage>
                 labelStyle: const TextStyle(
                   fontWeight: FontWeight.w700,
                 ),
+                icon: Icons.edit,
                 bgColor: Colors.blue, // Sostituisci con il colore desiderato
                 onPressed: () {
                   showDialog(
@@ -310,13 +311,14 @@ class _ProfilePageState extends State<ProfilePage>
                   );
                 },
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               // Button to delete personal info
               PrettyCapsuleButton(
                 label: 'Delete Personal Info'.toUpperCase(),
                 labelStyle: const TextStyle(
                   fontWeight: FontWeight.w700,
                 ),
+                icon: Icons.delete,
                 bgColor: Colors.blue, // Sostituisci con il colore desiderato
                 onPressed: () {
                   showDialog(
@@ -341,12 +343,13 @@ class _ProfilePageState extends State<ProfilePage>
                   );
                 },
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               PrettyCapsuleButton(
                 label: 'Authorize the app'.toUpperCase(),
                 labelStyle: const TextStyle(
                   fontWeight: FontWeight.w700,
                 ),
+                icon: Icons.done,
                 bgColor: Colors.blue, // Sostituisci con il colore desiderato
                 onPressed: () async {
                   final result = await AuthorizeUtils.authorize();
@@ -363,12 +366,13 @@ class _ProfilePageState extends State<ProfilePage>
                   }
                 },
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               PrettyCapsuleButton(
                 label: 'Unauthorize the app'.toUpperCase(),
                 labelStyle: const TextStyle(
                   fontWeight: FontWeight.w700,
                 ),
+                icon: Icons.not_interested,
                 bgColor: Colors.blue, // Sostituisci con il colore desiderato
                 onPressed: () async {
                   await AuthorizeUtils.unauthorize();
