@@ -36,13 +36,14 @@ class SustainableMovingApp extends StatelessWidget {
       ],
       child: MaterialApp(
         initialRoute:
-            NavBar // <- CAMBIA QUA PER LAVORARE DIRETTAMENTE SU UNA PAGINA
+            HomePage // <- CAMBIA QUA PER LAVORARE DIRETTAMENTE SU UNA PAGINA
                 .routename,
         routes: {
           HomePage.routename: (context) => const HomePage(),
           NavBar.routename: (context) => const NavBar(),
           ChoosePage.routename: (context) => const ChoosePage(),
-          PathChoosingFeature.routename: (context) => const PathChoosingFeature(),
+          PathChoosingFeature.routename: (context) =>
+              const PathChoosingFeature(),
           LoginPage.routename: (context) => const LoginPage(),
           EditProfile.routename: (context) => const EditProfile(),
           TrainingPage.routename: (context) => const TrainingPage(),

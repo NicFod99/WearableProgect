@@ -25,7 +25,13 @@ class _LoginPage extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text(
+          'Login',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 28.0,
+          ),
+        ),
         centerTitle: true,
         titleSpacing: 0,
       ),

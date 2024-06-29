@@ -26,8 +26,8 @@ class HomePage extends StatelessWidget {
         body: Stack(
           children: [
             // Background image covering the entire screen
-            Image.network(
-              'https://fai-platform.imgix.net/media/sardegna/or/14199_spiaggia-is-arutas.jpg?crop=fit&w=1440&h=800&auto=format,compress',
+            Image.asset(
+              'assets/homepage.png',
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,
@@ -40,13 +40,13 @@ class HomePage extends StatelessWidget {
 
             // Positioned at the bottom
             Positioned(
-              bottom: 20.0,
+              bottom: 40.0,
               left: 0,
               right: 0,
               child: Center(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final fontSize = constraints.maxWidth * 0.05;
+                    final fontSize = constraints.maxWidth * 0.045;
                     return TweenAnimationBuilder<double>(
                       // Animazione scritta.
                       tween: Tween<double>(begin: 1, end: 1.5),
@@ -58,8 +58,9 @@ class HomePage extends StatelessWidget {
                             'Click anywhere to continue',
                             style: TextStyle(
                               fontSize: fontSize,
-                              color: Color.fromARGB(
-                                  255, 42, 131, 9), // Text color is white
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic,
+                              color: Color.fromARGB(255, 58, 136, 61),
                               shadows: [
                                 Shadow(
                                   blurRadius: 2.0,
