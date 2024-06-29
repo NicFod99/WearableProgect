@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:sustainable_moving/Models/favorite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pretty_animated_buttons/pretty_animated_buttons.dart';
 
 /* Profile page, utilizzata dall'utente per cambiare foto e info.
  * 
@@ -19,7 +20,8 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin {
   late TextEditingController _nameController;
   late TextEditingController _surnameController;
   late TextEditingController _heightController;
@@ -89,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     await prefs.setString('sex', 'M');
     await prefs.setInt('age', 0);
     await prefs.setString('imagePath', '');
-    await prefs.setBool('delete_personal',true);
+    await prefs.setBool('delete_personal', true);
   }
 
   @override
@@ -231,7 +233,12 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              PrettyCapsuleButton(
+                label: 'Edit Profile Info'.toUpperCase(),
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                ),
+                bgColor: Colors.blue, // Sostituisci con il colore desiderato
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -243,20 +250,24 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                           children: [
                             TextField(
                               controller: _nameController,
-                              decoration: const InputDecoration(labelText: 'Name'),
+                              decoration:
+                                  const InputDecoration(labelText: 'Name'),
                             ),
                             TextField(
                               controller: _surnameController,
-                              decoration: const InputDecoration(labelText: 'Surname'),
+                              decoration:
+                                  const InputDecoration(labelText: 'Surname'),
                             ),
                             TextField(
                               controller: _heightController,
-                              decoration: const InputDecoration(labelText: 'Height'),
+                              decoration:
+                                  const InputDecoration(labelText: 'Height'),
                               keyboardType: TextInputType.number,
                             ),
                             TextField(
                               controller: _weightController,
-                              decoration: const InputDecoration(labelText: 'Weight'),
+                              decoration:
+                                  const InputDecoration(labelText: 'Weight'),
                               keyboardType: TextInputType.number,
                             ),
                             DropdownButtonFormField<String>(
@@ -278,7 +289,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                             ),
                             TextField(
                               controller: _ageController,
-                              decoration: const InputDecoration(labelText: 'Age'),
+                              decoration:
+                                  const InputDecoration(labelText: 'Age'),
                               keyboardType: TextInputType.number,
                             ),
                           ],
@@ -297,10 +309,15 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                     },
                   );
                 },
-                child: const Text("Edit Profile Info"),
               ),
+              const SizedBox(height: 5),
               // Button to delete personal info
-              ElevatedButton(
+              PrettyCapsuleButton(
+                label: 'Delete Personal Info'.toUpperCase(),
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                ),
+                bgColor: Colors.blue, // Sostituisci con il colore desiderato
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -323,9 +340,14 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                     },
                   );
                 },
-                child: const Text("Delete Personal Info"),
               ),
-              ElevatedButton(
+              const SizedBox(height: 5),
+              PrettyCapsuleButton(
+                label: 'Authorize the app'.toUpperCase(),
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                ),
+                bgColor: Colors.blue, // Sostituisci con il colore desiderato
                 onPressed: () async {
                   final result = await AuthorizeUtils.authorize();
                   if (result == 200) {
@@ -336,23 +358,28 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                   } else {
                     ScaffoldMessenger.of(context)
                       ..removeCurrentSnackBar()
-                      ..showSnackBar(const SnackBar(content: Text('Request failed')));
+                      ..showSnackBar(
+                          const SnackBar(content: Text('Request failed')));
                   }
                 },
-                child: const Text('Authorize the app'),
               ),
-              ElevatedButton(
+              const SizedBox(height: 5),
+              PrettyCapsuleButton(
+                label: 'Unauthorize the app'.toUpperCase(),
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                ),
+                bgColor: Colors.blue, // Sostituisci con il colore desiderato
                 onPressed: () async {
                   await AuthorizeUtils.unauthorize();
                   //Remove data in the providers
                   Provider.of<HeartRateNotifier>(context, listen: false)
-                      .clearFavorite();    
+                      .clearFavorite();
                   ScaffoldMessenger.of(context)
                     ..removeCurrentSnackBar()
-                    ..showSnackBar(
-                        const SnackBar(content: Text('Tokens have been deleted')));
+                    ..showSnackBar(const SnackBar(
+                        content: Text('Tokens have been deleted')));
                 },
-                child: const Text('Unauthorize the app'),
               ),
               const SizedBox(height: 20),
               const Text(

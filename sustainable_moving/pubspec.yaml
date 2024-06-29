@@ -49,6 +49,7 @@ dependencies:
   circular_countdown_timer: ^0.2.3
   numberpicker: ^2.1.2
   fl_chart: ^0.40.0
+  pretty_animated_buttons: ^0.0.1
   
 dev_dependencies:
   flutter_test:
