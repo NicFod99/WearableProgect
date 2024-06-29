@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:pretty_animated_buttons/configs/pkg_colors.dart';
 import 'package:sustainable_moving/Screens/navBar.dart';
 import 'package:pretty_animated_buttons/pretty_animated_buttons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /* Login page, si passa con ID: "a", PASS: "a" per semplicità, i controller sono
  * messi nel dispose come suggerito per liberare memoria. 
  *
  * TODO: Fare in modo che non richiede ogni volta il login, ma lo salvi in 
- * shared preference, sicchè lo bypassi */
+ * shared preference, sicchè lo bypassi 
+ * TESTARE SE VA*/
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -22,6 +24,12 @@ class _LoginPage extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _wrongCredentials = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,11 +103,15 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-  void _login() {
+  Future<void> _login() async {
     final String username = _usernameController.text;
     final String password = _passwordController.text;
 
     if (username == 'a' && password == 'a') {
+      // Save login status
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+
       // Navigate to the homepage if credentials are correct
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => NavBar()));
@@ -114,6 +126,17 @@ class _LoginPage extends State<LoginPage> {
           _wrongCredentials = false;
         });
       });
+    }
+  }
+
+  void _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      // Navigate to the homepage if already logged in
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => NavBar()));
     }
   }
 
