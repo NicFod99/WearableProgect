@@ -65,7 +65,10 @@ class FavoritePage extends StatelessWidget {
           )
         ],
         centerTitle: true,
-        title: const Text("Favorite places"),
+        title: const Text(
+          "Favorite places",
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 28),
+        ),
       ),
       body: ListView.builder(
         itemCount: item.products.length,

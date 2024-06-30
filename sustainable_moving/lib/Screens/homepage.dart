@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pretty_animated_buttons/configs/pkg_colors.dart';
 import 'package:sustainable_moving/Screens/loginPage.dart';
 
 /* Pagine HomePage, ho voluto provare Image.Network, richiama un link dove c'è
@@ -25,16 +26,15 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         body: Stack(
           children: [
-            // Background image covering the entire screen
-            Image.asset(
-              'assets/whiteHome.png',
-              fit: BoxFit.cover,
+            // Container bianco che copre l'intero schermo
+            Container(
+              color: Colors.white,
               width: double.infinity,
               height: double.infinity,
             ),
             Positioned(
               child: Center(
-                child: Image.asset('assets/Logo.png'),
+                child: Image.asset('assets/LogoClean.png'),
               ),
             ),
 
@@ -54,20 +54,22 @@ class HomePage extends StatelessWidget {
                       builder: (context, value, child) {
                         return Transform.scale(
                           scale: value,
-                          child: Text(
-                            'Click anywhere to continue',
+                          child: const Text(
+                            'Click anywhere \nto continue',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: fontSize,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                              color: Color.fromARGB(255, 58, 136, 61),
-                              shadows: [
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              fontStyle: FontStyle.normal,
+                              color: Color.fromARGB(255, 47, 125, 49),
+                              height: 1.1,
+                              /*shadows: [
                                 Shadow(
                                   blurRadius: 2.0,
                                   color: Colors.black.withOpacity(0.6),
                                   offset: Offset(0, 2),
                                 ),
-                              ],
+                              ],*/
                             ),
                           ),
                         );

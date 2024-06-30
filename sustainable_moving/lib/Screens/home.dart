@@ -152,8 +152,8 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
             child: Text(
               "Destination Nearby",
               style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+                fontSize: 28,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),

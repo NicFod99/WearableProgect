@@ -91,7 +91,10 @@ class _TrainingPage extends State<TrainingPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Training Page"),
+        title: const Text(
+          "Activity",
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 28),
+        ),
       ),
       body: SingleChildScrollView(
         child: Center(

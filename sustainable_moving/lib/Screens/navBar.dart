@@ -34,7 +34,7 @@ class _NavBar extends State<NavBar> {
         index: _selectedIndex,
         children: const [
           ChoosePage(),
-          PathChoosingFeature(), 
+          PathChoosingFeature(),
           FavoritePage(),
           TrainingPage(),
           ProfilePage(),
@@ -49,8 +49,9 @@ class _NavBar extends State<NavBar> {
           });
         },
         iconSize: 25, // Adjust the icon size
-        selectedItemColor: Colors.green, // Adjust the selected item color
-        unselectedItemColor: Colors.green,
+        selectedItemColor: const Color.fromARGB(
+            255, 3, 81, 146), // Adjust the selected item color
+        unselectedItemColor: Colors.blue,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

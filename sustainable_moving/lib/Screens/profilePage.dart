@@ -166,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage>
             children: [
               const Text(
                 'Profile',
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25),
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 28),
               ),
               const SizedBox(height: 10),
               Center(
