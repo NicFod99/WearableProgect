@@ -49,6 +49,7 @@ class _ProfilePageState extends State<ProfilePage>
     _imagePath = "";
 
     _loadProfileInfo();
+    _saveProfileInfo();
   }
 
   Future<void> _loadProfileInfo() async {
@@ -109,8 +110,8 @@ class _ProfilePageState extends State<ProfilePage>
     setState(() {
       _name = _nameController.text;
       _surname = _surnameController.text;
-      _height = int.parse(_heightController.text);
-      _weight = double.parse(_weightController.text);
+      _height = int.tryParse(_heightController.text)??0;
+      _weight = double.tryParse(_weightController.text)??0;
       _sex = _sexController.text;
       _age = int.tryParse(_ageController.text) ?? 0;
     });
@@ -125,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage>
       _name = "";
       _surname = "";
       _height = 0;
-      _weight = 0;
+      _weight = 0.0;
       _age = 0;
       _imagePath = "";
       _nameController.text = "";
