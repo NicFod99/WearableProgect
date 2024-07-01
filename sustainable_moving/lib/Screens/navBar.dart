@@ -33,8 +33,7 @@ class _NavBar extends State<NavBar> {
       body: IndexedStack(
         index: _selectedIndex,
         children: const [
-          ChoosePage(),
-          PathChoosingFeature(), 
+          ChoosePage(), 
           FavoritePage(),
           TrainingPage(),
           ProfilePage(),
@@ -55,10 +54,6 @@ class _NavBar extends State<NavBar> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.roundabout_left),
-            label: 'Path',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),

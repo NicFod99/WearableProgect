@@ -19,7 +19,8 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin {
   late TextEditingController _nameController;
   late TextEditingController _surnameController;
   late TextEditingController _heightController;
@@ -47,6 +48,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     _imagePath = "";
 
     _loadProfileInfo();
+    _saveProfileInfo();
   }
 
   Future<void> _loadProfileInfo() async {
@@ -89,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     await prefs.setString('sex', 'M');
     await prefs.setInt('age', 0);
     await prefs.setString('imagePath', '');
-    await prefs.setBool('delete_personal',true);
+    await prefs.setBool('delete_personal', true);
   }
 
   @override
@@ -107,8 +109,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
     setState(() {
       _name = _nameController.text;
       _surname = _surnameController.text;
-      _height = int.parse(_heightController.text);
-      _weight = double.parse(_weightController.text);
+      _height = int.tryParse(_heightController.text)??0;
+      _weight = double.tryParse(_weightController.text)??0;
       _sex = _sexController.text;
       _age = int.tryParse(_ageController.text) ?? 0;
     });
@@ -123,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
       _name = "";
       _surname = "";
       _height = 0;
-      _weight = 0;
+      _weight = 0.0;
       _age = 0;
       _imagePath = "";
       _nameController.text = "";
@@ -243,20 +245,24 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                           children: [
                             TextField(
                               controller: _nameController,
-                              decoration: const InputDecoration(labelText: 'Name'),
+                              decoration:
+                                  const InputDecoration(labelText: 'Name'),
                             ),
                             TextField(
                               controller: _surnameController,
-                              decoration: const InputDecoration(labelText: 'Surname'),
+                              decoration:
+                                  const InputDecoration(labelText: 'Surname'),
                             ),
                             TextField(
                               controller: _heightController,
-                              decoration: const InputDecoration(labelText: 'Height'),
+                              decoration:
+                                  const InputDecoration(labelText: 'Height'),
                               keyboardType: TextInputType.number,
                             ),
                             TextField(
                               controller: _weightController,
-                              decoration: const InputDecoration(labelText: 'Weight'),
+                              decoration:
+                                  const InputDecoration(labelText: 'Weight'),
                               keyboardType: TextInputType.number,
                             ),
                             DropdownButtonFormField<String>(
@@ -278,7 +284,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                             ),
                             TextField(
                               controller: _ageController,
-                              decoration: const InputDecoration(labelText: 'Age'),
+                              decoration:
+                                  const InputDecoration(labelText: 'Age'),
                               keyboardType: TextInputType.number,
                             ),
                           ],
@@ -336,7 +343,8 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                   } else {
                     ScaffoldMessenger.of(context)
                       ..removeCurrentSnackBar()
-                      ..showSnackBar(const SnackBar(content: Text('Request failed')));
+                      ..showSnackBar(
+                          const SnackBar(content: Text('Request failed')));
                   }
                 },
                 child: const Text('Authorize the app'),
@@ -346,11 +354,11 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                   await AuthorizeUtils.unauthorize();
                   //Remove data in the providers
                   Provider.of<HeartRateNotifier>(context, listen: false)
-                      .clearFavorite();    
+                      .clearFavorite();
                   ScaffoldMessenger.of(context)
                     ..removeCurrentSnackBar()
-                    ..showSnackBar(
-                        const SnackBar(content: Text('Tokens have been deleted')));
+                    ..showSnackBar(const SnackBar(
+                        content: Text('Tokens have been deleted')));
                 },
                 child: const Text('Unauthorize the app'),
               ),

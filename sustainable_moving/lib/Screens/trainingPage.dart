@@ -27,7 +27,7 @@ class _TrainingPage extends State<TrainingPage> {
   List todayDistances = [];
   double _todayDistance = 0.0;
   List weeklyDistances = [];
-  List weeklyDistancesGraph = [];
+  List weeklyDistancesGraph = [0,0,0,0,0,0,0];
   double weeklyDistanceMean = 0.0;
   double _distanceGoal = 5.0; // Default goal
   final Random random = Random();
@@ -334,8 +334,8 @@ class _TrainingPage extends State<TrainingPage> {
           insetPadding: EdgeInsets.all(0),
           backgroundColor: Colors.transparent,
           child: Container(
-            width: MediaQuery.of(context).size.width*0.9,
-            height: MediaQuery.of(context).size.height*0.5,
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.5,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -607,6 +607,7 @@ class _TrainingPage extends State<TrainingPage> {
         _waterIntake = 0;
         _distanceGoal = 5.0; // Reset to default goal
         weeklyDistances.clear();
+        weeklyDistancesGraph = [0, 0, 0, 0, 0, 0, 0];
       });
       prefs.remove('delete_personal');
     }
@@ -660,10 +661,10 @@ class _TrainingPage extends State<TrainingPage> {
         print("Unable to fetch Distance datas...");
       }
       weeklyDistances.add(dailyDistance / 100000);
+      weeklyDistancesGraph[i] = dailyDistance / 100000;
     }
     //Calculate the mean
     weeklyDistanceMean = totalDistance / days.length / 100000;
-    weeklyDistancesGraph = weeklyDistances;
   }
 
   // Get user weight from shared preferences and update water goal
