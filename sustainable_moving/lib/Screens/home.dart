@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sustainable_moving/Models/favorite.dart';
 import 'package:sustainable_moving/Models/items.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChoosePage extends StatefulWidget {
   const ChoosePage({super.key});
@@ -21,9 +22,6 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
   final Catalog catalog = Catalog(); // Define the catalog here
   late List<bool> _isFavorite; // Tracks the favorite status of each item
 
-  /* Init state dove viene utilizzato l'animazione di quando si clicca sul cuore
-   *  o sull'info, viene richiamato ogni volta che la pagina si aggiorna. */
-
   @override
   void initState() {
     super.initState();
@@ -39,7 +37,6 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     _isFavorite = List<bool>.filled(catalog.items.length,
         false); // Initialize all elements as non-favorites
 
-    // Listener per aggiornare _isFavorite quando i preferiti cambiano
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<Favorite>(context, listen: false)
           .addListener(_updateFavorites);
@@ -47,13 +44,9 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     });
   }
 
-  /* Attenti con il dispose, utilizzato per deallocare memoria (è una free),
-   * aiuta a evitare che crashi. */
-
   @override
   void dispose() {
     _controller.dispose();
-    //Check if provider is active before removing the listener
     Provider.of<Favorite>(context, listen: false)
         .removeListener(_updateFavorites);
     super.dispose();
@@ -80,16 +73,13 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
         catalog.items[index].length); // Show description and length on tap
   }
 
-  // E' il push sulla lista item.
   void _addToFavorites(int index) {
     setState(() {
       if (_isFavorite[index]) {
-        // Se l'elemento è già nei preferiti (pulsante rosso), rimuovilo
         _isFavorite[index] = false;
         Provider.of<Favorite>(context, listen: false)
             .removeProduct(catalog.items[index]);
       } else {
-        // Se l'elemento non è nei preferiti, aggiungilo
         _isFavorite[index] = true;
         Provider.of<Favorite>(context, listen: false)
             .addProduct(catalog.items[index]);
@@ -97,7 +87,6 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     });
   }
 
-  // Pop-Up info path
   void _showDescription(
       BuildContext context, String name, String description, double length) {
     showDialog(
@@ -120,7 +109,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                     'Length: ',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text('$length km'),
+                  Text('$length m'),
                 ],
               ),
             ],
@@ -136,6 +125,14 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
         );
       },
     );
+  }
+
+  void _openMap(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -157,11 +154,10 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
               ),
             ),
           ),
-          // Disegna il listato di item da addare nella lista item di favorite.
           Expanded(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: MediaQuery.of(context).size.width ~/ 200,
+                crossAxisCount: 1,
                 mainAxisSpacing: 4.0,
                 crossAxisSpacing: 4.0,
                 childAspectRatio: 4 / 3,
@@ -169,7 +165,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
               itemCount: catalog.items.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                  onTap: () => _handleTap(index), // Pass index to _handleTap
+                  onTap: () => _handleTap(index),
                   child: Stack(
                     children: [
                       SizedBox(
@@ -215,16 +211,21 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                                   IconButton(
                                     onPressed: () {
                                       _addToFavorites(index);
-                                      _controller.forward(
-                                          from:
-                                              0); // Start animation from the beginning
+                                      _controller.forward(from: 0);
                                     },
                                     icon: Icon(Icons.favorite),
                                     color: _isFavorite[index]
                                         ? Colors.red
-                                        : Colors
-                                            .white, // Change the color according to the status
+                                        : Colors.white,
                                     tooltip: 'Add to Favorites',
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      _openMap(catalog.items[index].mapUrl);
+                                    },
+                                    icon: Icon(Icons.map),
+                                    color: Colors.white,
+                                    tooltip: 'Open Map',
                                   ),
                                 ],
                               ),

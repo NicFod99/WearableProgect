@@ -33,7 +33,7 @@ class FavoritePage extends StatelessWidget {
                     'Length: ',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text('$length km'),
+                  Text('$length m'),
                 ],
               ),
             ],
