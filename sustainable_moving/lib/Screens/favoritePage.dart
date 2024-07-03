@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sustainable_moving/Models/favorite.dart';
 import 'package:sustainable_moving/Models/items.dart';
-
-/* Pagine Favorite, prende dal listato item e aggiunge tramite item builder ciò
- * che è presente nella lista item del provider Favorite */
+import 'package:url_launcher/url_launcher.dart';
 
 class FavoritePage extends StatelessWidget {
   const FavoritePage({super.key});
@@ -49,6 +47,14 @@ class FavoritePage extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _openMap(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -98,23 +104,36 @@ class FavoritePage extends StatelessWidget {
                       child: Container(
                         color: Colors.black.withOpacity(0.5),
                         padding: EdgeInsets.all(8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              pathData.name,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  pathData.name,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  "Length: ${pathData.length} m",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              "Length: ${pathData.length} m",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                              ),
+                            IconButton(
+                              onPressed: () {
+                                _openMap(pathData.mapUrl);
+                              },
+                              icon: Icon(Icons.map),
+                              color: Colors.white,
+                              tooltip: 'Open Map',
                             ),
                           ],
                         ),
