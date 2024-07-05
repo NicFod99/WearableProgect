@@ -62,16 +62,21 @@ class HeartRateNotifier extends ChangeNotifier {
         '${Impact.baseUrl}${Impact.hrEndpoint}${Impact.patientUsername}/day/$day/';
     final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};
 
-    final response = await http.get(Uri.parse(url), headers: headers);
+    try {
+      final response = await http.get(Uri.parse(url), headers: headers);
 
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      result = [];
-      for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        result.add(HeartRate.fromJson(decodedResponse['data']['date'],
-            decodedResponse['data']['data'][i]));
+      if (response.statusCode == 200) {
+        final decodedResponse = jsonDecode(response.body);
+        result = [];
+        for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
+          result.add(HeartRate.fromJson(decodedResponse['data']['date'],
+              decodedResponse['data']['data'][i]));
+        }
+      } else {
+        result = null;
       }
-    } else {
+    } catch (e) {
+      print("Error occurred during HTTP request: $e");
       result = null;
     }
 
@@ -81,7 +86,6 @@ class HeartRateNotifier extends ChangeNotifier {
   Future<List<HeartRate>?> fetchData() async {
     return _requestData();
   }
-
 
   List<double> _dataPicker() {
     List<double> heartRatetoList =
