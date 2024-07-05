@@ -1,4 +1,3 @@
-// Importing necessary libraries
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -20,14 +19,12 @@ class DistanceNotifier extends ChangeNotifier {
   // Method to add a distance to the list
   void addProduct(Distance product) {
     distances.add(product);
-    // Notify all the listeners about this update
     notifyListeners();
   }
 
   // Method to clear all distances
   void clearFavorite() {
     distances.clear();
-    // Notify all the listeners about this update
     notifyListeners();
   }
 
@@ -40,7 +37,7 @@ class DistanceNotifier extends ChangeNotifier {
       distances = distance;
     } else {
       // Log the error message
-      logger.e("Unable to fetch Distance datas...");
+      logger.e("Unable to fetch Distance data...");
     }
     // Notify all the listeners about this update
     notifyListeners();
@@ -52,29 +49,42 @@ class DistanceNotifier extends ChangeNotifier {
     final sp = await SharedPreferences.getInstance();
     var access = sp.getString('access');
 
-    if (access!= null && JwtDecoder.isExpired(access!)) {
+    if (access != null && JwtDecoder.isExpired(access)) {
       await AuthorizeUtils.refreshTokens();
       access = sp.getString('access');
     }
-    final url = '${Impact.baseUrl}${Impact.distanceEndpoint}${Impact.patientUsername}/day/$day/';
+
+    final url =
+        '${Impact.baseUrl}${Impact.distanceEndpoint}${Impact.patientUsername}/day/$day/';
 
     // Send the GET request
-    final response = await http.get(Uri.parse(url), headers: {
-      HttpHeaders.authorizationHeader: 'Bearer $access',
-    });
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {HttpHeaders.authorizationHeader: 'Bearer $access'},
+      );
 
-    // If the response is successful, parse the data
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      result = [];
-      for (var item in decodedResponse['data']['data']) {
-        result.add(Distance.fromJson(decodedResponse['data']['date'],item));
+      // If the response is successful, parse the data
+      if (response.statusCode == 200) {
+        final decodedResponse = jsonDecode(response.body);
+        result = [];
+        for (var item in decodedResponse['data']['data']) {
+          result.add(Distance.fromJson(decodedResponse['data']['date'], item));
+        }
+      } else {
+        result = null;
       }
-    } else {
+    } on SocketException catch (e) {
+      print('Network error: $e');
+      result = null;
+    } on http.ClientException catch (e) {
+      print('Client error: $e');
+      result = null;
+    } catch (e) {
+      print('An unexpected error occurred: $e');
       result = null;
     }
 
-    // Return the result
     return result;
   }
 
@@ -87,5 +97,5 @@ class DistanceNotifier extends ChangeNotifier {
     // Map the distances to their integer values and take the first 5
     List<int> distanceList = distances.map((e) => e.value.toInt()).toList();
     return distanceList.take(5).toList();
-  } 
+  }
 }
