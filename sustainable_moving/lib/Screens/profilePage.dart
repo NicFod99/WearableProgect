@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:material_design_icons_flutter/icon_map.dart';
+import 'package:pretty_animated_buttons/configs/pkg_colors.dart';
 import 'package:sustainable_moving/Screens/navBar.dart';
 import 'dart:io';
 import '/utils/authorize_utils.dart';
@@ -110,8 +113,8 @@ class _ProfilePageState extends State<ProfilePage>
     setState(() {
       _name = _nameController.text;
       _surname = _surnameController.text;
-      _height = int.tryParse(_heightController.text)??0;
-      _weight = double.tryParse(_weightController.text)??0;
+      _height = int.tryParse(_heightController.text) ?? 0;
+      _weight = double.tryParse(_weightController.text) ?? 0;
       _sex = _sexController.text;
       _age = int.tryParse(_ageController.text) ?? 0;
     });
@@ -314,13 +317,77 @@ class _ProfilePageState extends State<ProfilePage>
               ),
               const SizedBox(height: 10),
               // Button to delete personal info
-              PrettyCapsuleButton(
+              /*PrettyCapsuleButton(
                 label: 'Delete Personal Info'.toUpperCase(),
                 labelStyle: const TextStyle(
                   fontWeight: FontWeight.w700,
                 ),
                 icon: Icons.delete,
                 bgColor: Colors.blue, // Sostituisci con il colore desiderato
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Delete Personal Info'),
+                        content: const Text(
+                            'Are you sure you want to delete your personal info?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: _deletePersonalInfo,
+                            child: const Text('Delete'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),*/
+              PrettyWaveButton(
+                // ignore: sort_child_properties_last
+                child: const Text(
+                  'Delete Personal Info',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                backgroundColor: Colors.blue,
+                verticalPadding: 12,
+                horizontalPadding: 34,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Delete Personal Info'),
+                        content: const Text(
+                            'Are you sure you want to delete your personal info?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: _deletePersonalInfo,
+                            child: const Text('Delete'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+              PrettySlideIconButton(
+                foregroundColor: Colors.blue,
+                icon: Icons.delete,
+                label: 'Delete Personal Info',
+                slidePosition: SlidePosition.left,
+                labelStyle: const TextStyle(fontWeight: FontWeight.w700),
                 onPressed: () {
                   showDialog(
                     context: context,
