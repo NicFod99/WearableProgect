@@ -28,7 +28,7 @@ class _TrainingPage extends State<TrainingPage> {
   List todayDistances = [];
   double _todayDistance = 0.0;
   List weeklyDistances = [];
-  List weeklyDistancesGraph = [0,0,0,0,0,0,0];
+  List weeklyDistancesGraph = [0, 0, 0, 0, 0, 0, 0];
   double weeklyDistanceMean = 0.0;
   double _distanceGoal = 5.0; // Default goal
   final Random random = Random();
@@ -208,17 +208,16 @@ class _TrainingPage extends State<TrainingPage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               _buildDistanceTracker(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               const Text(
                 'Water Tracker',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 10),
               Wrap(
                 spacing: 10,
                 children: List.generate(
@@ -269,7 +268,7 @@ class _TrainingPage extends State<TrainingPage> {
                 'Total: ${(_waterIntake * 0.5).toStringAsFixed(1)} liters / Goal: ${_waterGoal.toStringAsFixed(1)} liters',
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(height: 20),
@@ -288,8 +287,8 @@ class _TrainingPage extends State<TrainingPage> {
         const Text(
           'Distance Tracker',
           style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
           ),
         ),
         const SizedBox(height: 10),
@@ -297,7 +296,7 @@ class _TrainingPage extends State<TrainingPage> {
           _getDistanceComparisonMessage(),
           style: const TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
             color: Colors.black,
           ),
           textAlign: TextAlign.center,
@@ -317,7 +316,7 @@ class _TrainingPage extends State<TrainingPage> {
           '${_todayDistance.toStringAsFixed(2)} km / ${_distanceGoal.toStringAsFixed(2)} km',
           style: const TextStyle(
             fontSize: 16,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 10),
@@ -553,7 +552,7 @@ class _TrainingPage extends State<TrainingPage> {
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 5),
           ScrollDateTimePicker(
