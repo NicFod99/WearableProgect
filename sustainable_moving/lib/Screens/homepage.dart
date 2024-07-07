@@ -26,6 +26,8 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         body: Stack(
           children: [
+            Image.asset('assets/background.jpg'),
+
             // Container bianco che copre l'intero schermo
             Container(
               color: Colors.white,

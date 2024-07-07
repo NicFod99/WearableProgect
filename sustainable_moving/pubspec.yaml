@@ -51,6 +51,7 @@ dependencies:
   fl_chart: ^0.40.0
   pretty_animated_buttons: ^0.0.1
   url_launcher: ^6.0.9
+  nice_buttons: ^0.0.3
   
 dev_dependencies:
   flutter_test:
@@ -65,6 +66,7 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   animations: ^2.0.11
   eva_icons_flutter: ^3.1.0
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -86,6 +88,7 @@ flutter:
     - assets/Pd3.jpg
     - assets/Pd4.jpg
     - assets/Pd5.jpg
+    - assets/background.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -23,7 +23,8 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPage extends State<TrainingPage> {
-  String today = '2023-05-04'; //TODO change to DateTime.now().toString().substring(0, 10);
+  String today =
+      '2023-05-04'; //TODO change to DateTime.now().toString().substring(0, 10);
   List pulses = [];
   List todayDistances = [];
   double _todayDistance = 0.0;
@@ -147,8 +148,8 @@ class _TrainingPage extends State<TrainingPage> {
                       width: MediaQuery.of(context).size.width / 2.7,
                       height: MediaQuery.of(context).size.height / 2.7,
                       ringColor: const Color.fromARGB(255, 247, 236, 137),
-                      fillColor: Colors.orange,
-                      backgroundColor: Colors.red,
+                      fillColor: Color.fromARGB(255, 9, 166, 14),
+                      backgroundColor: Color.fromARGB(255, 161, 132, 44),
                       backgroundGradient: null,
                       strokeWidth: 30.0,
                       strokeCap: StrokeCap.round,
@@ -236,7 +237,7 @@ class _TrainingPage extends State<TrainingPage> {
                       fontWeight: FontWeight.w700,
                     ),
                     icon: Icons.local_drink,
-                    bgColor: Colors.blue,
+                    bgColor: Color.fromARGB(255, 9, 166, 14),
                     onPressed: () {
                       setState(() {
                         _waterIntake++;
@@ -252,7 +253,7 @@ class _TrainingPage extends State<TrainingPage> {
                       fontWeight: FontWeight.w700,
                     ),
                     icon: Icons.delete,
-                    bgColor: Colors.blue,
+                    bgColor: Color.fromARGB(255, 9, 166, 14),
                     onPressed: () {
                       setState(() {
                         if (_waterIntake > 0) _waterIntake--;
@@ -307,7 +308,7 @@ class _TrainingPage extends State<TrainingPage> {
           child: LinearProgressIndicator(
             value: progress,
             backgroundColor: Colors.grey[300],
-            color: Colors.blue,
+            color: Color.fromARGB(255, 9, 166, 14),
             minHeight: 20,
           ),
         ),
@@ -329,7 +330,7 @@ class _TrainingPage extends State<TrainingPage> {
                 fontWeight: FontWeight.w700,
               ),
               icon: Icons.directions_run,
-              bgColor: Colors.blue,
+              bgColor: Color.fromARGB(255, 9, 166, 14),
               onPressed: () => _showGoalSettingDialog(context),
             ),
             const SizedBox(height: 10), // Add some spacing between buttons
@@ -339,7 +340,7 @@ class _TrainingPage extends State<TrainingPage> {
                 fontWeight: FontWeight.w700,
               ),
               icon: Icons.bar_chart,
-              bgColor: Colors.blue,
+              bgColor: Color.fromARGB(255, 9, 166, 14),
               onPressed: () => _showWeeklyChart(context),
             ),
           ],
@@ -442,7 +443,8 @@ class _TrainingPage extends State<TrainingPage> {
             leftTitles: SideTitles(
               showTitles: true,
               getTitles: (double value) {
-                if (value == yAxisMax) return '${value.toInt()} km';
+                if (value == yAxisMax || value == 25)
+                  return 'Km ${value.toInt()}';
                 return '${value.toInt()}';
               },
               getTextStyles: (context, value) => const TextStyle(
@@ -503,7 +505,7 @@ class _TrainingPage extends State<TrainingPage> {
                 fontWeight: FontWeight.w700,
               ),
               icon: Icons.save,
-              bgColor: Colors.blue,
+              bgColor: Color.fromARGB(255, 9, 166, 14),
               onPressed: () {
                 double newGoal =
                     double.tryParse(goalController.text) ?? _distanceGoal;
@@ -532,7 +534,9 @@ class _TrainingPage extends State<TrainingPage> {
     return Expanded(
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.red),
+          backgroundColor: MaterialStateProperty.all(
+            Color.fromARGB(255, 9, 166, 14),
+          ),
         ),
         onPressed: onPressed,
         child: Icon(

@@ -11,6 +11,7 @@ import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:sustainable_moving/Models/favorite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pretty_animated_buttons/pretty_animated_buttons.dart';
+import 'package:nice_buttons/nice_buttons.dart';
 
 /* Profile page, utilizzata dall'utente per cambiare foto e info.
  * 
@@ -237,14 +238,10 @@ class _ProfilePageState extends State<ProfilePage>
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 20),
-              PrettyCapsuleButton(
-                label: 'Edit Profile Info'.toUpperCase(),
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                ),
-                icon: Icons.edit,
-                bgColor: Colors.blue, // Sostituisci con il colore desiderato
-                onPressed: () {
+              NiceButtons(
+                stretch: true,
+                gradientOrientation: GradientOrientation.Horizontal,
+                onTap: (finish) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -314,7 +311,16 @@ class _ProfilePageState extends State<ProfilePage>
                     },
                   );
                 },
+                child: Text(
+                  'Edit Profile Info',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
               ),
+              //PrettyNeumorphicButton(
+              //label: 'Edit Personal Info',
+              //icon: Icons.edit,
+              //bgColor: Colors.blue, // Sostituisci con il colore desiderato
+              //),
               const SizedBox(height: 10),
               // Button to delete personal info
               /*PrettyCapsuleButton(
