@@ -23,7 +23,7 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPage extends State<TrainingPage> {
-  String today = '2023-05-04';
+  String today = '2023-05-04'; //TODO change to DateTime.now().toString().substring(0, 10);
   List pulses = [];
   List todayDistances = [];
   double _todayDistance = 0.0;
@@ -400,6 +400,17 @@ class _TrainingPage extends State<TrainingPage> {
   }
 
   Widget _buildWeeklyChartContent() {
+    // Get today's and yesterday's date
+    final DateTime todayDate = DateTime.parse(DateTime.now().toString());
+    final DateTime yesterdayDate = todayDate.subtract(Duration(days: 1));
+
+    // Get the day names for the last 7 days ending with yesterday
+    List<String> days = [];
+    for (int i = 6; i >= 0; i--) {
+      final DateTime day = yesterdayDate.subtract(Duration(days: i));
+      days.add(DateFormat('EEE').format(day));
+    }
+
     // Calculate the maximum distance for the y-axis range
     double maxDistance = 0;
     for (int i = 0; i < weeklyDistancesGraph.length; i++) {
@@ -419,24 +430,7 @@ class _TrainingPage extends State<TrainingPage> {
             bottomTitles: SideTitles(
               showTitles: true,
               getTitles: (double value) {
-                switch (value.toInt()) {
-                  case 0:
-                    return 'Mon';
-                  case 1:
-                    return 'Tue';
-                  case 2:
-                    return 'Wed';
-                  case 3:
-                    return 'Thu';
-                  case 4:
-                    return 'Fri';
-                  case 5:
-                    return 'Sat';
-                  case 6:
-                    return 'Sun';
-                  default:
-                    return '';
-                }
+                return days[value.toInt()];
               },
               getTextStyles: (context, value) => const TextStyle(
                 color: Color(0xff7589a2),
@@ -448,7 +442,8 @@ class _TrainingPage extends State<TrainingPage> {
             leftTitles: SideTitles(
               showTitles: true,
               getTitles: (double value) {
-                return '${value.toInt()} km';
+                if (value == yAxisMax) return '${value.toInt()} km';
+                return '${value.toInt()}';
               },
               getTextStyles: (context, value) => const TextStyle(
                 color: Color(0xff7589a2),
@@ -464,9 +459,13 @@ class _TrainingPage extends State<TrainingPage> {
           borderData: FlBorderData(
             show: false,
           ),
+          gridData: FlGridData(
+            drawVerticalLine: false, // Remove vertical grid lines
+            drawHorizontalLine: true,
+          ),
           barGroups: weeklyDistancesGraph.asMap().entries.map((entry) {
             int index = entry.key;
-            double distance = entry.value;
+            double distance = entry.value.toDouble();
             return BarChartGroupData(
               x: index,
               barRods: [
@@ -661,24 +660,22 @@ class _TrainingPage extends State<TrainingPage> {
 
   //Get the mean of the weekly distance
   Future<void> getWeeklyDistanceMean() async {
-    //List of 7 days before today
     final List<String> days = [];
-    //Use today variable to get the current date
     final DateTime todayDate = DateTime.parse(today);
-    //Get the day of the week
-    final int dayOfWeek = todayDate.weekday;
-    //Get the date of the last 7 days
+
+    // Get the last 7 days including today
     for (int i = 0; i < 7; i++) {
-      final DateTime day = todayDate.subtract(Duration(days: dayOfWeek + i));
-      days.add(day.toString().substring(0, 10));
+      final DateTime day = todayDate.subtract(Duration(days: i));
+      days.add(DateFormat('yyyy-MM-dd').format(day));
     }
-    //Get the distance of the last 7 days
+    //Reverse the list
+    days.reversed;
+
+    // Initialize variables
     double totalDistance = 0.0;
     weeklyDistances.clear();
     for (int i = 0; i < days.length; i++) {
       List<Distance>? distance = await DistanceNotifier().fetchData(days[i]);
-      //If the distance is not null and not empty add it to the list
-      //Otherwise print an error message
       double dailyDistance = 0.0;
       if (distance != null && distance.isNotEmpty) {
         for (int j = 0; j < distance.length; j++) {
@@ -686,12 +683,15 @@ class _TrainingPage extends State<TrainingPage> {
           totalDistance += distance[j].value;
         }
       } else {
-        print("Unable to fetch Distance datas...");
+        print("Unable to fetch Distance datas for ${days[i]}...");
       }
-      weeklyDistances.add(dailyDistance / 100000);
-      weeklyDistancesGraph[i] = dailyDistance / 100000;
+
+      // Store the distance in the list and graph in reverse order
+      weeklyDistances.insert(0, dailyDistance / 100000);
+      weeklyDistancesGraph[6 - i] = dailyDistance / 100000;
     }
-    //Calculate the mean
+
+    // Calculate the mean
     weeklyDistanceMean = totalDistance / days.length / 100000;
   }
 
