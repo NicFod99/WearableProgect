@@ -26,7 +26,7 @@ class TrainingPage extends StatefulWidget {
 
 class _TrainingPage extends State<TrainingPage> {
   String today =
-      '2023-05-04'; //TODO change to DateTime.now().toString().substring(0, 10);
+      '2023-05-04'; //TODO change to DateTime.now().toString().substring(0, 10) for production
   List pulses = [];
   List todayDistances = [];
   double _todayDistance = 0.0;
