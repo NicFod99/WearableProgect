@@ -113,7 +113,7 @@ class Catalog {
         name: 'Parco di San Giuliano',
         length: 750,
         description: 'From Ponte of San Giuliano to the Center of the Park.',
-        imagePath: 'assets/Vz1.png',
+        imagePath: 'assets/Vz1.jpg',
         mapUrl:
             "https://www.google.com/maps/dir/Ponte+San+Giuliano,+Via+Orlanda,+Venezia,+VE/Parco+di+San+Giuliano,+Via+Orlanda,+30173+Venezia+VE/@45.4738565,12.268959,16z/data=!4m14!4m13!1m5!1m1!1s0x477eb3f96c54a1a7:0xffa00ad4164feb20!2m2!1d12.2670732!2d45.477694!1m5!1m1!1s0x477eb3e3a7e6564d:0xe8dbeb23eb939ec3!2m2!1d12.2760376!2d45.4743271!3e2?entry=ttu",
       ),

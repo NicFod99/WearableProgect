@@ -163,498 +163,348 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                'Profile',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 28),
-              ),
-              const SizedBox(height: 10),
-              Center(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.black, width: 2),
-                      ),
-                      child: _imagePath.isNotEmpty
-                          ? ClipOval(
-                              child: Image.file(
-                                File(_imagePath),
-                                fit: BoxFit.cover,
-                                width: 120,
-                                height: 120,
-                              ),
-                            )
-                          : const Icon(Icons.person,
-                              size: 80), // Placeholder icon if no image
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: ElevatedButton(
-                        onPressed: _pickImage,
-                        child: const Icon(
-                          Icons.edit,
-                          color: Color.fromARGB(255, 7, 126, 11),
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          "Profile",
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 28),
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 10),
+                Center(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.black, width: 2),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          shape: const CircleBorder(),
-                          padding: const EdgeInsets.all(10),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Name: $_name",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "Surname: $_surname",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "Height: $_height cm",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "Weight: $_weight kg",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "Sex: $_sex",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "Age: $_age",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              /*NiceButtons(
-                startColor: Color.fromARGB(255, 9, 166, 14),
-                endColor: Color.fromARGB(255, 9, 166, 14),
-                borderColor: Color.fromARGB(255, 7, 126, 11),
-                width: 200,
-                height: 40,
-                stretch: false,
-                gradientOrientation: GradientOrientation.Horizontal,
-                onTap: (finish) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text(
-                          'Modify Profile Info',
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextField(
-                              controller: _nameController,
-                              decoration: const InputDecoration(
-                                  labelText: 'Name',
-                                  labelStyle: TextStyle(fontSize: 16)),
-                            ),
-                            TextField(
-                              controller: _surnameController,
-                              decoration: const InputDecoration(
-                                  labelText: 'Surname',
-                                  labelStyle: TextStyle(fontSize: 16)),
-                            ),
-                            TextField(
-                              controller: _heightController,
-                              decoration: const InputDecoration(
-                                  labelText: 'Height (cm)',
-                                  labelStyle: TextStyle(fontSize: 16)),
-                              keyboardType: TextInputType.number,
-                            ),
-                            TextField(
-                              controller: _weightController,
-                              decoration: const InputDecoration(
-                                  labelText: 'Weight (kg)',
-                                  labelStyle: TextStyle(fontSize: 16)),
-                              keyboardType: TextInputType.number,
-                            ),
-                            DropdownButtonFormField<String>(
-                              value: _sex,
-                              onChanged: (newValue) {
-                                setState(() {
-                                  _sex = newValue!;
-                                });
-                              },
-                              items: [
-                                'M',
-                                'F'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            ),
-                            TextField(
-                              controller: _ageController,
-                              decoration: const InputDecoration(
-                                  labelText: 'Age',
-                                  labelStyle: TextStyle(fontSize: 16)),
-                              keyboardType: TextInputType.number,
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('Cancel',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              style: TextButton.styleFrom(
-                                foregroundColor: Color.fromARGB(255, 6, 114, 9),
-                                //backgroundColor: Color.fromARGB(255, 6, 114, 9),
-                              )),
-                          TextButton(
-                              onPressed: _modifyProfileInfo,
-                              child: const Text(
-                                'Save',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              style: TextButton.styleFrom(
-                                foregroundColor: Color.fromARGB(255, 6, 114, 9),
-                                //backgroundColor: Color.fromARGB(255, 6, 114, 9),
-                              )),
-                        ],
-                      );
-                    },
-                  );
-                },
-                child: Text(
-                  'Edit Profile Info',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400),
-                ),
-              ),*/
-              SizedBox(
-                width: 210,
-                child: TextButton.icon(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text(
-                            'Edit Profile Info',
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          content: SingleChildScrollView(
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxHeight:
-                                    MediaQuery.of(context).size.height * 0.6,
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  TextField(
-                                    controller: _nameController,
-                                    decoration: const InputDecoration(
-                                        labelText: 'Name',
-                                        labelStyle: TextStyle(fontSize: 16)),
-                                  ),
-                                  TextField(
-                                    controller: _surnameController,
-                                    decoration: const InputDecoration(
-                                        labelText: 'Surname',
-                                        labelStyle: TextStyle(fontSize: 16)),
-                                  ),
-                                  TextField(
-                                    controller: _heightController,
-                                    decoration: const InputDecoration(
-                                        labelText: 'Height (cm)',
-                                        labelStyle: TextStyle(fontSize: 16)),
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                  TextField(
-                                    controller: _weightController,
-                                    decoration: const InputDecoration(
-                                        labelText: 'Weight (kg)',
-                                        labelStyle: TextStyle(fontSize: 16)),
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                  DropdownButtonFormField<String>(
-                                    value: _sex,
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        _sex = newValue!;
-                                      });
-                                    },
-                                    items: ['M', 'F']
-                                        .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                  ),
-                                  TextField(
-                                    controller: _ageController,
-                                    decoration: const InputDecoration(
-                                        labelText: 'Age',
-                                        labelStyle: TextStyle(fontSize: 16)),
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Cancel',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                                style: TextButton.styleFrom(
-                                  foregroundColor:
-                                      Color.fromARGB(255, 6, 114, 9),
-                                )),
-                            TextButton(
-                                onPressed: _modifyProfileInfo,
-                                child: const Text(
-                                  'Save',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                        child: _imagePath.isNotEmpty
+                            ? ClipOval(
+                                child: Image.file(
+                                  File(_imagePath),
+                                  fit: BoxFit.cover,
+                                  width: 120,
+                                  height: 120,
                                 ),
-                                style: TextButton.styleFrom(
-                                  foregroundColor:
-                                      Color.fromARGB(255, 6, 114, 9),
-                                )),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.edit, color: Colors.white),
-                  label: const Text('Edit Profile Info',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400)),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Color.fromARGB(255, 9, 166, 14),
+                              )
+                            : const Icon(Icons.person,
+                                size: 80), // Placeholder icon if no image
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: ElevatedButton(
+                          onPressed: _pickImage,
+                          child: const Icon(
+                            Icons.edit,
+                            color: Color.fromARGB(255, 7, 126, 11),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            shape: const CircleBorder(),
+                            padding: const EdgeInsets.all(10),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 5),
-              /*NiceButtons(
+                const SizedBox(height: 10),
+                Text(
+                  "Name: $_name",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "Surname: $_surname",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "Height: $_height cm",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "Weight: $_weight kg",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "Sex: $_sex",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "Age: $_age",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: 210,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text(
+                              'Edit Profile Info',
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                            content: SingleChildScrollView(
+                              child: Container(
+                                constraints: BoxConstraints(
+                                  maxHeight:
+                                      MediaQuery.of(context).size.height * 0.6,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextField(
+                                      controller: _nameController,
+                                      decoration: const InputDecoration(
+                                          labelText: 'Name',
+                                          labelStyle: TextStyle(fontSize: 16)),
+                                    ),
+                                    TextField(
+                                      controller: _surnameController,
+                                      decoration: const InputDecoration(
+                                          labelText: 'Surname',
+                                          labelStyle: TextStyle(fontSize: 16)),
+                                    ),
+                                    TextField(
+                                      controller: _heightController,
+                                      decoration: const InputDecoration(
+                                          labelText: 'Height (cm)',
+                                          labelStyle: TextStyle(fontSize: 16)),
+                                      keyboardType: TextInputType.number,
+                                    ),
+                                    TextField(
+                                      controller: _weightController,
+                                      decoration: const InputDecoration(
+                                          labelText: 'Weight (kg)',
+                                          labelStyle: TextStyle(fontSize: 16)),
+                                      keyboardType: TextInputType.number,
+                                    ),
+                                    DropdownButtonFormField<String>(
+                                      value: _sex,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          _sex = newValue!;
+                                        });
+                                      },
+                                      items: ['M', 'F']
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
+                                    TextField(
+                                      controller: _ageController,
+                                      decoration: const InputDecoration(
+                                          labelText: 'Age',
+                                          labelStyle: TextStyle(fontSize: 16)),
+                                      keyboardType: TextInputType.number,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor:
+                                        Color.fromARGB(255, 6, 114, 9),
+                                  )),
+                              TextButton(
+                                  onPressed: _modifyProfileInfo,
+                                  child: const Text(
+                                    'Save',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor:
+                                        Color.fromARGB(255, 6, 114, 9),
+                                  )),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.edit, color: Colors.white),
+                    label: const Text('Edit Profile Info',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400)),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color.fromARGB(255, 9, 166, 14),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5),
+                SizedBox(
+                  width: 210,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text(
+                              'Delete Personal Info',
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                            content: const Text(
+                                'Are you sure you want to delete your personal info?'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor:
+                                        Color.fromARGB(255, 6, 114, 9),
+                                    //backgroundColor: Color.fromARGB(255, 6, 114, 9),
+                                  )),
+                              TextButton(
+                                  onPressed: _deletePersonalInfo,
+                                  child: const Text(
+                                    'Delete',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor:
+                                        Color.fromARGB(255, 6, 114, 9),
+                                    //backgroundColor: Color.fromARGB(255, 6, 114, 9),
+                                  )),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.delete, color: Colors.white),
+                    label: const Text('Delete Personal Info',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400)),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color.fromARGB(255, 9, 166, 14),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 40),
+                NiceButtons(
                   startColor: Color.fromARGB(255, 9, 166, 14),
                   endColor: Color.fromARGB(255, 9, 166, 14),
                   borderColor: Color.fromARGB(255, 7, 126, 11),
-                  width: 200,
+                  width: 210,
                   height: 40,
                   stretch: false,
                   gradientOrientation: GradientOrientation.Horizontal,
-                  onTap: (finish) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text(
-                            'Delete Personal Info',
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          content: const Text(
-                              'Are you sure you want to delete your personal info?'),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Cancel',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Color.fromARGB(255, 6, 114, 9),
-                                  //backgroundColor: Color.fromARGB(255, 6, 114, 9),
-                                )),
-                            TextButton(
-                                onPressed: _deletePersonalInfo,
-                                child: const Text(
-                                  'Delete',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Color.fromARGB(255, 6, 114, 9),
-                                  //backgroundColor: Color.fromARGB(255, 6, 114, 9),
-                                )),
-                          ],
-                        );
-                      },
-                    );
+                  onTap: (finish) async {
+                    final result = await AuthorizeUtils.authorize();
+                    if (result == 200) {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(const SnackBar(
+                            content: Text('Request successful')));
+                    } else {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(
+                            const SnackBar(content: Text('Request failed')));
+                    }
                   },
                   child: Text(
-                    'Delete Personal Info',
+                    'Authorize the app',
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.w400),
                   ),
-                ),*/
-              SizedBox(
-                width: 210,
-                child: TextButton.icon(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text(
-                            'Delete Personal Info',
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          content: const Text(
-                              'Are you sure you want to delete your personal info?'),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Cancel',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                                style: TextButton.styleFrom(
-                                  foregroundColor:
-                                      Color.fromARGB(255, 6, 114, 9),
-                                  //backgroundColor: Color.fromARGB(255, 6, 114, 9),
-                                )),
-                            TextButton(
-                                onPressed: _deletePersonalInfo,
-                                child: const Text(
-                                  'Delete',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                style: TextButton.styleFrom(
-                                  foregroundColor:
-                                      Color.fromARGB(255, 6, 114, 9),
-                                  //backgroundColor: Color.fromARGB(255, 6, 114, 9),
-                                )),
-                          ],
-                        );
-                      },
-                    );
+                ),
+                const SizedBox(height: 10),
+                NiceButtons(
+                  startColor: Color.fromARGB(255, 9, 166, 14),
+                  endColor: Color.fromARGB(255, 9, 166, 14),
+                  borderColor: Color.fromARGB(255, 7, 126, 11),
+                  width: 210,
+                  height: 40,
+                  stretch: false,
+                  gradientOrientation: GradientOrientation.Horizontal,
+                  onTap: (finish) async {
+                    await AuthorizeUtils.unauthorize();
+                    //Remove data in the providers
+                    Provider.of<HeartRateNotifier>(context, listen: false)
+                        .clearFavorite();
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(const SnackBar(
+                          content: Text('Tokens have been deleted')));
                   },
-                  icon: const Icon(Icons.delete, color: Colors.white),
-                  label: const Text('Delete Personal Info',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400)),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Color.fromARGB(255, 9, 166, 14),
+                  child: Text(
+                    'Unauthorize the app',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400),
                   ),
                 ),
-              ),
-              const SizedBox(height: 40),
-              NiceButtons(
-                startColor: Color.fromARGB(255, 9, 166, 14),
-                endColor: Color.fromARGB(255, 9, 166, 14),
-                borderColor: Color.fromARGB(255, 7, 126, 11),
-                width: 210,
-                height: 40,
-                stretch: false,
-                gradientOrientation: GradientOrientation.Horizontal,
-                onTap: (finish) async {
-                  final result = await AuthorizeUtils.authorize();
-                  if (result == 200) {
-                    ScaffoldMessenger.of(context)
-                      ..removeCurrentSnackBar()
-                      ..showSnackBar(
-                          const SnackBar(content: Text('Request successful')));
-                  } else {
-                    ScaffoldMessenger.of(context)
-                      ..removeCurrentSnackBar()
-                      ..showSnackBar(
-                          const SnackBar(content: Text('Request failed')));
-                  }
-                },
-                child: Text(
-                  'Authorize the app',
+                const SizedBox(height: 20),
+                const Text(
+                  "About",
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400),
-                ),
-              ),
-              const SizedBox(height: 10),
-              NiceButtons(
-                startColor: Color.fromARGB(255, 9, 166, 14),
-                endColor: Color.fromARGB(255, 9, 166, 14),
-                borderColor: Color.fromARGB(255, 7, 126, 11),
-                width: 210,
-                height: 40,
-                stretch: false,
-                gradientOrientation: GradientOrientation.Horizontal,
-                onTap: (finish) async {
-                  await AuthorizeUtils.unauthorize();
-                  //Remove data in the providers
-                  Provider.of<HeartRateNotifier>(context, listen: false)
-                      .clearFavorite();
-                  ScaffoldMessenger.of(context)
-                    ..removeCurrentSnackBar()
-                    ..showSnackBar(const SnackBar(
-                        content: Text('Tokens have been deleted')));
-                },
-                child: Text(
-                  'Unauthorize the app',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                "About",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                  "Sustainable moving aims to allow you to choose a better and sustainable path. Every use external from the Unipd environment is sanctioned by copyright. Work done by Quasi Engineers team.",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black.withOpacity(0.6),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  textAlign: TextAlign.justify),
-              const SizedBox(height: 10),
-              const Align(
-                alignment: Alignment.center,
-                child: Text("Version alpha 1.0.0"),
-              ),
-            ],
+                ),
+                Text(
+                    "Sustainable moving aims to allow you to choose a better and sustainable path. Every use external from the Unipd environment is sanctioned by copyright. Work done by Quasi Engineers team.",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black.withOpacity(0.6),
+                    ),
+                    textAlign: TextAlign.justify),
+                const SizedBox(height: 10),
+                const Align(
+                  alignment: Alignment.center,
+                  child: Text("Version alpha 1.0.0"),
+                ),
+              ],
+            ),
           ),
         ),
       ),

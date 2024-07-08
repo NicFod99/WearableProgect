@@ -174,7 +174,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
             "Where do you want to train today?",
             style: TextStyle(
               fontSize: 24,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -200,11 +200,16 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                   items: ["Padova", "Venezia", "Vicenza"]
                       .map((city) => DropdownMenuItem<String>(
                             value: city,
-                            child: Text(
-                              city,
-                              style: TextStyle(
-                                  color: Colors
-                                      .white), // Set the text color to white
+                            child: Center(
+                              child: Text(
+                                city,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      22, // Adjust the font size as needed
+                                ),
+                              ),
                             ),
                           ))
                       .toList(),
@@ -212,8 +217,8 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                   iconEnabledColor:
                       Colors.white, // Change the dropdown icon color to white
                   style: TextStyle(
-                      color: Colors
-                          .white), // Set the text color of the selected item to white
+                    color: Colors.white,
+                  ), // Set the text color of the selected item to white
                   isExpanded:
                       true, // Make the dropdown expand to the full width
                 ),

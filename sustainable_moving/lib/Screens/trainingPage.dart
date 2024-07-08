@@ -154,7 +154,7 @@ class _TrainingPage extends State<TrainingPage> {
                       controller: _controller,
                       width: MediaQuery.of(context).size.width / 2.7,
                       height: MediaQuery.of(context).size.height / 2.7,
-                      ringColor: Color.fromARGB(246, 139, 226, 162),
+                      ringColor: Color.fromARGB(246, 90, 168, 82),
                       fillColor: Color.fromARGB(255, 9, 166, 14),
                       backgroundColor: Color.fromARGB(255, 9, 166, 14),
                       backgroundGradient: null,
@@ -618,7 +618,7 @@ class _TrainingPage extends State<TrainingPage> {
             ? 'less'
             : 'equal to';
 
-    return 'Today you walked ${difference.abs().toStringAsFixed(2)} km $comparison than your weekly average.';
+    return 'Today you walked ${difference.abs().toStringAsFixed(2)} km $comparison \n than your weekly average.';
   }
 
   Widget _button({required IconData icon, VoidCallback? onPressed}) {

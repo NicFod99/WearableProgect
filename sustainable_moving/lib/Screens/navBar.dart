@@ -30,6 +30,7 @@ class _NavBar extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 192, 232, 148),
       body: IndexedStack(
         index: _selectedIndex,
         children: const [
@@ -39,36 +40,41 @@ class _NavBar extends State<NavBar> {
           ProfilePage(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        onTap: (int newindex) {
-          setState(() {
-            _selectedIndex = newindex;
-          });
-        },
-        iconSize: 25, // Adjust the icon size
-        selectedItemColor:
-            Color.fromARGB(255, 6, 105, 9), // Adjust the selected item color
-        unselectedItemColor: Color.fromARGB(255, 9, 166, 14),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorite',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(EvaIcons.activity),
-            label: 'Activity',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor: Color.fromARGB(255, 192, 232, 148),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          type: BottomNavigationBarType.fixed,
+          onTap: (int newindex) {
+            setState(() {
+              _selectedIndex = newindex;
+            });
+          },
+          iconSize: 25, // Adjust the icon size
+          selectedItemColor:
+              Color.fromARGB(255, 6, 105, 9), // Adjust the selected item color
+          unselectedItemColor: Color.fromARGB(255, 9, 166, 14),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: 'Favorite',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(EvaIcons.activity),
+              label: 'Activity',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
     );
   }
