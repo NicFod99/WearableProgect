@@ -168,11 +168,16 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Where you want to train today?",
+        title: const FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            "Where do you want to train today?",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w400,
-            )),
+            ),
+          ),
+        ),
       ),
       body: Column(
         children: [
