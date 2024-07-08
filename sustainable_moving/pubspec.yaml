@@ -95,6 +95,9 @@ flutter:
     - assets/Vz2.jpg
     - assets/Vz3.jpg
     - assets/background.jpg
+    - assets/backgroundNew.jpg
+    - assets/backgroundNew2.jpg
+    - assets/backgroundNew3.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

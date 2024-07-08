@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
           children: [
             // Background Image
             Image.asset(
-              'assets/background.jpg',
+              'assets/backgroundNew.jpg',
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,
@@ -69,10 +69,10 @@ class HomePage extends StatelessWidget {
                         return Transform.scale(
                           scale: value,
                           child: Text(
-                            'Click anywhere to continue',
+                            'Click anywhere \nto continue',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 18, // Increase the font size
+                              fontSize: 12,
                               fontWeight: FontWeight.w400,
                               fontStyle: FontStyle.normal,
                               color: Color.fromARGB(255, 255, 255, 255),
