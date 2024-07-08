@@ -19,8 +19,9 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   late int selectedIndex; // Track the index of the tapped item
-  final Catalog catalog = Catalog(); // Define the catalog here
+  late Catalog catalog; // Define the catalog here
   late List<bool> _isFavorite; // Tracks the favorite status of each item
+  String selectedCity = "Padova"; // Default selected city
 
   @override
   void initState() {
@@ -34,13 +35,14 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
         setState(() {});
       });
     selectedIndex = -1; // Initialize selectedIndex to -1
+    catalog = getCatalogForCity(selectedCity); // Initialize the catalog
     _isFavorite = List<bool>.filled(catalog.items.length,
         false); // Initialize all elements as non-favorites
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<Favorite>(context, listen: false)
           .addListener(_updateFavorites);
-      _updateFavorites(); // Assicurarsi che _isFavorite sia inizializzato correttamente
+      _updateFavorites(); // Ensure _isFavorite is initialized correctly
     });
   }
 
@@ -135,12 +137,38 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     }
   }
 
+  void _onCityChanged(String? city) {
+    if (city != null) {
+      setState(() {
+        selectedCity = city;
+        catalog =
+            getCatalogForCity(city); // Update catalog based on selected city
+        _isFavorite = List<bool>.filled(catalog.items.length, false);
+        _updateFavorites(); // Ensure favorites are updated
+      });
+    }
+  }
+
+  Catalog getCatalogForCity(String city) {
+    // Replace this with your actual logic to fetch catalog for each city
+    switch (city) {
+      case "Padova":
+        return Catalog.padovaCatalog();
+      case "Venezia":
+        return Catalog.veneziaCatalog();
+      case "Vicenza":
+        return Catalog.vicenzaCatalog();
+      default:
+        return Catalog.padovaCatalog();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Welcome back Runner!",
+        title: const Text("Where you want to train today?",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w400,
@@ -148,13 +176,42 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
       ),
       body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              "Destination Nearby",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w600,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: double.infinity, // Make the container span the full width
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(
+                      255, 9, 166, 14), // Set the background color to green
+                  borderRadius: BorderRadius.circular(
+                      5.0), // Add some rounding to the corners
+                ),
+                child: DropdownButton<String>(
+                  value: selectedCity,
+                  onChanged: _onCityChanged,
+                  dropdownColor: Color.fromARGB(255, 9, 166, 14),
+                  items: ["Padova", "Venezia", "Vicenza"]
+                      .map((city) => DropdownMenuItem<String>(
+                            value: city,
+                            child: Text(
+                              city,
+                              style: TextStyle(
+                                  color: Colors
+                                      .white), // Set the text color to white
+                            ),
+                          ))
+                      .toList(),
+                  underline: SizedBox(), // Remove the underline
+                  iconEnabledColor:
+                      Colors.white, // Change the dropdown icon color to white
+                  style: TextStyle(
+                      color: Colors
+                          .white), // Set the text color of the selected item to white
+                  isExpanded:
+                      true, // Make the dropdown expand to the full width
+                ),
               ),
             ),
           ),
