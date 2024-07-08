@@ -107,6 +107,7 @@ class _TrainingPage extends State<TrainingPage> {
               FittedBox(
                 // ROW DEL CUORE E DEL TIMER
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(
                       width: 50,
@@ -116,7 +117,8 @@ class _TrainingPage extends State<TrainingPage> {
                       children: [
                         Transform.scale(
                           scale: 9.0,
-                          child: const Icon(Icons.favorite, color: Colors.red),
+                          child: const Icon(Icons.favorite_border,
+                              color: Colors.red),
                         ),
                         Column(
                           children: [
@@ -124,20 +126,23 @@ class _TrainingPage extends State<TrainingPage> {
                               pulses.isNotEmpty
                                   ? getRandomHeartRate()
                                   : 'No data',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const Text(
-                              "BPM",
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
+                                color: Colors.red,
+                                fontSize: pulses.isNotEmpty
+                                    ? 40
+                                    : 13, //'no data' font size
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            if (pulses.isNotEmpty)
+                              const Text(
+                                "BPM",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                           ],
                         )
                       ],
