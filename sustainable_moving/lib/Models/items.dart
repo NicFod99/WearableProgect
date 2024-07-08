@@ -77,19 +77,19 @@ class Catalog {
   static Catalog vicenzaCatalog() {
     return Catalog(items: [
       PathData(
-        name: 'Strade delle 52 gallerie',
+        name: 'The Strada delle 52 Gallerie',
         length: 5700,
         description:
-            'Corsa per esperti. Ottimo allenamento richiesto. Sono richiesti passo sicuro, calzature robuste ed esperienza alpinistica.',
+            'Race for experts. Excellent training required. Secure footing, sturdy footwear, and mountaineering experience are necessary.',
         imagePath: 'assets/Vc1.jpg',
         mapUrl:
             "https://www.google.it/maps/dir/Parcheggio+2+della+strada+delle+52+Gallerie,+36030+Valli+del+Pasubio+VI/Rifugio+Generale+Achille+Papa,+Str.+degli+Eroi,+36030+Valli+del+Pasubio+VI/@45.7838499,11.1911706,13.98z/data=!4m14!4m13!1m5!1m1!1s0x4778af8680d6bb57:0xb1eff2113de4f881!2m2!1d11.2280026!2d45.7778502!1m5!1m1!1s0x4778a8dd312f2f3b:0xf8fa0ae9f6d29334!2m2!1d11.1858846!2d45.7838731!3e2?entry=ttu",
       ),
       PathData(
-        name: 'Cima Portule e Cima Larici',
+        name: 'Cima Portule and Cima Larici',
         length: 950,
         description:
-            'L indice UV è molto alto su gran parte del tuo percorso. Ti consigliamo di utilizzare crema solare e occhiali da sole.',
+            'The UV index is very high along much of your route. We recommend using sunscreen and sunglasses.',
         imagePath: 'assets/Vc2.jpg',
         mapUrl:
             "https://www.google.it/maps/dir/Cima+Portule,+36012+Asiago+VI/Cima+Larici,+36012+Asiago+VI/@45.979128,11.4229099,14.75z/am=t/data=!4m19!4m18!1m10!1m1!1s0x4778964b8a715fe5:0xc7c0d14bc4b3e8df!2m2!1d11.4467226!2d45.9793729!3m4!1m2!1d11.4311963!2d45.9765505!3s0x4778964dd7cd472f:0xdf5f72555b6061b5!1m5!1m1!1s0x477897a1270bff73:0xdfe8b6d279b3f796!2m2!1d11.4231477!2d45.9801275!3e2?entry=ttu",
@@ -110,7 +110,7 @@ class Catalog {
   static Catalog veneziaCatalog() {
     return Catalog(items: [
       PathData(
-        name: 'Parco di San Giuliano',
+        name: 'San Giuliano park',
         length: 750,
         description: 'From Ponte of San Giuliano to the Center of the Park.',
         imagePath: 'assets/Vz1.jpg',
@@ -118,7 +118,7 @@ class Catalog {
             "https://www.google.com/maps/dir/Ponte+San+Giuliano,+Via+Orlanda,+Venezia,+VE/Parco+di+San+Giuliano,+Via+Orlanda,+30173+Venezia+VE/@45.4738565,12.268959,16z/data=!4m14!4m13!1m5!1m1!1s0x477eb3f96c54a1a7:0xffa00ad4164feb20!2m2!1d12.2670732!2d45.477694!1m5!1m1!1s0x477eb3e3a7e6564d:0xe8dbeb23eb939ec3!2m2!1d12.2760376!2d45.4743271!3e2?entry=ttu",
       ),
       PathData(
-        name: 'Parco Alfredo Albanese',
+        name: 'Alfredo Albanese park',
         length: 500,
         description: 'From the Area "Orti" to the center of the park.',
         imagePath: 'assets/Vz2.jpg',
@@ -126,7 +126,7 @@ class Catalog {
             "https://www.google.it/maps/dir/Area+%22Orti%22,+Via+Rielta,+Venezia,+VE/Parco+Alfredo+Albanese,+Via+Gori,+8,+30172+Mestre+VE/@45.5005494,12.2606291,17z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x477eb52f50ee18ad:0x2eddd07731cadb9f!2m2!1d12.2654068!2d45.5020599!1m5!1m1!1s0x477eb46565bf38d3:0xbc21681d6154741a!2m2!1d12.2609032!2d45.4993575!3e2?entry=ttu",
       ),
       PathData(
-        name: 'Parco delle Rimembranze',
+        name: 'Rimembranze park',
         length: 550,
         description: 'From Giardini della biennale to the center of the park.',
         imagePath: 'assets/Vz3.jpg',

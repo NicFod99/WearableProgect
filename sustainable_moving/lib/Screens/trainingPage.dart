@@ -578,17 +578,6 @@ class _TrainingPage extends State<TrainingPage> {
                 labelStyle: TextStyle(fontSize: 16)),
           ),
           actions: [
-            /*IconButton(
-              icon: const Icon(Icons.save),
-              iconSize: 28,
-              color: Color.fromARGB(255, 6, 114, 9),
-              onPressed: () {
-                double newGoal =
-                    double.tryParse(goalController.text) ?? _distanceGoal;
-                _updateDistanceGoal(newGoal);
-                Navigator.of(context).pop();
-              },
-            ),*/
             TextButton(
                 onPressed: () {
                   double newGoal =

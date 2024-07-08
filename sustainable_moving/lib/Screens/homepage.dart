@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pretty_animated_buttons/configs/pkg_colors.dart';
 import 'package:sustainable_moving/Screens/loginPage.dart';
 
-/* Pagine HomePage, ho voluto provare Image.Network, richiama un link dove c'è
- * la foto, ma potete anche scaricarla e aggiungerla negli assets, e poi richia
- * marla, come ho fatto nella linea 37. C'è una piccola animazione per l'intro. */
-
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -26,21 +22,38 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         body: Stack(
           children: [
-            Image.asset('assets/background.jpg'),
-
-            // Container bianco che copre l'intero schermo
-            Container(
-              color: Colors.white,
+            // Background Image
+            Image.asset(
+              'assets/background.jpg',
+              fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,
             ),
+
+            // White container overlay
+            Container(
+              //color: Colors.white.withOpacity(0.6), // Adjust opacity as needed
+              width: double.infinity,
+              height: double.infinity,
+            ),
+
+            // Logo in the center with scaling
             Positioned(
+              top: 70.0, // Adjust position as needed
+              left: 0,
+              right: 0,
               child: Center(
-                child: Image.asset('assets/LogoClean.png'),
+                child: Transform.scale(
+                  scale: 1.6, // Adjust the scale factor as needed
+                  child: Image.asset(
+                    'assets/LogoClean.png',
+                    width: 200, // Adjust size as needed
+                  ),
+                ),
               ),
             ),
 
-            // Positioned at the bottom
+            // Text at the bottom
             Positioned(
               bottom: 40.0,
               left: 0,
@@ -50,28 +63,27 @@ class HomePage extends StatelessWidget {
                   builder: (context, constraints) {
                     final fontSize = constraints.maxWidth * 0.045;
                     return TweenAnimationBuilder<double>(
-                      // Animazione scritta.
                       tween: Tween<double>(begin: 1, end: 1.5),
                       duration: Duration(seconds: 1),
                       builder: (context, value, child) {
                         return Transform.scale(
                           scale: value,
-                          child: const Text(
-                            'Click anywhere \nto continue',
+                          child: Text(
+                            'Click anywhere to continue',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 20, // Increase the font size
                               fontWeight: FontWeight.w400,
                               fontStyle: FontStyle.normal,
-                              color: Color.fromARGB(255, 47, 125, 49),
+                              color: Color.fromARGB(255, 255, 255, 255),
                               height: 1.1,
-                              /*shadows: [
+                              shadows: [
                                 Shadow(
-                                  blurRadius: 2.0,
-                                  color: Colors.black.withOpacity(0.6),
-                                  offset: Offset(0, 2),
+                                  blurRadius: 10,
+                                  color: Colors.black,
+                                  offset: Offset(0, 0),
                                 ),
-                              ],*/
+                              ],
                             ),
                           ),
                         );
@@ -85,5 +97,5 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
-  } //build
-} //HomePage
+  }
+}

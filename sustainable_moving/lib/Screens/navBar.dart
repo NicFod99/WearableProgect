@@ -42,6 +42,7 @@ class _NavBar extends State<NavBar> {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
+          // sets the background color of the `BottomNavigationBar`
           canvasColor: Color.fromARGB(255, 192, 232, 148),
         ),
         child: BottomNavigationBar(
@@ -52,6 +53,8 @@ class _NavBar extends State<NavBar> {
               _selectedIndex = newindex;
             });
           },
+          selectedFontSize: 15,
+          unselectedFontSize: 15,
           iconSize: 25, // Adjust the icon size
           selectedItemColor:
               Color.fromARGB(255, 6, 105, 9), // Adjust the selected item color
