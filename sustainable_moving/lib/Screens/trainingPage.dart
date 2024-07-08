@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:sustainable_moving/Models/heartRate.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
@@ -12,6 +13,7 @@ import 'package:water_bottle/water_bottle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pretty_animated_buttons/pretty_animated_buttons.dart';
+import 'package:nice_buttons/nice_buttons.dart';
 
 class TrainingPage extends StatefulWidget {
   const TrainingPage({Key? key}) : super(key: key);
@@ -94,7 +96,7 @@ class _TrainingPage extends State<TrainingPage> {
         centerTitle: true,
         title: const Text(
           "Activity",
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 28),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 28),
         ),
       ),
       body: SingleChildScrollView(
@@ -147,9 +149,9 @@ class _TrainingPage extends State<TrainingPage> {
                       controller: _controller,
                       width: MediaQuery.of(context).size.width / 2.7,
                       height: MediaQuery.of(context).size.height / 2.7,
-                      ringColor: const Color.fromARGB(255, 247, 236, 137),
+                      ringColor: Color.fromARGB(246, 139, 226, 162),
                       fillColor: Color.fromARGB(255, 9, 166, 14),
-                      backgroundColor: Color.fromARGB(255, 161, 132, 44),
+                      backgroundColor: Color.fromARGB(255, 9, 166, 14),
                       backgroundGradient: null,
                       strokeWidth: 30.0,
                       strokeCap: StrokeCap.round,
@@ -219,6 +221,7 @@ class _TrainingPage extends State<TrainingPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const SizedBox(height: 5),
               Wrap(
                 spacing: 10,
                 children: List.generate(
@@ -231,42 +234,54 @@ class _TrainingPage extends State<TrainingPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  PrettyCapsuleButton(
-                    label: 'Add 0.5L'.toUpperCase(),
-                    labelStyle: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                    ),
-                    icon: Icons.local_drink,
-                    bgColor: Color.fromARGB(255, 9, 166, 14),
-                    onPressed: () {
+                  NiceButtons(
+                    startColor: Color.fromARGB(255, 9, 166, 14),
+                    endColor: Color.fromARGB(255, 9, 166, 14),
+                    borderColor: Color.fromARGB(255, 7, 126, 11),
+                    width: 125,
+                    height: 40,
+                    stretch: false,
+                    gradientOrientation: GradientOrientation.Horizontal,
+                    onTap: (finish) async {
                       setState(() {
                         _waterIntake++;
                       });
                     },
-                    /*icon: const Icon(Icons.local_drink_outlined,
-                        size: 24, color: Colors.white),*/
+                    child: const Text(
+                      'Add 0.5L',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
                   ),
                   const SizedBox(width: 10),
-                  PrettyCapsuleButton(
-                    label: 'Remove 0.5L'.toUpperCase(),
-                    labelStyle: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                    ),
-                    icon: Icons.delete,
-                    bgColor: Color.fromARGB(255, 9, 166, 14),
-                    onPressed: () {
+                  NiceButtons(
+                    startColor: Color.fromARGB(255, 9, 166, 14),
+                    endColor: Color.fromARGB(255, 9, 166, 14),
+                    borderColor: Color.fromARGB(255, 7, 126, 11),
+                    width: 125,
+                    height: 40,
+                    stretch: false,
+                    gradientOrientation: GradientOrientation.Horizontal,
+                    onTap: (finish) async {
                       setState(() {
                         if (_waterIntake > 0) _waterIntake--;
                       });
                     },
-                    /*icon:
-                        const Icon(Icons.remove, size: 24, color: Colors.white),*/
+                    child: Text(
+                      'Remove 0.5L',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
               Text(
-                'Total: ${(_waterIntake * 0.5).toStringAsFixed(1)} liters / Goal: ${_waterGoal.toStringAsFixed(1)} liters',
+                'Total: ${(_waterIntake * 0.5).toStringAsFixed(1)}L / Goal: ${_waterGoal.toStringAsFixed(1)}L',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -292,7 +307,7 @@ class _TrainingPage extends State<TrainingPage> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         Text(
           _getDistanceComparisonMessage(),
           style: const TextStyle(
@@ -324,7 +339,7 @@ class _TrainingPage extends State<TrainingPage> {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            PrettyCapsuleButton(
+            /*PrettyCapsuleButton(
               label: 'Set Distance Goal'.toUpperCase(),
               labelStyle: const TextStyle(
                 fontWeight: FontWeight.w700,
@@ -332,9 +347,35 @@ class _TrainingPage extends State<TrainingPage> {
               icon: Icons.directions_run,
               bgColor: Color.fromARGB(255, 9, 166, 14),
               onPressed: () => _showGoalSettingDialog(context),
+            ),*/
+            NiceButtons(
+              startColor: Color.fromARGB(255, 9, 166, 14),
+              endColor: Color.fromARGB(255, 9, 166, 14),
+              borderColor: Color.fromARGB(255, 7, 126, 11),
+              width: 200,
+              height: 40,
+              stretch: false,
+              gradientOrientation: GradientOrientation.Horizontal,
+              onTap: (finish) => _showGoalSettingDialog(context),
+              child: Text(
+                'Set Distance Goal',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400),
+              ),
+            ),
+            TextButton.icon(
+              onPressed: () => _showGoalSettingDialog(context),
+              icon: const Icon(Icons.directions_run, color: Colors.white),
+              label: const Text('Set Distance Goal'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Color.fromARGB(255, 9, 166, 14),
+              ),
             ),
             const SizedBox(height: 10), // Add some spacing between buttons
-            PrettyCapsuleButton(
+            /*PrettyCapsuleButton(
               label: 'Your weekly chart'.toUpperCase(),
               labelStyle: const TextStyle(
                 fontWeight: FontWeight.w700,
@@ -342,6 +383,23 @@ class _TrainingPage extends State<TrainingPage> {
               icon: Icons.bar_chart,
               bgColor: Color.fromARGB(255, 9, 166, 14),
               onPressed: () => _showWeeklyChart(context),
+            ),*/
+            NiceButtons(
+              startColor: Color.fromARGB(255, 9, 166, 14),
+              endColor: Color.fromARGB(255, 9, 166, 14),
+              borderColor: Color.fromARGB(255, 7, 126, 11),
+              width: 200,
+              height: 40,
+              stretch: false,
+              gradientOrientation: GradientOrientation.Horizontal,
+              onTap: (finish) => _showWeeklyChart(context),
+              child: Text(
+                'Your weekly chart',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400),
+              ),
             ),
           ],
         ),
@@ -492,27 +550,47 @@ class _TrainingPage extends State<TrainingPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Set Distance Goal'),
+          title: const Text(
+            'Set Distance Goal',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 24,
+            ),
+          ),
           content: TextField(
             controller: goalController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Distance Goal (km)'),
+            decoration: const InputDecoration(
+                labelText: 'Distance Goal (km)',
+                labelStyle: TextStyle(fontSize: 16)),
           ),
           actions: [
-            PrettyCapsuleButton(
-              label: 'Save',
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.w700,
-              ),
-              icon: Icons.save,
-              bgColor: Color.fromARGB(255, 9, 166, 14),
+            /*IconButton(
+              icon: const Icon(Icons.save),
+              iconSize: 28,
+              color: Color.fromARGB(255, 6, 114, 9),
               onPressed: () {
                 double newGoal =
                     double.tryParse(goalController.text) ?? _distanceGoal;
                 _updateDistanceGoal(newGoal);
                 Navigator.of(context).pop();
               },
-            ),
+            ),*/
+            TextButton(
+                onPressed: () {
+                  double newGoal =
+                      double.tryParse(goalController.text) ?? _distanceGoal;
+                  _updateDistanceGoal(newGoal);
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  'Save',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                style: TextButton.styleFrom(
+                  foregroundColor: Color.fromARGB(255, 6, 114, 9),
+                  //backgroundColor: Color.fromARGB(255, 6, 114, 9),
+                ))
           ],
         );
       },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';
 import 'package:pretty_animated_buttons/configs/pkg_colors.dart';
@@ -171,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage>
             children: [
               const Text(
                 'Profile',
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 28),
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 28),
               ),
               const SizedBox(height: 10),
               Center(
@@ -202,7 +203,10 @@ class _ProfilePageState extends State<ProfilePage>
                       right: 0,
                       child: ElevatedButton(
                         onPressed: _pickImage,
-                        child: const Icon(Icons.edit),
+                        child: const Icon(
+                          Icons.edit,
+                          color: Color.fromARGB(255, 7, 126, 11),
+                        ),
                         style: ElevatedButton.styleFrom(
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(10),
@@ -215,61 +219,85 @@ class _ProfilePageState extends State<ProfilePage>
               const SizedBox(height: 20),
               Text(
                 "Name: $_name",
-                style: const TextStyle(fontSize: 16),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
               ),
               Text(
                 "Surname: $_surname",
-                style: const TextStyle(fontSize: 16),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
               ),
               Text(
                 "Height: $_height cm",
-                style: const TextStyle(fontSize: 16),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
               ),
               Text(
                 "Weight: $_weight kg",
-                style: const TextStyle(fontSize: 16),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
               ),
               Text(
                 "Sex: $_sex",
-                style: const TextStyle(fontSize: 16),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
               ),
               Text(
                 "Age: $_age",
-                style: const TextStyle(fontSize: 16),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
               NiceButtons(
-                stretch: true,
+                startColor: Color.fromARGB(255, 9, 166, 14),
+                endColor: Color.fromARGB(255, 9, 166, 14),
+                borderColor: Color.fromARGB(255, 7, 126, 11),
+                width: 200,
+                height: 40,
+                stretch: false,
                 gradientOrientation: GradientOrientation.Horizontal,
                 onTap: (finish) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text('Modify Profile Info'),
+                        title: const Text(
+                          'Modify Profile Info',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextField(
                               controller: _nameController,
-                              decoration:
-                                  const InputDecoration(labelText: 'Name'),
+                              decoration: const InputDecoration(
+                                  labelText: 'Name',
+                                  labelStyle: TextStyle(fontSize: 16)),
                             ),
                             TextField(
                               controller: _surnameController,
-                              decoration:
-                                  const InputDecoration(labelText: 'Surname'),
+                              decoration: const InputDecoration(
+                                  labelText: 'Surname',
+                                  labelStyle: TextStyle(fontSize: 16)),
                             ),
                             TextField(
                               controller: _heightController,
-                              decoration:
-                                  const InputDecoration(labelText: 'Height'),
+                              decoration: const InputDecoration(
+                                  labelText: 'Height (cm)',
+                                  labelStyle: TextStyle(fontSize: 16)),
                               keyboardType: TextInputType.number,
                             ),
                             TextField(
                               controller: _weightController,
-                              decoration:
-                                  const InputDecoration(labelText: 'Weight'),
+                              decoration: const InputDecoration(
+                                  labelText: 'Weight (kg)',
+                                  labelStyle: TextStyle(fontSize: 16)),
                               keyboardType: TextInputType.number,
                             ),
                             DropdownButtonFormField<String>(
@@ -291,21 +319,43 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                             TextField(
                               controller: _ageController,
-                              decoration:
-                                  const InputDecoration(labelText: 'Age'),
+                              decoration: const InputDecoration(
+                                  labelText: 'Age',
+                                  labelStyle: TextStyle(fontSize: 16)),
                               keyboardType: TextInputType.number,
                             ),
                           ],
                         ),
                         actions: [
                           TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Cancel',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Color.fromARGB(255, 6, 114, 9),
+                                //backgroundColor: Color.fromARGB(255, 6, 114, 9),
+                              )),
+                          /*TextButton.icon(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text('Cancel'),
-                          ),
+                            icon: const Icon(Icons.cancel, color: Colors.red),
+                            label: const Text('Cancel'),
+                            style: TextButton.styleFrom(
+                                foregroundColor: Colors.red,
+                                backgroundColor:
+                                    Colors.black26 // Change the text color here
+                                ),
+                          ),*/
                           TextButton(
-                            onPressed: _modifyProfileInfo,
-                            child: const Text('Save'),
-                          ),
+                              onPressed: _modifyProfileInfo,
+                              child: const Text(
+                                'Save',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Color.fromARGB(255, 6, 114, 9),
+                                //backgroundColor: Color.fromARGB(255, 6, 114, 9),
+                              )),
                         ],
                       );
                     },
@@ -313,119 +363,75 @@ class _ProfilePageState extends State<ProfilePage>
                 },
                 child: Text(
                   'Edit Profile Info',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400),
                 ),
               ),
-              //PrettyNeumorphicButton(
-              //label: 'Edit Personal Info',
-              //icon: Icons.edit,
-              //bgColor: Colors.blue, // Sostituisci con il colore desiderato
-              //),
               const SizedBox(height: 10),
-              // Button to delete personal info
-              /*PrettyCapsuleButton(
-                label: 'Delete Personal Info'.toUpperCase(),
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                ),
-                icon: Icons.delete,
-                bgColor: Colors.blue, // Sostituisci con il colore desiderato
-                onPressed: () {
+              NiceButtons(
+                startColor: Color.fromARGB(255, 9, 166, 14),
+                endColor: Color.fromARGB(255, 9, 166, 14),
+                borderColor: Color.fromARGB(255, 7, 126, 11),
+                width: 200,
+                height: 40,
+                stretch: false,
+                gradientOrientation: GradientOrientation.Horizontal,
+                onTap: (finish) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text('Delete Personal Info'),
+                        title: const Text(
+                          'Delete Personal Info',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
                         content: const Text(
                             'Are you sure you want to delete your personal info?'),
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Cancel'),
-                          ),
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Cancel',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Color.fromARGB(255, 6, 114, 9),
+                                //backgroundColor: Color.fromARGB(255, 6, 114, 9),
+                              )),
                           TextButton(
-                            onPressed: _deletePersonalInfo,
-                            child: const Text('Delete'),
-                          ),
+                              onPressed: _deletePersonalInfo,
+                              child: const Text(
+                                'Delete',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Color.fromARGB(255, 6, 114, 9),
+                                //backgroundColor: Color.fromARGB(255, 6, 114, 9),
+                              )),
                         ],
                       );
                     },
                   );
                 },
-              ),*/
-              PrettyWaveButton(
-                // ignore: sort_child_properties_last
-                child: const Text(
+                child: Text(
                   'Delete Personal Info',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400),
                 ),
-                backgroundColor: Colors.blue,
-                verticalPadding: 12,
-                horizontalPadding: 34,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Delete Personal Info'),
-                        content: const Text(
-                            'Are you sure you want to delete your personal info?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: _deletePersonalInfo,
-                            child: const Text('Delete'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
-              PrettySlideIconButton(
-                foregroundColor: Colors.blue,
-                icon: Icons.delete,
-                label: 'Delete Personal Info',
-                slidePosition: SlidePosition.left,
-                labelStyle: const TextStyle(fontWeight: FontWeight.w700),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Delete Personal Info'),
-                        content: const Text(
-                            'Are you sure you want to delete your personal info?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: _deletePersonalInfo,
-                            child: const Text('Delete'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
               ),
               const SizedBox(height: 10),
-              PrettyCapsuleButton(
-                label: 'Authorize the app'.toUpperCase(),
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                ),
-                icon: Icons.done,
-                bgColor: Colors.blue, // Sostituisci con il colore desiderato
-                onPressed: () async {
+              NiceButtons(
+                startColor: Color.fromARGB(255, 9, 166, 14),
+                endColor: Color.fromARGB(255, 9, 166, 14),
+                borderColor: Color.fromARGB(255, 7, 126, 11),
+                width: 200,
+                height: 40,
+                stretch: false,
+                gradientOrientation: GradientOrientation.Horizontal,
+                onTap: (finish) async {
                   final result = await AuthorizeUtils.authorize();
                   if (result == 200) {
                     ScaffoldMessenger.of(context)
@@ -439,16 +445,24 @@ class _ProfilePageState extends State<ProfilePage>
                           const SnackBar(content: Text('Request failed')));
                   }
                 },
+                child: Text(
+                  'Authorize the app',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
               const SizedBox(height: 10),
-              PrettyCapsuleButton(
-                label: 'Unauthorize the app'.toUpperCase(),
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                ),
-                icon: Icons.not_interested,
-                bgColor: Colors.blue, // Sostituisci con il colore desiderato
-                onPressed: () async {
+              NiceButtons(
+                startColor: Color.fromARGB(255, 9, 166, 14),
+                endColor: Color.fromARGB(255, 9, 166, 14),
+                borderColor: Color.fromARGB(255, 7, 126, 11),
+                width: 200,
+                height: 40,
+                stretch: false,
+                gradientOrientation: GradientOrientation.Horizontal,
+                onTap: (finish) async {
                   await AuthorizeUtils.unauthorize();
                   //Remove data in the providers
                   Provider.of<HeartRateNotifier>(context, listen: false)
@@ -458,6 +472,13 @@ class _ProfilePageState extends State<ProfilePage>
                     ..showSnackBar(const SnackBar(
                         content: Text('Tokens have been deleted')));
                 },
+                child: Text(
+                  'Unauthorize the app',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
               const SizedBox(height: 20),
               const Text(
@@ -468,12 +489,12 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
               ),
               Text(
-                "Sustainable moving aims to allow you to choose a better and sustainable path. Every use external from the Unipd environment is sanctioned by copyright. Work done by Quasi Engineers team.",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black.withOpacity(0.6),
-                ),
-              ),
+                  "Sustainable moving aims to allow you to choose a better and sustainable path. Every use external from the Unipd environment is sanctioned by copyright. Work done by Quasi Engineers team.",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black.withOpacity(0.6),
+                  ),
+                  textAlign: TextAlign.justify),
               const SizedBox(height: 10),
               const Align(
                 alignment: Alignment.center,

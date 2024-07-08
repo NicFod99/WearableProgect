@@ -49,7 +49,7 @@ class _NavBar extends State<NavBar> {
         },
         iconSize: 25, // Adjust the icon size
         selectedItemColor:
-            Color.fromARGB(255, 0, 67, 3), // Adjust the selected item color
+            Color.fromARGB(255, 6, 105, 9), // Adjust the selected item color
         unselectedItemColor: Color.fromARGB(255, 9, 166, 14),
         items: const [
           BottomNavigationBarItem(

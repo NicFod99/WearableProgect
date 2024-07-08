@@ -140,7 +140,11 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Welcome back Runner!"),
+        title: const Text("Welcome back Runner!",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w400,
+            )),
       ),
       body: Column(
         children: [
@@ -150,7 +154,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
               "Destination Nearby",
               style: TextStyle(
                 fontSize: 28,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
