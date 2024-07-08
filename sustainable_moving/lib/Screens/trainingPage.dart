@@ -107,6 +107,7 @@ class _TrainingPage extends State<TrainingPage> {
               FittedBox(
                 // ROW DEL CUORE E DEL TIMER
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(
                       width: 50,
@@ -116,7 +117,8 @@ class _TrainingPage extends State<TrainingPage> {
                       children: [
                         Transform.scale(
                           scale: 9.0,
-                          child: const Icon(Icons.favorite, color: Colors.red),
+                          child: const Icon(Icons.favorite_border,
+                              color: Colors.red),
                         ),
                         Column(
                           children: [
@@ -124,20 +126,23 @@ class _TrainingPage extends State<TrainingPage> {
                               pulses.isNotEmpty
                                   ? getRandomHeartRate()
                                   : 'No data',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const Text(
-                              "BPM",
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
+                                color: Colors.red,
+                                fontSize: pulses.isNotEmpty
+                                    ? 40
+                                    : 13, //'no data' font size
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            if (pulses.isNotEmpty)
+                              const Text(
+                                "BPM",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                           ],
                         )
                       ],
@@ -348,7 +353,7 @@ class _TrainingPage extends State<TrainingPage> {
               bgColor: Color.fromARGB(255, 9, 166, 14),
               onPressed: () => _showGoalSettingDialog(context),
             ),*/
-            NiceButtons(
+            /*NiceButtons(
               startColor: Color.fromARGB(255, 9, 166, 14),
               endColor: Color.fromARGB(255, 9, 166, 14),
               borderColor: Color.fromARGB(255, 7, 126, 11),
@@ -364,27 +369,22 @@ class _TrainingPage extends State<TrainingPage> {
                     fontSize: 18,
                     fontWeight: FontWeight.w400),
               ),
-            ),
+            ),*/
             TextButton.icon(
               onPressed: () => _showGoalSettingDialog(context),
               icon: const Icon(Icons.directions_run, color: Colors.white),
-              label: const Text('Set Distance Goal'),
+              label: const Text('Set Distance Goal',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400)),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: Color.fromARGB(255, 9, 166, 14),
               ),
             ),
-            const SizedBox(height: 10), // Add some spacing between buttons
-            /*PrettyCapsuleButton(
-              label: 'Your weekly chart'.toUpperCase(),
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.w700,
-              ),
-              icon: Icons.bar_chart,
-              bgColor: Color.fromARGB(255, 9, 166, 14),
-              onPressed: () => _showWeeklyChart(context),
-            ),*/
-            NiceButtons(
+            const SizedBox(height: 5),
+            /*NiceButtons(
               startColor: Color.fromARGB(255, 9, 166, 14),
               endColor: Color.fromARGB(255, 9, 166, 14),
               borderColor: Color.fromARGB(255, 7, 126, 11),
@@ -399,6 +399,19 @@ class _TrainingPage extends State<TrainingPage> {
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w400),
+              ),
+            ),*/
+            TextButton.icon(
+              onPressed: () => _showWeeklyChart(context),
+              icon: const Icon(Icons.bar_chart, color: Colors.white),
+              label: const Text('Your weekly chart',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400)),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Color.fromARGB(255, 9, 166, 14),
               ),
             ),
           ],
