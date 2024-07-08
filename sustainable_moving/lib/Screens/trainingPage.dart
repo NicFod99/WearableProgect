@@ -154,7 +154,7 @@ class _TrainingPage extends State<TrainingPage> {
                       controller: _controller,
                       width: MediaQuery.of(context).size.width / 2.7,
                       height: MediaQuery.of(context).size.height / 2.7,
-                      ringColor: Color.fromARGB(246, 210, 250, 206),
+                      ringColor: Color.fromARGB(255, 186, 234, 188),
                       fillColor: Color.fromARGB(255, 28, 83, 30),
                       backgroundColor: Color.fromARGB(255, 9, 166, 14),
                       backgroundGradient: null,
@@ -529,10 +529,27 @@ class _TrainingPage extends State<TrainingPage> {
           ),
           content: TextField(
             controller: goalController,
+            cursorColor: Colors.black,
             keyboardType: TextInputType.number,
+            style: TextStyle(
+              color: Colors.black,
+              decorationColor: Colors.black,
+            ),
             decoration: const InputDecoration(
-                labelText: 'Distance Goal (km)',
-                labelStyle: TextStyle(fontSize: 16)),
+              labelText: 'Distance Goal (km)',
+              labelStyle: TextStyle(fontSize: 16, color: Colors.black),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                  width: 2,
+                ),
+              ),
+            ),
           ),
           actions: [
             TextButton(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pretty_animated_buttons/configs/pkg_colors.dart';
 import 'package:sustainable_moving/Screens/navBar.dart';
-import 'package:pretty_animated_buttons/pretty_animated_buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /* Login page, si passa con ID: "a", PASS: "a" per semplicità, i controller sono
@@ -57,33 +56,72 @@ class _LoginPage extends State<LoginPage> {
                   children: [
                     TextField(
                       controller: _usernameController,
+                      cursorColor: Colors.black,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Username',
-                        hintText: 'Enter username',
-                      ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors
+                                  .black, // Colore del bordo quando selezionato
+                            ),
+                          ),
+                          labelText: 'Username',
+                          labelStyle: TextStyle(color: Colors.black),
+                          hintText: 'Enter username',
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors
+                                  .black, // Colore del bordo quando abilitato e non selezionato
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          )),
                     ),
                     const SizedBox(height: 16.0),
                     TextField(
                       obscureText: true,
                       controller: _passwordController,
+                      cursorColor: Colors.black,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors
+                                .black, // Colore del bordo quando selezionato
+                          ),
+                        ),
                         labelText: 'Password',
+                        labelStyle: TextStyle(color: Colors.black),
                         hintText: 'Enter password',
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors
+                                .black, // Colore del bordo quando abilitato e non selezionato
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16.0),
-                    PrettyCapsuleButton(
-                      label: 'Login'.toUpperCase(),
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                      ),
-                      icon: Icons.login,
-                      bgColor: Colors.blue,
+                    TextButton.icon(
                       onPressed: () {
                         _login();
                       },
+                      icon: const Icon(Icons.login, color: Colors.white),
+                      label: const Text('Login',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400)),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Color.fromARGB(255, 9, 166, 14),
+                      ),
                     ),
                     if (_wrongCredentials)
                       const Padding(

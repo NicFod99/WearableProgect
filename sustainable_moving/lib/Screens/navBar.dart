@@ -43,7 +43,7 @@ class _NavBar extends State<NavBar> {
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
             // sets the background color of the `BottomNavigationBar`
-            canvasColor: Color.fromARGB(255, 166, 232, 168)),
+            canvasColor: Color(0xFFD4EED8)),
         child: BottomNavigationBar(
           currentIndex: _selectedIndex,
           type: BottomNavigationBarType.fixed,

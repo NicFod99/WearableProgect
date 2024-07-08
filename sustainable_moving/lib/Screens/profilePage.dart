@@ -281,28 +281,92 @@ class _ProfilePageState extends State<ProfilePage>
                                   children: [
                                     TextField(
                                       controller: _nameController,
+                                      cursorColor: Colors.black,
                                       decoration: const InputDecoration(
-                                          labelText: 'Name',
-                                          labelStyle: TextStyle(fontSize: 16)),
+                                        labelText: 'Name',
+                                        labelStyle: TextStyle(
+                                            fontSize: 16, color: Colors.black),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors
+                                                .black, // Colore della linea quando il TextField non è selezionato
+                                          ),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.black,
+                                            width:
+                                                2, // Colore della linea quando il TextField è selezionato
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                     TextField(
                                       controller: _surnameController,
+                                      cursorColor: Colors.black,
                                       decoration: const InputDecoration(
-                                          labelText: 'Surname',
-                                          labelStyle: TextStyle(fontSize: 16)),
+                                        labelText: 'Surname',
+                                        labelStyle: TextStyle(
+                                            fontSize: 16, color: Colors.black),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors
+                                                .black, // Colore della linea quando il TextField non è selezionato
+                                          ),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.black,
+                                            width:
+                                                2, // Colore della linea quando il TextField è selezionato
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                     TextField(
                                       controller: _heightController,
+                                      cursorColor: Colors.black,
                                       decoration: const InputDecoration(
-                                          labelText: 'Height (cm)',
-                                          labelStyle: TextStyle(fontSize: 16)),
+                                        labelText: 'Height (cm)',
+                                        labelStyle: TextStyle(
+                                            fontSize: 16, color: Colors.black),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors
+                                                .black, // Colore della linea quando il TextField non è selezionato
+                                          ),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.black,
+                                            width:
+                                                2, // Colore della linea quando il TextField è selezionato
+                                          ),
+                                        ),
+                                      ),
                                       keyboardType: TextInputType.number,
                                     ),
                                     TextField(
                                       controller: _weightController,
+                                      cursorColor: Colors.black,
                                       decoration: const InputDecoration(
-                                          labelText: 'Weight (kg)',
-                                          labelStyle: TextStyle(fontSize: 16)),
+                                        labelText: 'Weight (kg)',
+                                        labelStyle: TextStyle(
+                                            fontSize: 16, color: Colors.black),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors
+                                                .black, // Colore della linea quando il TextField non è selezionato
+                                          ),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.black,
+                                            width:
+                                                2, // Colore della linea quando il TextField è selezionato
+                                          ),
+                                        ),
+                                      ),
                                       keyboardType: TextInputType.number,
                                     ),
                                     DropdownButtonFormField<String>(
@@ -320,12 +384,46 @@ class _ProfilePageState extends State<ProfilePage>
                                           child: Text(value),
                                         );
                                       }).toList(),
+                                      decoration: const InputDecoration(
+                                        labelText: 'Sex',
+                                        labelStyle: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.black,
+                                            width: 2,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                     TextField(
                                       controller: _ageController,
+                                      cursorColor: Colors.black,
                                       decoration: const InputDecoration(
-                                          labelText: 'Age',
-                                          labelStyle: TextStyle(fontSize: 16)),
+                                        labelText: 'Age',
+                                        labelStyle: TextStyle(
+                                            fontSize: 16, color: Colors.black),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors
+                                                .black, // Colore della linea quando il TextField non è selezionato
+                                          ),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.black,
+                                            width:
+                                                2, // Colore della linea quando il TextField è selezionato
+                                          ),
+                                        ),
+                                      ),
                                       keyboardType: TextInputType.number,
                                     ),
                                   ],

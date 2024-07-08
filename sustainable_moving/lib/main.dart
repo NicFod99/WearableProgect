@@ -36,10 +36,10 @@ class SustainableMovingApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: ThemeData(
-          scaffoldBackgroundColor: Color.fromARGB(255, 166, 232, 168),
+          scaffoldBackgroundColor: Color(0xFFD4EED8),
           appBarTheme: AppBarTheme(
-              backgroundColor: Color.fromARGB(
-                  255, 166, 232, 168) // Match app bar background color
+              backgroundColor:
+                  Color(0xFFD4EED8) // Match app bar background color
               ), // Global background color
         ),
         initialRoute:
