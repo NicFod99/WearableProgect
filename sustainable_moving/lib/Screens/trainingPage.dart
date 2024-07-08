@@ -154,8 +154,8 @@ class _TrainingPage extends State<TrainingPage> {
                       controller: _controller,
                       width: MediaQuery.of(context).size.width / 2.7,
                       height: MediaQuery.of(context).size.height / 2.7,
-                      ringColor: Color.fromARGB(246, 90, 168, 82),
-                      fillColor: Color.fromARGB(255, 9, 166, 14),
+                      ringColor: Color.fromARGB(246, 210, 250, 206),
+                      fillColor: Color.fromARGB(255, 28, 83, 30),
                       backgroundColor: Color.fromARGB(255, 9, 166, 14),
                       backgroundGradient: null,
                       strokeWidth: 30.0,
@@ -344,32 +344,6 @@ class _TrainingPage extends State<TrainingPage> {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            /*PrettyCapsuleButton(
-              label: 'Set Distance Goal'.toUpperCase(),
-              labelStyle: const TextStyle(
-                fontWeight: FontWeight.w700,
-              ),
-              icon: Icons.directions_run,
-              bgColor: Color.fromARGB(255, 9, 166, 14),
-              onPressed: () => _showGoalSettingDialog(context),
-            ),*/
-            /*NiceButtons(
-              startColor: Color.fromARGB(255, 9, 166, 14),
-              endColor: Color.fromARGB(255, 9, 166, 14),
-              borderColor: Color.fromARGB(255, 7, 126, 11),
-              width: 200,
-              height: 40,
-              stretch: false,
-              gradientOrientation: GradientOrientation.Horizontal,
-              onTap: (finish) => _showGoalSettingDialog(context),
-              child: Text(
-                'Set Distance Goal',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400),
-              ),
-            ),*/
             TextButton.icon(
               onPressed: () => _showGoalSettingDialog(context),
               icon: const Icon(Icons.directions_run, color: Colors.white),
@@ -384,23 +358,6 @@ class _TrainingPage extends State<TrainingPage> {
               ),
             ),
             const SizedBox(height: 5),
-            /*NiceButtons(
-              startColor: Color.fromARGB(255, 9, 166, 14),
-              endColor: Color.fromARGB(255, 9, 166, 14),
-              borderColor: Color.fromARGB(255, 7, 126, 11),
-              width: 200,
-              height: 40,
-              stretch: false,
-              gradientOrientation: GradientOrientation.Horizontal,
-              onTap: (finish) => _showWeeklyChart(context),
-              child: Text(
-                'Your weekly chart',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400),
-              ),
-            ),*/
             TextButton.icon(
               onPressed: () => _showWeeklyChart(context),
               icon: const Icon(Icons.bar_chart, color: Colors.white),
@@ -433,7 +390,7 @@ class _TrainingPage extends State<TrainingPage> {
             height: MediaQuery.of(context).size.height * 0.5,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Color.fromARGB(255, 255, 255, 255),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Stack(
@@ -519,7 +476,7 @@ class _TrainingPage extends State<TrainingPage> {
                 return '${value.toInt()}';
               },
               getTextStyles: (context, value) => const TextStyle(
-                color: Color(0xff7589a2),
+                color: Color.fromARGB(255, 9, 166, 14),
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
@@ -591,7 +548,6 @@ class _TrainingPage extends State<TrainingPage> {
                 ),
                 style: TextButton.styleFrom(
                   foregroundColor: Color.fromARGB(255, 6, 114, 9),
-                  //backgroundColor: Color.fromARGB(255, 6, 114, 9),
                 ))
           ],
         );

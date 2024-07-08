@@ -30,7 +30,7 @@ class _NavBar extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 192, 232, 148),
+      backgroundColor: Color.fromARGB(255, 166, 232, 168),
       body: IndexedStack(
         index: _selectedIndex,
         children: const [
@@ -42,9 +42,8 @@ class _NavBar extends State<NavBar> {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-          // sets the background color of the `BottomNavigationBar`
-          canvasColor: Color.fromARGB(255, 192, 232, 148),
-        ),
+            // sets the background color of the `BottomNavigationBar`
+            canvasColor: Color.fromARGB(255, 166, 232, 168)),
         child: BottomNavigationBar(
           currentIndex: _selectedIndex,
           type: BottomNavigationBarType.fixed,
@@ -58,7 +57,7 @@ class _NavBar extends State<NavBar> {
           iconSize: 25, // Adjust the icon size
           selectedItemColor:
               Color.fromARGB(255, 6, 105, 9), // Adjust the selected item color
-          unselectedItemColor: Color.fromARGB(255, 9, 166, 14),
+          unselectedItemColor: Color.fromARGB(255, 7, 126, 11),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),

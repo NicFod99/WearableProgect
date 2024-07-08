@@ -72,7 +72,7 @@ class HomePage extends StatelessWidget {
                             'Click anywhere to continue',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 20, // Increase the font size
+                              fontSize: 18, // Increase the font size
                               fontWeight: FontWeight.w400,
                               fontStyle: FontStyle.normal,
                               color: Color.fromARGB(255, 255, 255, 255),

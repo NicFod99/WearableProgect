@@ -182,7 +182,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(2.0),
             child: SizedBox(
               width: double.infinity, // Make the container span the full width
               child: Container(
@@ -207,7 +207,7 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize:
-                                      22, // Adjust the font size as needed
+                                      20, // Adjust the font size as needed
                                 ),
                               ),
                             ),
