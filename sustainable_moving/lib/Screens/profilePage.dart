@@ -13,6 +13,7 @@ import 'package:sustainable_moving/Models/favorite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pretty_animated_buttons/pretty_animated_buttons.dart';
 import 'package:nice_buttons/nice_buttons.dart';
+import 'package:sustainable_moving/Screens/loginPage.dart';
 
 /* Profile page, utilizzata dall'utente per cambiare foto e info.
  * 
@@ -146,6 +147,11 @@ class _ProfilePageState extends State<ProfilePage>
     Provider.of<Favorite>(context, listen: false).clearFavorite();
     Navigator.pop(context); // Close the dialog
     AuthorizeUtils.unauthorize();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => LoginPage()), // Navigate to the login page
+    );
   }
 
   // Funzione per prendere la foto dalla galleria (funziona bene, testato).

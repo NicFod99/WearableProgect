@@ -27,7 +27,7 @@ class _LoginPage extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus();
+    _checkPersonalInfoDeletion();
   }
 
   @override
@@ -164,6 +164,20 @@ class _LoginPage extends State<LoginPage> {
           _wrongCredentials = false;
         });
       });
+    }
+  }
+
+  void _checkPersonalInfoDeletion() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool deletePersonal = prefs.getBool('delete_personal') ?? false;
+
+    if (deletePersonal) {
+      // Redirect to the login page if personal info needs to be deleted
+      await prefs.remove('isLoggedIn');
+      await prefs.remove('delete_personal');
+      Navigator.pushReplacementNamed(context, LoginPage.routename);
+    } else {
+      _checkLoginStatus();
     }
   }
 
