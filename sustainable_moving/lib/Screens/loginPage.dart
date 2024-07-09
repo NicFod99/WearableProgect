@@ -3,13 +3,6 @@ import 'package:pretty_animated_buttons/configs/pkg_colors.dart';
 import 'package:sustainable_moving/Screens/navBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/* Login page, si passa con ID: "a", PASS: "a" per semplicità, i controller sono
- * messi nel dispose come suggerito per liberare memoria. 
- *
- * TODO: Fare in modo che non richiede ogni volta il login, ma lo salvi in 
- * shared preference, sicchè lo bypassi 
- * TESTARE SE VA*/
-
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -46,111 +39,111 @@ class _LoginPage extends State<LoginPage> {
       ),
       body: DefaultTabController(
         length: 6,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 60),
-                    Positioned(
-                      top: 0.0, // Adjust position as needed
-                      left: 0,
-                      right: 0,
-                      child: Transform.scale(
-                        scale: 1.8, // Adjust the scale factor as needed
-                        child: Image.asset(
-                          'assets/LogoClean.png',
-                          width: 200, // Adjust size as needed
-                        ),
-                      ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 60),
+                Positioned(
+                  top: 0.0, // Adjust position as needed
+                  left: 0,
+                  right: 0,
+                  child: Transform.scale(
+                    scale: 1.8, // Adjust the scale factor as needed
+                    child: Image.asset(
+                      'assets/LogoClean.png',
+                      width: 200, // Adjust size as needed
                     ),
-                    SizedBox(height: 60),
-                    TextField(
-                      controller: _usernameController,
-                      cursorColor: Colors.black,
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors
-                                  .black, // Colore del bordo quando selezionato
-                            ),
-                          ),
-                          labelText: 'Username',
-                          labelStyle: TextStyle(color: Colors.black),
-                          hintText: 'Enter username',
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors
-                                  .black, // Colore del bordo quando abilitato e non selezionato
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.black,
-                            ),
-                          )),
-                    ),
-                    const SizedBox(height: 16.0),
-                    TextField(
-                      obscureText: true,
-                      controller: _passwordController,
-                      cursorColor: Colors.black,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors
-                                .black, // Colore del bordo quando selezionato
-                          ),
-                        ),
-                        labelText: 'Password',
-                        labelStyle: TextStyle(color: Colors.black),
-                        hintText: 'Enter password',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors
-                                .black, // Colore del bordo quando abilitato e non selezionato
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16.0),
-                    TextButton.icon(
-                      onPressed: () {
-                        _login();
-                      },
-                      icon: const Icon(Icons.login, color: Colors.white),
-                      label: const Text('Login',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400)),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Color.fromARGB(255, 9, 166, 14),
-                      ),
-                    ),
-                    if (_wrongCredentials)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text(
-                          'Wrong credentials',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    SizedBox(height: 105),
-                  ],
+                  ),
                 ),
-              ),
+                SizedBox(height: 60),
+                TextField(
+                  controller: _usernameController,
+                  cursorColor: Colors.black,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color:
+                            Colors.black, // Colore del bordo quando selezionato
+                      ),
+                    ),
+                    labelText: 'Username',
+                    labelStyle: TextStyle(color: Colors.black),
+                    hintText: 'Enter username',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors
+                            .black, // Colore del bordo quando abilitato e non selezionato
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                  obscureText: true,
+                  controller: _passwordController,
+                  cursorColor: Colors.black,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color:
+                            Colors.black, // Colore del bordo quando selezionato
+                      ),
+                    ),
+                    labelText: 'Password',
+                    labelStyle: TextStyle(color: Colors.black),
+                    hintText: 'Enter password',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors
+                            .black, // Colore del bordo quando abilitato e non selezionato
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                TextButton.icon(
+                  onPressed: () {
+                    _login();
+                  },
+                  icon: const Icon(Icons.login, color: Colors.white),
+                  label: const Text(
+                    'Login',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Color.fromARGB(255, 9, 166, 14),
+                  ),
+                ),
+                if (_wrongCredentials)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(
+                      'Wrong credentials',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                SizedBox(height: 105),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
