@@ -54,6 +54,20 @@ class _LoginPage extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    SizedBox(height: 60),
+                    Positioned(
+                      top: 0.0, // Adjust position as needed
+                      left: 0,
+                      right: 0,
+                      child: Transform.scale(
+                        scale: 1.8, // Adjust the scale factor as needed
+                        child: Image.asset(
+                          'assets/LogoClean.png',
+                          width: 200, // Adjust size as needed
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 60),
                     TextField(
                       controller: _usernameController,
                       cursorColor: Colors.black,
@@ -131,6 +145,7 @@ class _LoginPage extends State<LoginPage> {
                           style: TextStyle(color: Colors.red),
                         ),
                       ),
+                    SizedBox(height: 105),
                   ],
                 ),
               ),
