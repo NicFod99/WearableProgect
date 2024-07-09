@@ -476,7 +476,7 @@ class _TrainingPage extends State<TrainingPage> {
                 return '${value.toInt()}';
               },
               getTextStyles: (context, value) => const TextStyle(
-                color: Color.fromARGB(255, 9, 166, 14),
+                color: Color(0xff7589a2),
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
