@@ -135,6 +135,7 @@ class _ProfilePageState extends State<ProfilePage>
       _heightController.text = "";
       _weightController.text = "";
       _ageController.text = "";
+      _sexController.text = "M";
     });
     _deleteProfileInfo();
     //Remove data in the providers
@@ -365,6 +366,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       onChanged: (newValue) {
                                         setState(() {
                                           _sex = newValue!;
+                                          _sexController.text = _sex;
                                         });
                                       },
                                       items: ['M', 'F']
