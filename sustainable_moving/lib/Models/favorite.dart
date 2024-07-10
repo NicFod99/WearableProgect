@@ -23,7 +23,7 @@ class Favorite extends ChangeNotifier {
 
   void clearFavorite() {
     products.clear();
-    // Call the notifyListeners() method to alert that something happened.
+
     notifyListeners();
   }
 

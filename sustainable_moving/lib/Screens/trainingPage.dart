@@ -104,7 +104,6 @@ class _TrainingPage extends State<TrainingPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FittedBox(
-                // ROW DEL CUORE E DEL TIMER
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

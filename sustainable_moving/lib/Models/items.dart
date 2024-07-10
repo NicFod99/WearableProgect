@@ -1,6 +1,3 @@
-/* Classe PathData usato per cliccare dalla home ed aggiungere alla pagina 
- * favorite, è un listato dei percorsi i Padova. */
-
 class PathData {
   final String name;
   final double length;
