@@ -118,11 +118,13 @@ class _ChoosePageState extends State<ChoosePage> with TickerProviderStateMixin {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Close'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Color.fromARGB(255, 6, 114, 9),
+                )),
           ],
         );
       },

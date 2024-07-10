@@ -1,7 +1,5 @@
 import 'package:intl/intl.dart';
 
-/* CLASS HEART RATE, non si dovrebbe toccare troppo */
-
 class HeartRate {
   final DateTime time;
   final int value;

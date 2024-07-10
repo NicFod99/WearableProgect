@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pretty_animated_buttons/configs/pkg_colors.dart';
 import 'package:sustainable_moving/Screens/navBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

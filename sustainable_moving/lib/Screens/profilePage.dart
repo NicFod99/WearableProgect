@@ -3,7 +3,6 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/icon_map.dart';
-import 'package:pretty_animated_buttons/configs/pkg_colors.dart';
 import 'package:sustainable_moving/Screens/navBar.dart';
 import 'dart:io';
 import '/utils/authorize_utils.dart';
@@ -11,15 +10,12 @@ import 'package:provider/provider.dart';
 import 'package:sustainable_moving/Models/heartRateNotifier.dart';
 import 'package:sustainable_moving/Models/favorite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pretty_animated_buttons/pretty_animated_buttons.dart';
 import 'package:nice_buttons/nice_buttons.dart';
-
-/* Profile page, utilizzata dall'utente per cambiare foto e info.
- * 
- * TODO: Migliorare qusta pagina aggiungendo funzionalità per l'utente, fate voi.*/
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
+
+  static const routename = 'profilePage';
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -148,7 +144,6 @@ class _ProfilePageState extends State<ProfilePage>
     AuthorizeUtils.unauthorize();
   }
 
-  // Funzione per prendere la foto dalla galleria (funziona bene, testato).
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -288,15 +283,13 @@ class _ProfilePageState extends State<ProfilePage>
                                             fontSize: 16, color: Colors.black),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: Colors
-                                                .black, // Colore della linea quando il TextField non è selezionato
+                                            color: Colors.black,
                                           ),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
                                             color: Colors.black,
-                                            width:
-                                                2, // Colore della linea quando il TextField è selezionato
+                                            width: 2,
                                           ),
                                         ),
                                       ),
@@ -332,15 +325,13 @@ class _ProfilePageState extends State<ProfilePage>
                                             fontSize: 16, color: Colors.black),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: Colors
-                                                .black, // Colore della linea quando il TextField non è selezionato
+                                            color: Colors.black,
                                           ),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
                                             color: Colors.black,
-                                            width:
-                                                2, // Colore della linea quando il TextField è selezionato
+                                            width: 2,
                                           ),
                                         ),
                                       ),
@@ -412,15 +403,13 @@ class _ProfilePageState extends State<ProfilePage>
                                             fontSize: 16, color: Colors.black),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: Colors
-                                                .black, // Colore della linea quando il TextField non è selezionato
+                                            color: Colors.black,
                                           ),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
                                             color: Colors.black,
-                                            width:
-                                                2, // Colore della linea quando il TextField è selezionato
+                                            width: 2,
                                           ),
                                         ),
                                       ),
@@ -492,7 +481,6 @@ class _ProfilePageState extends State<ProfilePage>
                                   style: TextButton.styleFrom(
                                     foregroundColor:
                                         Color.fromARGB(255, 6, 114, 9),
-                                    //backgroundColor: Color.fromARGB(255, 6, 114, 9),
                                   )),
                               TextButton(
                                   onPressed: _deletePersonalInfo,
@@ -504,7 +492,6 @@ class _ProfilePageState extends State<ProfilePage>
                                   style: TextButton.styleFrom(
                                     foregroundColor:
                                         Color.fromARGB(255, 6, 114, 9),
-                                    //backgroundColor: Color.fromARGB(255, 6, 114, 9),
                                   )),
                             ],
                           );

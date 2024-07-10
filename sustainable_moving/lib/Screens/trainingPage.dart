@@ -12,7 +12,6 @@ import 'package:scroll_datetime_picker/scroll_datetime_picker.dart';
 import 'package:water_bottle/water_bottle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:pretty_animated_buttons/pretty_animated_buttons.dart';
 import 'package:nice_buttons/nice_buttons.dart';
 
 class TrainingPage extends StatefulWidget {
@@ -105,7 +104,6 @@ class _TrainingPage extends State<TrainingPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FittedBox(
-                // ROW DEL CUORE E DEL TIMER
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

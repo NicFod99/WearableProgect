@@ -1,7 +1,5 @@
 import 'package:intl/intl.dart';
 
-/* CLASS DISTANCE, non si dovrebbe toccare troppo */
-
 class Distance {
   final DateTime time;
   final int value;

@@ -9,10 +9,6 @@ import 'package:sustainable_moving/Impact/impact.dart';
 import 'package:draw_graph/models/feature.dart';
 import 'package:sustainable_moving/utils/authorize_utils.dart';
 
-/* NOTIFIER DI DISTANCE, aggiungere qui le funzioni per ottimizzare il codice
- * il codice delle get è stato fatto qui per ottimizzare (dovrebbe ottimizzare)
- * */
-
 final List<Feature> features = [
   Feature(title: "BPM", color: Colors.red, data: []),
   Feature(
