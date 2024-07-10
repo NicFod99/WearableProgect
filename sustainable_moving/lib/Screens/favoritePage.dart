@@ -38,11 +38,13 @@ class FavoritePage extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close'),
-            ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Close'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Color.fromARGB(255, 6, 114, 9),
+                )),
           ],
         );
       },
