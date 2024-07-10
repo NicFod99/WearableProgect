@@ -43,7 +43,7 @@ class SustainableMovingApp extends StatelessWidget {
               ), // Global background color
         ),
         initialRoute:
-            LoginPage // <- CAMBIA QUA PER LAVORARE DIRETTAMENTE SU UNA PAGINA
+            HomePage // <- CAMBIA QUA PER LAVORARE DIRETTAMENTE SU UNA PAGINA
                 .routename,
         routes: {
           HomePage.routename: (context) => const HomePage(),
